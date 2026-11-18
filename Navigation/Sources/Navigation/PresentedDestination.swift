@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct PresentedDestination<Destination: Hashable>: Identifiable {
+struct PresentedDestination<Destination: NavigationDestination>: Identifiable {
     let destination: Destination
 
     var id: Destination {
