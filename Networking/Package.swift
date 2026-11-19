@@ -35,6 +35,10 @@ let package = Package(
         .testTarget(
             name: "NetworkingTests",
             dependencies: ["Networking", "NetworkingTestHelpers"],
+            swiftSettings: [
+                .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
+                .enableUpcomingFeature("InferIsolatedConformances"),
+            ],
         ),
     ]
 )
