@@ -15,7 +15,7 @@ enum MigrationStepBuilder {
         guard let current = plan.schemas.last else {
             throw .invalidPlan(reason: "The plan has no schemas")
         }
-        return ManagedObjectModels.model(for: current, bindingClasses: true)
+        return ManagedObjectModelCache.bindModel(for: current)
     }
 
     static func steps(for plan: MigrationPlan.Type) throws(MigrationError) -> [MigrationStep] {
