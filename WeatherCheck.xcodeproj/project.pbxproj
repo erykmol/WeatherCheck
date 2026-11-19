@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1B443D8D7A7F9A4413AB81F8 /* Navigation in Frameworks */ = {isa = PBXBuildFile; productRef = A80A6F78B6380686C95E8093 /* Navigation */; };
+		4432FD8F5C6412A712510E60 /* DesignSystem in Frameworks */ = {isa = PBXBuildFile; productRef = 89B46764BD5FA6F636871DD6 /* DesignSystem */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -32,6 +33,7 @@
 		5DD2353C30ADA9B800B0B6EC /* WeatherCheck.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WeatherCheck.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5DD2354B30ADA9B900B0B6EC /* WeatherCheckTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WeatherCheckTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5DD2355530ADA9B900B0B6EC /* WeatherCheckUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WeatherCheckUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		D8C175A7EFBC2EC4E3EBCF1A /* DesignSystem */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = DesignSystem; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -56,6 +58,7 @@
 		18931031771E8D39FB908471 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			files = (
+				4432FD8F5C6412A712510E60 /* DesignSystem in Frameworks */,
 				1B443D8D7A7F9A4413AB81F8 /* Navigation in Frameworks */,
 			);
 		};
@@ -92,6 +95,7 @@
 		F405E6F6D03B5B1EAE860DAA = {
 			isa = PBXGroup;
 			children = (
+				D8C175A7EFBC2EC4E3EBCF1A /* DesignSystem */,
 				4869632C752236C5DEB7B971 /* Navigation */,
 				4BF10C441EA92F18E0562119 /* WeatherCheck */,
 				5ECC76E674002BBEBAE7D840 /* WeatherCheckTests */,
@@ -115,6 +119,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				4EEBBF7D70CEFACB595F4E21 /* PBXTargetDependency */,
 				82FB7215857FD3400D0F9295 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
@@ -122,6 +127,7 @@
 			);
 			name = WeatherCheck;
 			packageProductDependencies = (
+				89B46764BD5FA6F636871DD6 /* DesignSystem */,
 				A80A6F78B6380686C95E8093 /* Navigation */,
 			);
 			productName = WeatherCheck;
@@ -250,6 +256,10 @@
 			isa = PBXTargetDependency;
 			target = 5DD2353B30ADA9B800B0B6EC /* WeatherCheck */;
 			targetProxy = 4BEC087F0CDA9358A4D41A0C /* PBXContainerItemProxy */;
+		};
+		4EEBBF7D70CEFACB595F4E21 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = DFEE2010B3B74E2C6C757BCC /* DesignSystem */;
 		};
 		82FB7215857FD3400D0F9295 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -609,6 +619,10 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		89B46764BD5FA6F636871DD6 /* DesignSystem */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = DesignSystem;
+		};
 		A80A6F78B6380686C95E8093 /* Navigation */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Navigation;
@@ -616,6 +630,10 @@
 		ADA5730E757064E8860A98F6 /* Navigation */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Navigation;
+		};
+		DFEE2010B3B74E2C6C757BCC /* DesignSystem */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = DesignSystem;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
