@@ -1,0 +1,34 @@
+// swift-tools-version: 6.2
+// The swift-tools-version declares the minimum version of Swift required to build this package.
+
+import PackageDescription
+
+let package = Package(
+    name: "CitySearch",
+    platforms: [.iOS(.v17)],
+    products: [
+        .library(
+            name: "CitySearch",
+            targets: ["CitySearch"]
+        ),
+    ],
+    targets: [
+        .target(
+            name: "CitySearch",
+            swiftSettings: [
+                .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
+                .enableUpcomingFeature("InferIsolatedConformances"),
+            ],
+        ),
+        .testTarget(
+            name: "CitySearchTests",
+            dependencies: [
+                "CitySearch",
+            ],
+            swiftSettings: [
+                .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
+                .enableUpcomingFeature("InferIsolatedConformances"),
+            ],
+        ),
+    ]
+)
