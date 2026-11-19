@@ -134,7 +134,8 @@ enum BoundTestSchema: VersionedSchema {
     }
 }
 
-@MainActor
 func managedObjectModel(for schema: VersionedSchema.Type) -> NSManagedObjectModel {
-    ManagedObjectModels.model(for: schema, bindingClasses: false)
+    let model = NSManagedObjectModel(schema: schema, bindingClasses: false)
+    model.makeImmutable()
+    return model
 }
