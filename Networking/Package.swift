@@ -11,6 +11,10 @@ let package = Package(
             name: "Networking",
             targets: ["Networking"]
         ),
+        .library(
+            name: "NetworkingTestHelpers",
+            targets: ["NetworkingTestHelpers"]
+        ),
     ],
     targets: [
         .target(
@@ -20,9 +24,17 @@ let package = Package(
                 .enableUpcomingFeature("InferIsolatedConformances"),
             ],
         ),
+        .target(
+            name: "NetworkingTestHelpers",
+            dependencies: ["Networking"],
+            swiftSettings: [
+                .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
+                .enableUpcomingFeature("InferIsolatedConformances"),
+            ],
+        ),
         .testTarget(
             name: "NetworkingTests",
-            dependencies: ["Networking"]
+            dependencies: ["Networking", "NetworkingTestHelpers"],
         ),
     ]
 )
