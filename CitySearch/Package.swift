@@ -12,9 +12,15 @@ let package = Package(
             targets: ["CitySearch"]
         ),
     ],
+    dependencies: [
+        .package(path: "../Networking"),
+    ],
     targets: [
         .target(
             name: "CitySearch",
+            dependencies: [
+                .product(name: "Networking", package: "Networking"),
+            ],
             swiftSettings: [
                 .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
                 .enableUpcomingFeature("InferIsolatedConformances"),
