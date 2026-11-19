@@ -30,6 +30,7 @@ let package = Package(
             name: "CitySearchTests",
             dependencies: [
                 "CitySearch",
+                .product(name: "NetworkingTestHelpers", package: "Networking"),
             ],
             swiftSettings: [
                 .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
