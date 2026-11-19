@@ -22,8 +22,8 @@ enum MigrationStepBuilder {
         try validate(plan)
         var steps: [MigrationStep] = []
         for stage in plan.stages {
-            let source = ManagedObjectModels.model(for: stage.source, bindingClasses: false)
-            let destination = ManagedObjectModels.model(for: stage.destination, bindingClasses: false)
+            let source = unboundModel(for: stage.source)
+            let destination = unboundModel(for: stage.destination)
             let mapping = try mappingModel(for: stage, from: source, to: destination)
             steps.append(MigrationStep(sourceModel: source, destinationModel: destination, mappingModel: mapping))
         }
@@ -52,7 +52,7 @@ enum MigrationStepBuilder {
 
     private static func validateChecksums(of schemas: [any VersionedSchema.Type]) throws(MigrationError) {
         let changes = schemas.compactMap { (schema: VersionedSchema.Type) -> String? in
-            let checksum = ManagedObjectModels.model(for: schema, bindingClasses: false).versionChecksum
+            let checksum = unboundModel(for: schema).versionChecksum
             guard checksum != schema.versionChecksum else {
                 return nil
             }
@@ -63,6 +63,12 @@ enum MigrationStepBuilder {
                 reason: "A versioned schema changed, add a new version instead: \(changes.joined(separator: "; "))"
             )
         }
+    }
+
+    private static func unboundModel(for schema: VersionedSchema.Type) -> NSManagedObjectModel {
+        let model = NSManagedObjectModel(schema: schema, bindingClasses: false)
+        model.makeImmutable()
+        return model
     }
 
     private static func mappingModel(
@@ -127,9 +133,11 @@ enum MigrationStepBuilder {
         to destination: NSEntityDescription
     ) -> [NSPropertyMapping] {
         destination.attributesByName.keys.sorted().compactMap { (name: String) -> NSPropertyMapping? in
-            let sourceName = source.attributesByName[name] == nil
-                ? destination.attributesByName[name]?.renamingIdentifier
-                : name
+            let sourceName = if source.attributesByName[name] == nil {
+                destination.attributesByName[name]?.renamingIdentifier
+            } else {
+                name
+            }
             guard let sourceName, source.attributesByName[sourceName] != nil else {
                 return nil
             }
