@@ -15,9 +15,9 @@ struct MigrationStepBuilderTests {
     @Test func buildsAStepBetweenEveryPairOfSchemas() throws {
         let steps = try MigrationStepBuilder.steps(for: TestMigrationPlan.self)
 
-        let models = TestPlanParts.schemas.map { managedObjectModel(for: $0) }
-        #expect(steps.map(\.sourceModel) == Array(models.dropLast()))
-        #expect(steps.map(\.destinationModel) == Array(models.dropFirst()))
+        let hashes = TestPlanParts.schemas.map { managedObjectModel(for: $0).entityVersionHashesByName }
+        #expect(steps.map(\.sourceModel.entityVersionHashesByName) == Array(hashes.dropLast()))
+        #expect(steps.map(\.destinationModel.entityVersionHashesByName) == Array(hashes.dropFirst()))
     }
 
     @Test func copiesEntitiesWithoutAPolicyInACustomStage() throws {
