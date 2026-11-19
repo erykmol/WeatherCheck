@@ -1,0 +1,170 @@
+//
+//  MigrationStepBuilder.swift
+//  Persistence
+//
+//  Created by Eryk Mól on 19/11/2026.
+//
+
+import Foundation
+import CoreData
+
+@MainActor
+enum MigrationStepBuilder {
+    static func currentModel(of plan: MigrationPlan.Type) throws(MigrationError) -> NSManagedObjectModel {
+        try validate(plan)
+        guard let current = plan.schemas.last else {
+            throw .invalidPlan(reason: "The plan has no schemas")
+        }
+        return ManagedObjectModels.model(for: current, bindingClasses: true)
+    }
+
+    static func steps(for plan: MigrationPlan.Type) throws(MigrationError) -> [MigrationStep] {
+        try validate(plan)
+        var steps: [MigrationStep] = []
+        for stage in plan.stages {
+            let source = ManagedObjectModels.model(for: stage.source, bindingClasses: false)
+            let destination = ManagedObjectModels.model(for: stage.destination, bindingClasses: false)
+            let mapping = try mappingModel(for: stage, from: source, to: destination)
+            steps.append(MigrationStep(sourceModel: source, destinationModel: destination, mappingModel: mapping))
+        }
+        return steps
+    }
+
+    private static func validate(_ plan: MigrationPlan.Type) throws(MigrationError) {
+        let schemas = plan.schemas
+        let stages = plan.stages
+        guard !schemas.isEmpty else {
+            throw .invalidPlan(reason: "The plan has no schemas")
+        }
+        guard stages.count == schemas.count - 1 else {
+            throw .invalidPlan(reason: "\(schemas.count) schemas need \(schemas.count - 1) stages, found \(stages.count)")
+        }
+        for (index, stage) in stages.enumerated() {
+            guard
+                ObjectIdentifier(stage.source) == ObjectIdentifier(schemas[index]),
+                ObjectIdentifier(stage.destination) == ObjectIdentifier(schemas[index + 1])
+            else {
+                throw .invalidPlan(reason: "Stage \(index) doesn't go from schema \(index) to schema \(index + 1)")
+            }
+        }
+        try validateChecksums(of: schemas)
+    }
+
+    private static func validateChecksums(of schemas: [any VersionedSchema.Type]) throws(MigrationError) {
+        let changes = schemas.compactMap { (schema: VersionedSchema.Type) -> String? in
+            let checksum = ManagedObjectModels.model(for: schema, bindingClasses: false).versionChecksum
+            guard checksum != schema.versionChecksum else {
+                return nil
+            }
+            return #"\#(schema) has checksum "\#(checksum)" but declares "\#(schema.versionChecksum)""#
+        }
+        guard changes.isEmpty else {
+            throw .invalidPlan(
+                reason: "A versioned schema changed, add a new version instead: \(changes.joined(separator: "; "))"
+            )
+        }
+    }
+
+    private static func mappingModel(
+        for stage: MigrationStage,
+        from source: NSManagedObjectModel,
+        to destination: NSManagedObjectModel
+    ) throws(MigrationError) -> NSMappingModel {
+        switch stage {
+        case .lightweight:
+            do {
+                return try NSMappingModel.inferredMappingModel(forSourceModel: source, destinationModel: destination)
+            } catch {
+                throw .noInferredMapping(
+                    from: stage.source.versionIdentifier,
+                    to: stage.destination.versionIdentifier,
+                    underlying: error
+                )
+            }
+        case .custom(_, _, let policies):
+            return customMappingModel(from: source, to: destination, policies: policies)
+        }
+    }
+
+    private static func customMappingModel(
+        from source: NSManagedObjectModel,
+        to destination: NSManagedObjectModel,
+        policies: [String: NSEntityMigrationPolicy.Type]
+    ) -> NSMappingModel {
+        let mapping = NSMappingModel()
+        mapping.entityMappings = destination.entities.compactMap { (destinationEntity: NSEntityDescription) -> NSEntityMapping? in
+            guard
+                let name = destinationEntity.name,
+                let sourceEntity = source.entitiesByName[name]
+            else {
+                return nil
+            }
+            let entityMapping = NSEntityMapping()
+            entityMapping.name = "\(name)To\(name)"
+            entityMapping.mappingType = .transformEntityMappingType
+            entityMapping.sourceEntityName = name
+            entityMapping.sourceEntityVersionHash = sourceEntity.versionHash
+            entityMapping.destinationEntityName = name
+            entityMapping.destinationEntityVersionHash = destinationEntity.versionHash
+            entityMapping.sourceExpression = NSExpression(
+                format: #"FETCH(FUNCTION($manager, "fetchRequestForSourceEntityNamed:predicateString:", "\#(name)", "TRUEPREDICATE"), $manager.sourceContext, NO)"#
+            )
+            if let policy = policies[name] {
+                entityMapping.entityMigrationPolicyClassName = NSStringFromClass(policy)
+            } else {
+                entityMapping.attributeMappings = attributeMappings(from: sourceEntity, to: destinationEntity)
+                entityMapping.relationshipMappings = relationshipMappings(
+                    from: sourceEntity,
+                    to: destinationEntity,
+                    in: source
+                )
+            }
+            return entityMapping
+        }
+        return mapping
+    }
+
+    private static func attributeMappings(
+        from source: NSEntityDescription,
+        to destination: NSEntityDescription
+    ) -> [NSPropertyMapping] {
+        destination.attributesByName.keys.sorted().compactMap { (name: String) -> NSPropertyMapping? in
+            let sourceName = source.attributesByName[name] == nil
+                ? destination.attributesByName[name]?.renamingIdentifier
+                : name
+            guard let sourceName, source.attributesByName[sourceName] != nil else {
+                return nil
+            }
+            let mapping = NSPropertyMapping()
+            mapping.name = name
+            mapping.valueExpression = NSExpression(format: #"FUNCTION($source, "valueForKey:", "\#(sourceName)")"#)
+            return mapping
+        }
+    }
+
+    private static func relationshipMappings(
+        from source: NSEntityDescription,
+        to destination: NSEntityDescription,
+        in sourceModel: NSManagedObjectModel
+    ) -> [NSPropertyMapping] {
+        destination.relationshipsByName.keys.sorted().compactMap { (name: String) -> NSPropertyMapping? in
+            let sourceName = source.relationshipsByName[name] == nil
+                ? destination.relationshipsByName[name]?.renamingIdentifier
+                : name
+            guard
+                let sourceName,
+                source.relationshipsByName[sourceName] != nil,
+                let target = destination.relationshipsByName[name]?.destinationEntity?.name,
+                sourceModel.entitiesByName[target] != nil
+            else {
+                return nil
+            }
+            let mapping = NSPropertyMapping()
+            mapping.name = name
+            mapping.valueExpression = NSExpression(
+                format: #"FUNCTION($manager, "destinationInstancesForEntityMappingNamed:sourceInstances:", "\#(target)To\#(target)", $source.\#(sourceName))"#
+            )
+            return mapping
+        }
+    }
+}
