@@ -15,6 +15,7 @@ let package = Package(
     ],
     dependencies: [
         .package(path: "../Networking"),
+        .package(path: "../DesignSystem"),
         .package(path: "../Persistence"),
     ],
     targets: [
@@ -22,6 +23,7 @@ let package = Package(
             name: "CitySearch",
             dependencies: [
                 .product(name: "Networking", package: "Networking"),
+                .product(name: "DesignSystem", package: "DesignSystem"),
                 .product(name: "Persistence", package: "Persistence"),
             ],
             resources: [.process("Resources")],
