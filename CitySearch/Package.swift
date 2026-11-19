@@ -14,12 +14,14 @@ let package = Package(
     ],
     dependencies: [
         .package(path: "../Networking"),
+        .package(path: "../Persistence"),
     ],
     targets: [
         .target(
             name: "CitySearch",
             dependencies: [
                 .product(name: "Networking", package: "Networking"),
+                .product(name: "Persistence", package: "Persistence"),
             ],
             swiftSettings: [
                 .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
