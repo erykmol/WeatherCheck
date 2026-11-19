@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import DesignSystem
+import Networking
 
 public struct CitySearchView: View {
     @State private var viewModel: CitySearchViewModel
@@ -16,6 +17,7 @@ public struct CitySearchView: View {
     public init(history: any SearchHistoryStoring, onCitySelected: @escaping (City) -> Void) {
         self.init(viewModel: CitySearchViewModel(
             validator: CityNameValidator(),
+            networkMonitor: NetworkMonitor(),
             history: history,
             onCitySelected: onCitySelected
         ))
@@ -35,6 +37,7 @@ public struct CitySearchView: View {
             )
             .autocorrectionDisabled()
             .task { viewModel.loadHistory() }
+            .task { await viewModel.observeConnectivity() }
             .task(id: viewModel.request) { await viewModel.search() }
             .confirmationDialog(
                 Localizable.clearHistoryDialogTitle,
@@ -67,7 +70,12 @@ public struct CitySearchView: View {
         case .searching:
             SearchingView()
         case .results(let cities):
-            ResultsList(cities: cities, query: viewModel.query, onSelect: { viewModel.select($0) })
+            ResultsList(
+                cities: cities,
+                query: viewModel.query,
+                isOffline: viewModel.isOffline,
+                onSelect: { viewModel.select($0) }
+            )
         case .noResults(let query):
             NoResultsView(query: query)
         case .invalidName:
@@ -104,10 +112,7 @@ struct HistoryList: View {
     var body: some View {
         List {
             if isOffline {
-                Section {
-                    OfflineBanner()
-                }
-                .listRowBackground(Palette.warningBackground)
+                OfflineSection()
             }
             if !cities.isEmpty {
                 Section {
@@ -144,6 +149,15 @@ struct HistoryList: View {
             }
         }
         .listStyle(.insetGrouped)
+    }
+}
+
+struct OfflineSection: View {
+    var body: some View {
+        Section {
+            OfflineBanner()
+        }
+        .listRowBackground(Palette.warningBackground)
     }
 }
 
@@ -197,16 +211,21 @@ struct SearchingView: View {
 struct ResultsList: View {
     private let cities: [City]
     private let query: String
+    private let isOffline: Bool
     private let onSelect: (City) -> Void
 
-    init(cities: [City], query: String, onSelect: @escaping (City) -> Void) {
+    init(cities: [City], query: String, isOffline: Bool, onSelect: @escaping (City) -> Void) {
         self.cities = cities
         self.query = query
+        self.isOffline = isOffline
         self.onSelect = onSelect
     }
 
     var body: some View {
         List {
+            if isOffline {
+                OfflineSection()
+            }
             Section {
                 ForEach(cities) { city in
                     Button {

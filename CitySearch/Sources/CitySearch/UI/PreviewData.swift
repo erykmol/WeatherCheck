@@ -7,6 +7,7 @@
 
 #if DEBUG
 import Foundation
+import Networking
 
 @MainActor
 final class PreviewHistoryStore: SearchHistoryStoring {
@@ -31,6 +32,12 @@ final class PreviewHistoryStore: SearchHistoryStoring {
 
     func removeAll() {
         cities.removeAll()
+    }
+}
+
+struct PreviewNetworkMonitor: NetworkMonitorProtocol {
+    func connectivityUpdates() -> AsyncStream<Connectivity> {
+        AsyncStream { $0.finish() }
     }
 }
 
@@ -71,6 +78,7 @@ extension CitySearchViewModel {
         let viewModel = CitySearchViewModel(
             geocoding: PreviewGeocodingClient(response: response),
             validator: CityNameValidator(),
+            networkMonitor: PreviewNetworkMonitor(),
             history: PreviewHistoryStore(cities: history),
             debounce: .zero,
             onCitySelected: { _ in }

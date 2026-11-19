@@ -7,6 +7,8 @@
 
 import Foundation
 import Testing
+import Networking
+import NetworkingTestHelpers
 @testable import CitySearch
 
 @MainActor
@@ -14,12 +16,14 @@ struct CitySearchViewModelTests {
     private func makeSUT(
         _ results: Result<[City], SearchError>...,
         validation: CityNameValidation = .valid("Łódź"),
+        connectivity: [Connectivity] = [],
         store: FakeHistoryStore = FakeHistoryStore(),
         onCitySelected: @escaping (City) -> Void = { _ in }
     ) -> CitySearchViewModel {
         CitySearchViewModel(
             geocoding: FakeGeocodingClient(results: results),
             validator: FakeCityNameValidator(validation: validation),
+            networkMonitor: StubNetworkMonitor(updates: connectivity),
             history: store,
             debounce: .zero,
             onCitySelected: onCitySelected
@@ -86,6 +90,44 @@ struct CitySearchViewModelTests {
 
         #expect(!sut.isOffline)
         #expect(sut.content == .results([.lodz]))
+    }
+
+    @Test func showsTheOfflineBannerWhenTheConnectionDrops() async {
+        let sut = makeSUT(connectivity: [.disconnected])
+
+        await sut.observeConnectivity()
+
+        #expect(sut.isOffline)
+    }
+
+    @Test func keepsTheBannerWhileDisconnectedWhenASearchSucceeds() async {
+        let sut = makeSUT(.success([.lodz]), connectivity: [.disconnected])
+        await sut.observeConnectivity()
+
+        await sut.search()
+
+        #expect(sut.content == .results([.lodz]))
+        #expect(sut.isOffline)
+    }
+
+    @Test func searchesAgainWhenTheConnectionComesBack() async {
+        let sut = makeSUT(.failure(.offline), connectivity: [.connected])
+        await sut.search()
+        let before = sut.request
+
+        await sut.observeConnectivity()
+
+        #expect(!sut.isOffline)
+        #expect(sut.request != before)
+    }
+
+    @Test func doesNotSearchAgainWhenTheConnectionWasNotLost() async {
+        let sut = makeSUT(connectivity: [.connected])
+        let before = sut.request
+
+        await sut.observeConnectivity()
+
+        #expect(sut.request == before)
     }
 
     @Test func passesTheAPIReasonOn() async {

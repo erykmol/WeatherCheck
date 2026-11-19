@@ -7,6 +7,7 @@
 
 import Foundation
 import Observation
+import Networking
 
 @MainActor
 @Observable
@@ -29,8 +30,13 @@ final class CitySearchViewModel {
     var query = ""
     private(set) var content: Content = .idle
     private(set) var history: [City] = []
-    private(set) var isOffline = false
+    private var hasConnection = true
+    private var lastSearchFailedOffline = false
     private var attempt = 0
+
+    var isOffline: Bool {
+        !hasConnection || lastSearchFailedOffline
+    }
 
     var request: SearchRequest {
         SearchRequest(query: query, attempt: attempt)
@@ -38,6 +44,7 @@ final class CitySearchViewModel {
 
     private let geocoding: any GeocodingClientProtocol
     private let validator: any CityNameValidatorProtocol
+    private let networkMonitor: any NetworkMonitorProtocol
     private let historyStore: any SearchHistoryStoring
     private let debounce: Duration
     private let onCitySelected: (City) -> Void
@@ -45,14 +52,16 @@ final class CitySearchViewModel {
     init(
         geocoding: any GeocodingClientProtocol = GeocodingClient(),
         validator: any CityNameValidatorProtocol,
+        networkMonitor: any NetworkMonitorProtocol,
         history: any SearchHistoryStoring,
-        debounce: Duration? = nil,
+        debounce: Duration = Constants.debounce,
         onCitySelected: @escaping (City) -> Void
     ) {
         self.geocoding = geocoding
         self.validator = validator
+        self.networkMonitor = networkMonitor
         self.historyStore = history
-        self.debounce = debounce ?? Constants.debounce
+        self.debounce = debounce
         self.onCitySelected = onCitySelected
     }
 
@@ -83,6 +92,20 @@ final class CitySearchViewModel {
         }
     }
 
+    func observeConnectivity() async {
+        for await connectivity in networkMonitor.connectivityUpdates() {
+            switch connectivity {
+            case .disconnected:
+                hasConnection = false
+            case .connected:
+                guard isOffline else { continue }
+                hasConnection = true
+                lastSearchFailedOffline = false
+                retry()
+            }
+        }
+    }
+
     func retry() {
         attempt += 1
     }
@@ -104,13 +127,13 @@ final class CitySearchViewModel {
         do throws(SearchError) {
             let cities = try await geocoding.searchCities(named: name)
             guard !Task.isCancelled else { return }
-            isOffline = false
+            lastSearchFailedOffline = false
             content = cities.isEmpty ? .noResults(query: name) : .results(cities)
         } catch {
             guard !Task.isCancelled else { return }
             switch error {
             case .offline:
-                isOffline = true
+                lastSearchFailedOffline = true
                 content = .idle
             case .server(let message):
                 content = .failed(message: message)
