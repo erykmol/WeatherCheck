@@ -50,17 +50,19 @@ struct ProgressiveMigrator {
         let temporaryURL = Self.temporaryStoreURL(for: storeURL)
         let coordinator = NSPersistentStoreCoordinator(managedObjectModel: migrationStep.destinationModel)
         do {
-            try removeStore(at: temporaryURL, using: coordinator)
-            let manager = NSMigrationManager(sourceModel: migrationStep.sourceModel, destinationModel: migrationStep.destinationModel)
-            try manager.migrateStore(
-                from: storeURL,
-                type: .sqlite,
-                options: Self.rollbackJournalOptions,
-                mapping: migrationStep.mappingModel,
-                to: temporaryURL,
-                type: .sqlite,
-                options: Self.rollbackJournalOptions
-            )
+            try autoreleasepool {
+                try removeStore(at: temporaryURL, using: coordinator)
+                let manager = NSMigrationManager(sourceModel: migrationStep.sourceModel, destinationModel: migrationStep.destinationModel)
+                try manager.migrateStore(
+                    from: storeURL,
+                    type: .sqlite,
+                    options: Self.rollbackJournalOptions,
+                    mapping: migrationStep.mappingModel,
+                    to: temporaryURL,
+                    type: .sqlite,
+                    options: Self.rollbackJournalOptions
+                )
+            }
             try coordinator.replacePersistentStore(
                 at: storeURL,
                 destinationOptions: Self.rollbackJournalOptions,
