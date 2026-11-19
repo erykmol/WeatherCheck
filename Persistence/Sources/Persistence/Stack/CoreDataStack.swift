@@ -63,15 +63,6 @@ public final class CoreDataStack {
         }
     }
 
-    public static func deleteStoreFiles(at url: URL) throws {
-        for suffix in Constants.storeFileSuffixes {
-            let file = URL(filePath: url.path(percentEncoded: false) + suffix)
-            if FileManager.default.fileExists(atPath: file.path(percentEncoded: false)) {
-                try FileManager.default.removeItem(at: file)
-            }
-        }
-    }
-
     private static func prepareStore(
         for storage: Storage,
         model: NSManagedObjectModel,
@@ -106,5 +97,4 @@ public final class CoreDataStack {
 
 private enum Constants {
     static let inMemoryPath = "/dev/null"
-    static let storeFileSuffixes = ["", "-wal", "-shm"]
 }

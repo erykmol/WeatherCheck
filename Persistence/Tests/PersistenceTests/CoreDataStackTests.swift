@@ -46,39 +46,6 @@ struct CoreDataStackTests {
         #expect(items == [TestItem(title: "Apples", note: nil, amount: 2.5, unit: "pcs")])
     }
 
-    @Test func deletingTheStoreFilesRemovesItsData() throws {
-        let store = try TestStore()
-        let writer = try CoreDataStack(plan: TestMigrationPlan.self, storage: .file(store.url))
-        try insertItem(titled: "Apples", into: writer)
-        try writer.close()
-
-        try CoreDataStack.deleteStoreFiles(at: store.url)
-
-        let reopened = try CoreDataStack(plan: TestMigrationPlan.self, storage: .file(store.url))
-        defer { try? reopened.close() }
-        #expect(try itemTitles(in: reopened).isEmpty)
-    }
-
-    @Test func deletesTheJournalFilesWithTheStore() throws {
-        let store = try TestStore()
-        let files = ["", "-wal", "-shm"].map { URL(filePath: store.url.path(percentEncoded: false) + $0) }
-        for file in files {
-            try Data("not a database".utf8).write(to: file)
-        }
-
-        try CoreDataStack.deleteStoreFiles(at: store.url)
-
-        #expect(files.allSatisfy { !store.fileExists(at: $0) })
-    }
-
-    @Test func deletingMissingStoreFilesDoesNothing() throws {
-        let store = try TestStore()
-
-        try CoreDataStack.deleteStoreFiles(at: store.url)
-
-        #expect(!store.fileExists(at: store.url))
-    }
-
     @Test func rejectsAnInvalidPlan() {
         let error = #expect(throws: MigrationError.self) {
             try CoreDataStack(plan: EmptyTestMigrationPlan.self, storage: .inMemory)
