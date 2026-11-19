@@ -12,16 +12,22 @@ import Testing
 struct CityNameValidatorTests {
     @Test(arguments: ["Łódź", "Bielsko-Biała", "Nowy Sącz", "Gdańsk"])
     func acceptsLettersSpacesAndHyphens(name: String) {
-        #expect(CityNameValidator.validate(name) == .valid(name))
+        let sut = CityNameValidator()
+
+        #expect(sut.validate(name) == .valid(name))
     }
 
     @Test func trimsSurroundingSpaces() {
-        #expect(CityNameValidator.validate("  Kraków ") == .valid("Kraków"))
+        let sut = CityNameValidator()
+
+        #expect(sut.validate("  Kraków ") == .valid("Kraków"))
     }
 
     @Test(arguments: ["Kraków1", "Gdańsk!", "Łódź?", "1", "Łódź🙂", "'; DROP TABLE cities; --"])
     func rejectsOtherCharacters(name: String) {
-        #expect(CityNameValidator.validate(name) == .invalid)
+        let sut = CityNameValidator()
+
+        #expect(sut.validate(name) == .invalid)
     }
 
     @Test(arguments: [
@@ -32,11 +38,15 @@ struct CityNameValidatorTests {
         ("Bielsko\u{2013}Biała", "Bielsko-Biała"),
     ])
     func cleansUpPastedText(text: String, name: String) {
-        #expect(CityNameValidator.validate(text) == .valid(name))
+        let sut = CityNameValidator()
+
+        #expect(sut.validate(text) == .valid(name))
     }
 
     @Test func composesDecomposedLetters() {
-        let result = CityNameValidator.validate("\u{0141}o\u{0301}dz\u{0301}")
+        let sut = CityNameValidator()
+
+        let result = sut.validate("\u{0141}o\u{0301}dz\u{0301}")
 
         guard case .valid(let name) = result else {
             Issue.record("Expected a valid name, got \(result)")
@@ -46,20 +56,27 @@ struct CityNameValidatorTests {
     }
 
     @Test func acceptsANameOfOneHundredCharacters() {
+        let sut = CityNameValidator()
         let name = String(repeating: "a", count: 100)
 
-        #expect(CityNameValidator.validate(name) == .valid(name))
+        #expect(sut.validate(name) == .valid(name))
     }
 
     @Test func rejectsANameLongerThanOneHundredCharacters() {
-        #expect(CityNameValidator.validate(String(repeating: "a", count: 101)) == .tooLong)
+        let sut = CityNameValidator()
+
+        #expect(sut.validate(String(repeating: "a", count: 101)) == .tooLong)
     }
 
     @Test func treatsBlankTextAsEmpty() {
-        #expect(CityNameValidator.validate("   ") == .empty)
+        let sut = CityNameValidator()
+
+        #expect(sut.validate("   ") == .empty)
     }
 
     @Test func needsAtLeastTwoLetters() {
-        #expect(CityNameValidator.validate("Ł") == .tooShort)
+        let sut = CityNameValidator()
+
+        #expect(sut.validate("Ł") == .tooShort)
     }
 }

@@ -7,16 +7,8 @@
 
 import Foundation
 
-enum CityNameValidator {
-    enum Result: Equatable {
-        case empty
-        case tooShort
-        case tooLong
-        case invalid
-        case valid(String)
-    }
-
-    static func validate(_ text: String) -> Result {
+struct CityNameValidator: CityNameValidatorProtocol {
+    func validate(_ text: String) -> CityNameValidation {
         let name = sanitized(text)
         guard !name.isEmpty else {
             return .empty
@@ -33,7 +25,7 @@ enum CityNameValidator {
         return .valid(name)
     }
 
-    private static func sanitized(_ text: String) -> String {
+    private func sanitized(_ text: String) -> String {
         let scalars = text.unicodeScalars
             .filter { $0.properties.generalCategory != .format }
             .map { $0.properties.generalCategory == .dashPunctuation ? Constants.hyphen : $0 }
@@ -43,7 +35,7 @@ enum CityNameValidator {
             .joined(separator: " ")
     }
 
-    private static func isAllowed(_ character: Character) -> Bool {
+    private func isAllowed(_ character: Character) -> Bool {
         character.isLetter || character == " " || character == "-"
     }
 }
