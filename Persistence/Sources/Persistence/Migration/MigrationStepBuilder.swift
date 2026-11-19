@@ -100,15 +100,13 @@ enum MigrationStepBuilder {
                 return nil
             }
             let entityMapping = NSEntityMapping()
-            entityMapping.name = "\(name)To\(name)"
+            entityMapping.name = mappingName(forEntityNamed: name)
             entityMapping.mappingType = .transformEntityMappingType
             entityMapping.sourceEntityName = name
             entityMapping.sourceEntityVersionHash = sourceEntity.versionHash
             entityMapping.destinationEntityName = name
             entityMapping.destinationEntityVersionHash = destinationEntity.versionHash
-            entityMapping.sourceExpression = NSExpression(
-                format: #"FETCH(FUNCTION($manager, "fetchRequestForSourceEntityNamed:predicateString:", "\#(name)", "TRUEPREDICATE"), $manager.sourceContext, NO)"#
-            )
+            entityMapping.sourceExpression = sourceExpression(forEntityNamed: name)
             if let policy = policies[name] {
                 entityMapping.entityMigrationPolicyClassName = NSStringFromClass(policy)
             } else {
@@ -137,7 +135,7 @@ enum MigrationStepBuilder {
             }
             let mapping = NSPropertyMapping()
             mapping.name = name
-            mapping.valueExpression = NSExpression(format: #"FUNCTION($source, "valueForKey:", "\#(sourceName)")"#)
+            mapping.valueExpression = sourceValue(forKey: sourceName)
             return mapping
         }
     }
@@ -161,10 +159,48 @@ enum MigrationStepBuilder {
             }
             let mapping = NSPropertyMapping()
             mapping.name = name
-            mapping.valueExpression = NSExpression(
-                format: #"FUNCTION($manager, "destinationInstancesForEntityMappingNamed:sourceInstances:", "\#(target)To\#(target)", $source.\#(sourceName))"#
+            mapping.valueExpression = destinationInstances(
+                ofMapping: mappingName(forEntityNamed: target),
+                for: sourceValue(forKey: sourceName)
             )
             return mapping
         }
     }
+
+    private static func mappingName(forEntityNamed name: String) -> String {
+        "\(name)To\(name)"
+    }
+
+    private static func sourceExpression(forEntityNamed name: String) -> NSExpression {
+        NSFetchRequestExpression.expression(
+            forFetch: NSExpression(forConstantValue: NSFetchRequest<NSManagedObject>(entityName: name)),
+            context: call(#selector(getter: NSMigrationManager.sourceContext), on: Constants.managerVariable),
+            countOnly: false
+        )
+    }
+
+    private static func sourceValue(forKey key: String) -> NSExpression {
+        call(#selector(NSObject.value(forKey:)), on: Constants.sourceVariable, with: [NSExpression(forConstantValue: key)])
+    }
+
+    private static func destinationInstances(ofMapping mappingName: String, for sourceInstances: NSExpression) -> NSExpression {
+        call(
+            #selector(NSMigrationManager.destinationInstances(forEntityMappingName:sourceInstances:)),
+            on: Constants.managerVariable,
+            with: [NSExpression(forConstantValue: mappingName), sourceInstances]
+        )
+    }
+
+    private static func call(_ selector: Selector, on variable: String, with arguments: [NSExpression] = []) -> NSExpression {
+        NSExpression(
+            forFunction: NSExpression(forVariable: variable),
+            selectorName: NSStringFromSelector(selector),
+            arguments: arguments
+        )
+    }
+}
+
+private enum Constants {
+    static let managerVariable = "manager"
+    static let sourceVariable = "source"
 }
