@@ -37,14 +37,18 @@ enum MigrationStepBuilder {
             throw .invalidPlan(reason: "The plan has no schemas")
         }
         guard stages.count == schemas.count - 1 else {
-            throw .invalidPlan(reason: "\(schemas.count) schemas need \(schemas.count - 1) stages, found \(stages.count)")
+            throw .invalidPlan(
+                reason: "\(schemas.count) schemas need \(schemas.count - 1) stages, found \(stages.count)"
+            )
         }
         for (index, stage) in stages.enumerated() {
             guard
                 ObjectIdentifier(stage.source) == ObjectIdentifier(schemas[index]),
                 ObjectIdentifier(stage.destination) == ObjectIdentifier(schemas[index + 1])
             else {
-                throw .invalidPlan(reason: "Stage \(index) doesn't go from schema \(index) to schema \(index + 1)")
+                throw .invalidPlan(
+                    reason: "Stage \(index) doesn't go from schema \(index) to schema \(index + 1)"
+                )
             }
         }
         try validateChecksums(of: schemas)
