@@ -27,11 +27,13 @@ struct NetworkingManagerTests {
         }
         let sut = makeSUT(session: session)
 
-        let data = try await sut.send(Endpoint(
-            method: .GET,
-            path: "v1/items",
-            query: [URLQueryItem(name: "key", value: "value")]
-        ))
+        let data = try await sut.send(
+            Endpoint(
+                method: .GET,
+                path: "v1/items",
+                query: [URLQueryItem(name: "key", value: "value")]
+            )
+        )
 
         #expect(String(decoding: data, as: UTF8.self) == "https://api.example.com/v1/items?key=value")
     }
