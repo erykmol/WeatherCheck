@@ -29,6 +29,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		209FE7206EC5B6C0C8AD9472 /* Persistence */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Persistence; sourceTree = SOURCE_ROOT; };
 		4869632C752236C5DEB7B971 /* Navigation */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Navigation; sourceTree = SOURCE_ROOT; };
 		5DD2353C30ADA9B800B0B6EC /* WeatherCheck.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WeatherCheck.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5DD2354B30ADA9B900B0B6EC /* WeatherCheckTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WeatherCheckTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -99,6 +100,7 @@
 				D8C175A7EFBC2EC4E3EBCF1A /* DesignSystem */,
 				4869632C752236C5DEB7B971 /* Navigation */,
 				9C01A1896D0DA817AB13483E /* Networking */,
+				209FE7206EC5B6C0C8AD9472 /* Persistence */,
 				4BF10C441EA92F18E0562119 /* WeatherCheck */,
 				5ECC76E674002BBEBAE7D840 /* WeatherCheckTests */,
 				F317325F12DE0BC0DF6ADA23 /* WeatherCheckUITests */,
