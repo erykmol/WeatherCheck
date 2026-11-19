@@ -45,7 +45,7 @@ enum RelationTestEntity {
 
 enum RelationTestSchemaV1: VersionedSchema {
     static let versionIdentifier = "relation-1"
-    static let versionChecksum = ""
+    static let versionChecksum = "B0DbNyr4/U7/zQ69ySsQx1CHLbSfatd4G5o1cVtWlR0="
 
     static func makeEntities() -> [NSEntityDescription] {
         RelationTestEntity.make(petHasNickname: false)
@@ -54,7 +54,7 @@ enum RelationTestSchemaV1: VersionedSchema {
 
 enum RelationTestSchemaV2: VersionedSchema {
     static let versionIdentifier = "relation-2"
-    static let versionChecksum = ""
+    static let versionChecksum = "yuLf/HDXkvIuu3V3GAvrDp/s4Roczrd0pKmpKrmqHMI="
 
     static func makeEntities() -> [NSEntityDescription] {
         RelationTestEntity.make(petHasNickname: true)

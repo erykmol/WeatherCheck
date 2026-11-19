@@ -20,7 +20,7 @@ enum TestEntity {
 
 enum TestSchemaV1: VersionedSchema {
     static let versionIdentifier = "1"
-    static let versionChecksum = ""
+    static let versionChecksum = "cfkzmq0oQ8uTLgESWTYYEN/YwuAshcZ3hcPJLDTTm7w="
 
     static func makeEntities() -> [NSEntityDescription] {
         [
@@ -35,7 +35,7 @@ enum TestSchemaV1: VersionedSchema {
 
 enum TestSchemaV2: VersionedSchema {
     static let versionIdentifier = "2"
-    static let versionChecksum = ""
+    static let versionChecksum = "ZGSq/Ow9qY0NzT2JudAZ471nDPch6CxMJsOqLrLUSig="
 
     static func makeEntities() -> [NSEntityDescription] {
         [
@@ -51,7 +51,7 @@ enum TestSchemaV2: VersionedSchema {
 
 enum TestSchemaV3: VersionedSchema {
     static let versionIdentifier = "3"
-    static let versionChecksum = ""
+    static let versionChecksum = "STvYgYJf66r+bAJ1jcByWQSyGE5kd9z73vps57KC80Q="
 
     static func makeEntities() -> [NSEntityDescription] {
         [
@@ -67,7 +67,7 @@ enum TestSchemaV3: VersionedSchema {
 
 enum TestSchemaV4: VersionedSchema {
     static let versionIdentifier = "4"
-    static let versionChecksum = ""
+    static let versionChecksum = "zGniNm5F03hyqyTfUfpeqDALTN7rCLtENH7JLIGxKmI="
 
     static func makeEntities() -> [NSEntityDescription] {
         [
@@ -83,7 +83,7 @@ enum TestSchemaV4: VersionedSchema {
 
 enum TestSchemaV5: VersionedSchema {
     static let versionIdentifier = "5"
-    static let versionChecksum = ""
+    static let versionChecksum = "RXPQQt82E2yLKu5kTwak+TIU0e23SnFh8z2LyViFyLc="
 
     static func makeEntities() -> [NSEntityDescription] {
         [
@@ -120,7 +120,7 @@ final class BoundTestObject: NSManagedObject {}
 
 enum BoundTestSchema: VersionedSchema {
     static let versionIdentifier = "bound"
-    static let versionChecksum = ""
+    static let versionChecksum = "GvHO5At3IquomIUtjxBm6pxd+r5XwEzNigdcm8fH0Gs="
 
     static func makeEntities() -> [NSEntityDescription] {
         [
