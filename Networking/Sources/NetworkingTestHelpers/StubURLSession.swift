@@ -8,7 +8,7 @@
 import Foundation
 import Networking
 
-public actor StubURLSession: URLSessionProtocol {
+public struct StubURLSession: URLSessionProtocol {
     public typealias Handler = @Sendable (URLRequest) throws -> (HTTPURLResponse, Data)
 
     private let handler: Handler
