@@ -9,14 +9,9 @@ import Foundation
 import CoreData
 
 struct ProgressiveMigrator {
-    private let currentModel: NSManagedObjectModel
-
-    init(currentModel: NSManagedObjectModel) {
-        self.currentModel = currentModel
-    }
-
     func migrateStoreIfNeeded(
         at storeURL: URL,
+        to currentModel: NSManagedObjectModel,
         loadSteps: () throws(MigrationError) -> [MigrationStep]
     ) throws(MigrationError) {
         guard FileManager.default.fileExists(atPath: storeURL.path(percentEncoded: false)) else { return }

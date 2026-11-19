@@ -14,9 +14,10 @@ import CoreData
 struct ProgressiveMigratorTests {
     @Test func doesNothingWithoutAStore() throws {
         let store = try TestStore()
-        let sut = ProgressiveMigrator(currentModel: managedObjectModel(for: TestSchemaV5.self))
+        let current = managedObjectModel(for: TestSchemaV5.self)
+        let sut = ProgressiveMigrator()
 
-        try sut.migrateStoreIfNeeded(at: store.url) { () throws(MigrationError) in throw .unknownStoreVersion }
+        try sut.migrateStoreIfNeeded(at: store.url, to: current) { () throws(MigrationError) in throw .unknownStoreVersion }
 
         #expect(!store.fileExists(at: store.url))
     }
@@ -25,9 +26,9 @@ struct ProgressiveMigratorTests {
         let current = managedObjectModel(for: TestSchemaV5.self)
         let store = try TestStore()
         try store.seed(current, with: [["title": "Apples", "amount": 2.5, "unit": "kg"]])
-        let sut = ProgressiveMigrator(currentModel: current)
+        let sut = ProgressiveMigrator()
 
-        try sut.migrateStoreIfNeeded(at: store.url) { () throws(MigrationError) in throw .unknownStoreVersion }
+        try sut.migrateStoreIfNeeded(at: store.url, to: current) { () throws(MigrationError) in throw .unknownStoreVersion }
 
         #expect(try store.items(current) == [TestItem(title: "Apples", note: nil, amount: 2.5, unit: "kg")])
     }
@@ -39,10 +40,10 @@ struct ProgressiveMigratorTests {
             ["label": "Apples", "amount": "2.5"],
             ["label": "Pears", "amount": "3"],
         ])
-        let steps = try MigrationStepBuilder.steps(for: TestMigrationPlan.self)
-        let sut = ProgressiveMigrator(currentModel: current)
+        let steps = try MigrationStepBuilder(plan: TestMigrationPlan.self, modelCache: ManagedObjectModelCache()).steps()
+        let sut = ProgressiveMigrator()
 
-        try sut.migrateStoreIfNeeded(at: store.url) { steps }
+        try sut.migrateStoreIfNeeded(at: store.url, to: current) { steps }
 
         #expect(try store.items(current) == [
             TestItem(title: "Apples", note: nil, amount: 2.5, unit: "pcs"),
@@ -55,10 +56,10 @@ struct ProgressiveMigratorTests {
         let current = managedObjectModel(for: TestSchemaV5.self)
         let store = try TestStore()
         try store.seed(managedObjectModel(for: TestSchemaV3.self), with: [["title": "Apples", "amount": "2.5", "note": "Fresh"]])
-        let steps = try MigrationStepBuilder.steps(for: TestMigrationPlan.self)
-        let sut = ProgressiveMigrator(currentModel: current)
+        let steps = try MigrationStepBuilder(plan: TestMigrationPlan.self, modelCache: ManagedObjectModelCache()).steps()
+        let sut = ProgressiveMigrator()
 
-        try sut.migrateStoreIfNeeded(at: store.url) { steps }
+        try sut.migrateStoreIfNeeded(at: store.url, to: current) { steps }
 
         #expect(try store.items(current) == [TestItem(title: "Apples", note: "Fresh", amount: 2.5, unit: "pcs")])
     }
@@ -66,11 +67,12 @@ struct ProgressiveMigratorTests {
     @Test func stopsAtTheStepThatFails() throws {
         let store = try TestStore()
         try store.seed(managedObjectModel(for: TestSchemaV1.self), with: [["label": "Apples", "amount": "2.5"]])
-        let steps = try MigrationStepBuilder.steps(for: FailingTestMigrationPlan.self)
-        let sut = ProgressiveMigrator(currentModel: managedObjectModel(for: TestSchemaV5.self))
+        let steps = try MigrationStepBuilder(plan: FailingTestMigrationPlan.self, modelCache: ManagedObjectModelCache()).steps()
+        let current = managedObjectModel(for: TestSchemaV5.self)
+        let sut = ProgressiveMigrator()
 
         let error = #expect(throws: MigrationError.self) {
-            try sut.migrateStoreIfNeeded(at: store.url) { steps }
+            try sut.migrateStoreIfNeeded(at: store.url, to: current) { steps }
         }
 
         guard case .stepFailed(let step, _)? = error else {
@@ -86,12 +88,12 @@ struct ProgressiveMigratorTests {
         let current = managedObjectModel(for: TestSchemaV5.self)
         let store = try TestStore()
         try store.seed(managedObjectModel(for: TestSchemaV1.self), with: [["label": "Apples", "amount": "2.5"]])
-        let failing = try MigrationStepBuilder.steps(for: FailingTestMigrationPlan.self)
-        let working = try MigrationStepBuilder.steps(for: TestMigrationPlan.self)
-        let sut = ProgressiveMigrator(currentModel: current)
-        try? sut.migrateStoreIfNeeded(at: store.url) { failing }
+        let failing = try MigrationStepBuilder(plan: FailingTestMigrationPlan.self, modelCache: ManagedObjectModelCache()).steps()
+        let working = try MigrationStepBuilder(plan: TestMigrationPlan.self, modelCache: ManagedObjectModelCache()).steps()
+        let sut = ProgressiveMigrator()
+        try? sut.migrateStoreIfNeeded(at: store.url, to: current) { failing }
 
-        try sut.migrateStoreIfNeeded(at: store.url) { working }
+        try sut.migrateStoreIfNeeded(at: store.url, to: current) { working }
 
         #expect(try store.items(current) == [TestItem(title: "Apples", note: nil, amount: 2.5, unit: "pcs")])
     }
@@ -99,11 +101,12 @@ struct ProgressiveMigratorTests {
     @Test func failsWhenTheStepsStopBeforeTheCurrentModel() throws {
         let store = try TestStore()
         try store.seed(managedObjectModel(for: TestSchemaV1.self), with: [["label": "Apples", "amount": "2.5"]])
-        let steps = Array(try MigrationStepBuilder.steps(for: TestMigrationPlan.self).prefix(2))
-        let sut = ProgressiveMigrator(currentModel: managedObjectModel(for: TestSchemaV5.self))
+        let steps = Array(try MigrationStepBuilder(plan: TestMigrationPlan.self, modelCache: ManagedObjectModelCache()).steps().prefix(2))
+        let current = managedObjectModel(for: TestSchemaV5.self)
+        let sut = ProgressiveMigrator()
 
         let error = #expect(throws: MigrationError.self) {
-            try sut.migrateStoreIfNeeded(at: store.url) { steps }
+            try sut.migrateStoreIfNeeded(at: store.url, to: current) { steps }
         }
 
         guard case .incompleteMigration? = error else {
@@ -115,11 +118,12 @@ struct ProgressiveMigratorTests {
     @Test func rejectsAStoreFromAnUnknownVersion() throws {
         let store = try TestStore()
         try store.seed(unrelatedManagedObjectModel(), with: [])
-        let steps = try MigrationStepBuilder.steps(for: TestMigrationPlan.self)
-        let sut = ProgressiveMigrator(currentModel: managedObjectModel(for: TestSchemaV5.self))
+        let steps = try MigrationStepBuilder(plan: TestMigrationPlan.self, modelCache: ManagedObjectModelCache()).steps()
+        let current = managedObjectModel(for: TestSchemaV5.self)
+        let sut = ProgressiveMigrator()
 
         let error = #expect(throws: MigrationError.self) {
-            try sut.migrateStoreIfNeeded(at: store.url) { steps }
+            try sut.migrateStoreIfNeeded(at: store.url, to: current) { steps }
         }
 
         guard case .unknownStoreVersion? = error else {
@@ -131,10 +135,11 @@ struct ProgressiveMigratorTests {
     @Test func rejectsAFileThatIsNotAStore() throws {
         let store = try TestStore()
         try Data("not a database".utf8).write(to: store.url)
-        let sut = ProgressiveMigrator(currentModel: managedObjectModel(for: TestSchemaV5.self))
+        let current = managedObjectModel(for: TestSchemaV5.self)
+        let sut = ProgressiveMigrator()
 
         let error = #expect(throws: MigrationError.self) {
-            try sut.migrateStoreIfNeeded(at: store.url) { () throws(MigrationError) in [] }
+            try sut.migrateStoreIfNeeded(at: store.url, to: current) { () throws(MigrationError) in [] }
         }
 
         guard case .unreadableStore? = error else {

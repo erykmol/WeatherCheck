@@ -9,22 +9,31 @@ import Foundation
 import CoreData
 
 @MainActor
-enum MigrationStepBuilder {
-    static func currentModel(of plan: MigrationPlan.Type) throws(MigrationError) -> NSManagedObjectModel {
-        try validate(plan)
-        guard let current = plan.schemas.last else {
-            throw .invalidPlan(reason: "The plan has no schemas")
-        }
-        return ManagedObjectModelCache.bindModel(for: current)
+struct MigrationStepBuilder {
+    private let plan: MigrationPlan.Type
+    private let currentSchema: VersionedSchema.Type
+    private let modelCache: ManagedObjectModelCache
+
+    var currentModel: NSManagedObjectModel {
+        modelCache.bindModel(for: currentSchema)
     }
 
-    static func steps(for plan: MigrationPlan.Type) throws(MigrationError) -> [MigrationStep] {
-        try validate(plan)
+    init(plan: MigrationPlan.Type, modelCache: ManagedObjectModelCache) throws(MigrationError) {
+        guard let currentSchema = plan.schemas.last else {
+            throw .invalidPlan(reason: "The plan has no schemas")
+        }
+        try Self.validate(plan)
+        self.plan = plan
+        self.currentSchema = currentSchema
+        self.modelCache = modelCache
+    }
+
+    func steps() throws(MigrationError) -> [MigrationStep] {
         var steps: [MigrationStep] = []
         for stage in plan.stages {
-            let source = unboundModel(for: stage.source)
-            let destination = unboundModel(for: stage.destination)
-            let mapping = try mappingModel(for: stage, from: source, to: destination)
+            let source = Self.unboundModel(for: stage.source)
+            let destination = Self.unboundModel(for: stage.destination)
+            let mapping = try Self.mappingModel(for: stage, from: source, to: destination)
             steps.append(MigrationStep(sourceModel: source, destinationModel: destination, mappingModel: mapping))
         }
         return steps
@@ -33,9 +42,6 @@ enum MigrationStepBuilder {
     private static func validate(_ plan: MigrationPlan.Type) throws(MigrationError) {
         let schemas = plan.schemas
         let stages = plan.stages
-        guard !schemas.isEmpty else {
-            throw .invalidPlan(reason: "The plan has no schemas")
-        }
         guard stages.count == schemas.count - 1 else {
             throw .invalidPlan(
                 reason: "\(schemas.count) schemas need \(schemas.count - 1) stages, found \(stages.count)"

@@ -22,16 +22,30 @@ public final class CoreDataStack {
     public let viewContext: NSManagedObjectContext
     private let container: NSPersistentContainer
 
-    public init(plan: MigrationPlan.Type, storage: Storage) throws {
-        let model = try MigrationStepBuilder.currentModel(of: plan)
-        let storeURL = try Self.prepareStore(for: storage, plan: plan, model: model)
+    public convenience init(plan: MigrationPlan.Type, storage: Storage) throws {
+        try self.init(
+            name: String(describing: plan),
+            stepBuilder: MigrationStepBuilder(plan: plan, modelCache: .shared),
+            migrator: ProgressiveMigrator(),
+            storage: storage
+        )
+    }
+
+    init(
+        name: String,
+        stepBuilder: MigrationStepBuilder,
+        migrator: ProgressiveMigrator,
+        storage: Storage
+    ) throws {
+        let model = stepBuilder.currentModel
+        let storeURL = try Self.prepareStore(for: storage, model: model, stepBuilder: stepBuilder, migrator: migrator)
 
         let description = NSPersistentStoreDescription(url: storeURL)
         description.shouldAddStoreAsynchronously = false
         description.shouldMigrateStoreAutomatically = false
         description.shouldInferMappingModelAutomatically = false
 
-        let container = NSPersistentContainer(name: String(describing: plan), managedObjectModel: model)
+        let container = NSPersistentContainer(name: name, managedObjectModel: model)
         container.persistentStoreDescriptions = [description]
         try Self.loadStores(of: container)
 
@@ -60,8 +74,9 @@ public final class CoreDataStack {
 
     private static func prepareStore(
         for storage: Storage,
-        plan: MigrationPlan.Type,
-        model: NSManagedObjectModel
+        model: NSManagedObjectModel,
+        stepBuilder: MigrationStepBuilder,
+        migrator: ProgressiveMigrator
     ) throws -> URL {
         switch storage {
         case .file(let url):
@@ -69,8 +84,8 @@ public final class CoreDataStack {
                 at: url.deletingLastPathComponent(),
                 withIntermediateDirectories: true
             )
-            try ProgressiveMigrator(currentModel: model).migrateStoreIfNeeded(at: url) { () throws(MigrationError) in
-                try MigrationStepBuilder.steps(for: plan)
+            try migrator.migrateStoreIfNeeded(at: url, to: model) { () throws(MigrationError) in
+                try stepBuilder.steps()
             }
             return url
         case .inMemory:

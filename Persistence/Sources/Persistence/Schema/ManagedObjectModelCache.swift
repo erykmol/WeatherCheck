@@ -9,10 +9,12 @@ import Foundation
 import CoreData
 
 @MainActor
-enum ManagedObjectModelCache {
-    private static var models: [ObjectIdentifier: NSManagedObjectModel] = [:]
+final class ManagedObjectModelCache {
+    static let shared = ManagedObjectModelCache()
 
-    static func bindModel(for schema: any VersionedSchema.Type) -> NSManagedObjectModel {
+    private var models: [ObjectIdentifier: NSManagedObjectModel] = [:]
+
+    func bindModel(for schema: any VersionedSchema.Type) -> NSManagedObjectModel {
         let key = ObjectIdentifier(schema)
         if let model = models[key] {
             return model
