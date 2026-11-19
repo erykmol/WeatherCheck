@@ -5,6 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "CitySearch",
+    defaultLocalization: "pl",
     platforms: [.iOS(.v17)],
     products: [
         .library(
@@ -23,6 +24,7 @@ let package = Package(
                 .product(name: "Networking", package: "Networking"),
                 .product(name: "Persistence", package: "Persistence"),
             ],
+            resources: [.process("Resources")],
             swiftSettings: [
                 .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
                 .enableUpcomingFeature("InferIsolatedConformances"),

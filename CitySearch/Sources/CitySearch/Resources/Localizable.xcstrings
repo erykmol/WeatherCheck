@@ -1,0 +1,248 @@
+{
+  "sourceLanguage" : "pl",
+  "strings" : {
+    "clear_history_dialog_button" : {
+      "comment" : "Destructive button in the clear-history dialog.",
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wyczyść historię"
+          }
+        }
+      }
+    },
+    "clear_history_dialog_title" : {
+      "comment" : "Title of the dialog confirming that recent searches will be cleared.",
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wyczyścić historię wyszukiwania?"
+          }
+        }
+      }
+    },
+    "empty_history_message" : {
+      "comment" : "Description of the empty state shown before the first search.",
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wpisz nazwę miasta, aby zobaczyć aktualną pogodę i prognozę na 24 godziny. Ostatnio wyszukiwane miasta pojawią się tutaj."
+          }
+        }
+      }
+    },
+    "empty_history_title" : {
+      "comment" : "Title of the empty state shown before the first search.",
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wyszukaj miasto"
+          }
+        }
+      }
+    },
+    "error_details %@" : {
+      "comment" : "Error details from the API. The argument is the API's reason, in English.",
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Szczegóły: %@"
+          }
+        }
+      }
+    },
+    "history_clear_button" : {
+      "comment" : "Button in the recent searches header that clears them all.",
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wyczyść"
+          }
+        }
+      }
+    },
+    "history_remove_button" : {
+      "comment" : "Swipe action removing one city from recent searches.",
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usuń"
+          }
+        }
+      }
+    },
+    "history_section_title" : {
+      "comment" : "Header of the recent searches section.",
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ostatnio wyszukiwane"
+          }
+        }
+      }
+    },
+    "invalid_name_error_message" : {
+      "comment" : "Explains which characters a city name may contain.",
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nazwa może zawierać tylko litery, spacje i myślniki, np. „Bielsko-Biała”."
+          }
+        }
+      }
+    },
+    "invalid_name_error_title" : {
+      "comment" : "Title shown when the typed name has characters a city name can't have.",
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nieprawidłowa nazwa miasta"
+          }
+        }
+      }
+    },
+    "name_too_long_error_message" : {
+      "comment" : "Description shown when the typed name is longer than any city name.",
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nazwa może mieć najwyżej 100 znaków."
+          }
+        }
+      }
+    },
+    "no_internet_error_message" : {
+      "comment" : "Description in the offline banner.",
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wyszukiwanie wróci po odzyskaniu połączenia. Historia jest dostępna offline."
+          }
+        }
+      }
+    },
+    "no_internet_error_title" : {
+      "comment" : "Title of the offline banner.",
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Brak połączenia z internetem"
+          }
+        }
+      }
+    },
+    "no_results_message" : {
+      "comment" : "Description shown when no city matches.",
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sprawdź pisownię lub wpisz inną nazwę miasta."
+          }
+        }
+      }
+    },
+    "no_results_title %@" : {
+      "comment" : "Title shown when no city matches. The argument is the typed name.",
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Brak wyników dla „%@”"
+          }
+        }
+      }
+    },
+    "results_section_title" : {
+      "comment" : "Header of the search results section.",
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Miasta"
+          }
+        }
+      }
+    },
+    "retry_button" : {
+      "comment" : "Button retrying a failed search.",
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spróbuj ponownie"
+          }
+        }
+      }
+    },
+    "search_error_message" : {
+      "comment" : "Shown under the search error title.",
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spróbuj ponownie za chwilę."
+          }
+        }
+      }
+    },
+    "search_error_title" : {
+      "comment" : "Title shown when the search API returns an error.",
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nie udało się wyszukać miast"
+          }
+        }
+      }
+    },
+    "search_prompt" : {
+      "comment" : "Placeholder of the search field.",
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Szukaj miasta"
+          }
+        }
+      }
+    },
+    "search_title" : {
+      "comment" : "Title of the city search screen.",
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pogoda"
+          }
+        }
+      }
+    },
+    "searching_title" : {
+      "comment" : "Shown while a search is in progress.",
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Szukam…"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}
