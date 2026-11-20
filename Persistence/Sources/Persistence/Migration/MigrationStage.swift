@@ -9,23 +9,23 @@ import Foundation
 import CoreData
 
 public enum MigrationStage {
-    case lightweight(from: VersionedSchemaProtocol.Type, to: VersionedSchemaProtocol.Type)
+    case lightweight(from: any VersionedSchemaProtocol.Type, to: any VersionedSchemaProtocol.Type)
     case custom(
-        from: VersionedSchemaProtocol.Type,
-        to: VersionedSchemaProtocol.Type,
+        from: any VersionedSchemaProtocol.Type,
+        to: any VersionedSchemaProtocol.Type,
         policies: [String: NSEntityMigrationPolicy.Type]
     )
 }
 
 extension MigrationStage {
-    var source: VersionedSchemaProtocol.Type {
+    var source: any VersionedSchemaProtocol.Type {
         switch self {
         case .lightweight(let source, _), .custom(let source, _, _):
             source
         }
     }
 
-    var destination: VersionedSchemaProtocol.Type {
+    var destination: any VersionedSchemaProtocol.Type {
         switch self {
         case .lightweight(_, let destination), .custom(_, let destination, _):
             destination

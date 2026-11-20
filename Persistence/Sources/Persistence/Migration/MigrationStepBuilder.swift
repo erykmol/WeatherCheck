@@ -10,15 +10,15 @@ import CoreData
 
 @MainActor
 struct MigrationStepBuilder {
-    private let plan: MigrationPlanProtocol.Type
-    private let currentSchema: VersionedSchemaProtocol.Type
+    private let plan: any MigrationPlanProtocol.Type
+    private let currentSchema: any VersionedSchemaProtocol.Type
     private let modelCache: ManagedObjectModelCache
 
     var currentModel: NSManagedObjectModel {
         modelCache.bindModel(for: currentSchema)
     }
 
-    init(plan: MigrationPlanProtocol.Type, modelCache: ManagedObjectModelCache) throws(MigrationError) {
+    init(plan: any MigrationPlanProtocol.Type, modelCache: ManagedObjectModelCache) throws(MigrationError) {
         guard let currentSchema = plan.schemas.last else {
             throw .invalidPlan(reason: "The plan has no schemas")
         }
@@ -39,7 +39,7 @@ struct MigrationStepBuilder {
         return steps
     }
 
-    private static func validate(_ plan: MigrationPlanProtocol.Type) throws(MigrationError) {
+    private static func validate(_ plan: any MigrationPlanProtocol.Type) throws(MigrationError) {
         let schemas = plan.schemas
         let stages = plan.stages
         guard stages.count == schemas.count - 1 else {
@@ -60,7 +60,7 @@ struct MigrationStepBuilder {
         try validateChecksums(of: schemas)
     }
 
-    private static func validateChecksums(of schemas: [VersionedSchemaProtocol.Type]) throws(MigrationError) {
+    private static func validateChecksums(of schemas: [any VersionedSchemaProtocol.Type]) throws(MigrationError) {
         let changes = schemas.compactMap { (schema: any VersionedSchemaProtocol.Type) -> String? in
             let checksum = unboundModel(for: schema).versionChecksum
             guard checksum != schema.versionChecksum else {
@@ -75,7 +75,7 @@ struct MigrationStepBuilder {
         }
     }
 
-    private static func unboundModel(for schema: VersionedSchemaProtocol.Type) -> NSManagedObjectModel {
+    private static func unboundModel(for schema: any VersionedSchemaProtocol.Type) -> NSManagedObjectModel {
         let model = NSManagedObjectModel(schema: schema, bindingClasses: false)
         model.makeImmutable()
         return model

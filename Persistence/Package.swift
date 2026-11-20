@@ -18,6 +18,7 @@ let package = Package(
             swiftSettings: [
                 .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
                 .enableUpcomingFeature("InferIsolatedConformances"),
+                .enableUpcomingFeature("ExistentialAny"),
             ],
         ),
         .testTarget(
@@ -26,6 +27,7 @@ let package = Package(
             swiftSettings: [
                 .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
                 .enableUpcomingFeature("InferIsolatedConformances"),
+                .enableUpcomingFeature("ExistentialAny"),
             ],
         ),
     ]
