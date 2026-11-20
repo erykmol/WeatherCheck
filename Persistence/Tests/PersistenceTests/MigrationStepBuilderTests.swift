@@ -9,95 +9,115 @@ import Foundation
 import Testing
 import CoreData
 @testable import Persistence
+import PersistenceTestFixtures
 
 @MainActor
 struct MigrationStepBuilderTests {
+    private func makeSUT(
+        plan: any MigrationPlanProtocol.Type,
+        validator: FakeMigrationPlanValidator = FakeMigrationPlanValidator(),
+        modelBuilder: FakeManagedObjectModelBuilder = FakeManagedObjectModelBuilder(),
+        mappingModelBuilder: FakeMappingModelBuilder = FakeMappingModelBuilder(),
+        modelCache: FakeManagedObjectModelCache = FakeManagedObjectModelCache(model: NSManagedObjectModel())
+    ) throws(MigrationError) -> MigrationStepBuilder {
+        try MigrationStepBuilder(
+            plan: plan,
+            validator: validator,
+            modelBuilder: modelBuilder,
+            mappingModelBuilder: mappingModelBuilder,
+            modelCache: modelCache
+        )
+    }
+
     @Test func buildsAStepBetweenEveryPairOfSchemas() throws {
-        let sut = try MigrationStepBuilder(plan: TestMigrationPlan.self, modelCache: ManagedObjectModelCache())
+        let sut = try makeSUT(plan: TestMigrationPlan.self)
 
         let steps = try sut.steps()
 
-        let hashes = TestPlanParts.schemas.map { managedObjectModel(for: $0).entityVersionHashesByName }
-        #expect(steps.map(\.sourceModel.entityVersionHashesByName) == Array(hashes.dropLast()))
-        #expect(steps.map(\.destinationModel.entityVersionHashesByName) == Array(hashes.dropFirst()))
+        let versions = TestPlanParts.schemas.map { Set<AnyHashable>([$0.versionIdentifier]) }
+        #expect(steps.map(\.sourceModel.versionIdentifiers) == Array(versions.dropLast()))
+        #expect(steps.map(\.destinationModel.versionIdentifiers) == Array(versions.dropFirst()))
     }
 
-    @Test func copiesEntitiesWithoutAPolicyInACustomStage() throws {
-        let current = managedObjectModel(for: TestSchemaV5.self)
-        let source = managedObjectModel(for: TestSchemaV3.self)
-        let store = try TestStore()
-        try store.seed(source, with: [["title": "Apples", "amount": "2.5"]])
-        try store.seed(source, entity: TestEntity.tag, with: [["name": "Fruit"]])
-        let sut = try MigrationStepBuilder(plan: TestMigrationPlan.self, modelCache: ManagedObjectModelCache())
+    @Test func buildsTheStepsFromModelsWithoutBoundClasses() throws {
+        let modelBuilder = FakeManagedObjectModelBuilder()
+        let sut = try makeSUT(plan: TestMigrationPlan.self, modelBuilder: modelBuilder)
 
-        let steps = try sut.steps()
+        _ = try sut.steps()
 
-        try ProgressiveMigrator().migrateStoreIfNeeded(at: store.url, to: current) { steps }
-        #expect(try store.tagNames(current) == ["Fruit"])
+        #expect(!modelBuilder.requests.isEmpty)
+        #expect(modelBuilder.requests.allSatisfy { !$0.bindingClasses })
     }
 
-    @Test func copiesRelationshipsInACustomStage() throws {
-        let current = managedObjectModel(for: RelationTestSchemaV2.self)
-        let store = try TestStore()
-        try store.seedOwner(named: "Ala", withPetNamed: "Burek", in: managedObjectModel(for: RelationTestSchemaV1.self))
-        let sut = try MigrationStepBuilder(plan: RelationTestMigrationPlan.self, modelCache: ManagedObjectModelCache())
+    @Test func buildsTheMappingOfEachStepFromItsModels() throws {
+        let mappingModelBuilder = FakeMappingModelBuilder()
+        let sut = try makeSUT(plan: TestMigrationPlan.self, mappingModelBuilder: mappingModelBuilder)
 
         let steps = try sut.steps()
 
-        try ProgressiveMigrator().migrateStoreIfNeeded(at: store.url, to: current) { steps }
-        #expect(try store.petOwnerNames(current) == ["Ala"])
+        let requests = mappingModelBuilder.requests
+        #expect(requests.count == steps.count)
+        for (step, request) in zip(steps, requests) {
+            #expect(step.mappingModel === request.mapping)
+            #expect(step.sourceModel === request.source)
+            #expect(step.destinationModel === request.destination)
+        }
     }
 
     @Test func takesTheCurrentModelFromTheCache() throws {
-        let cache = ManagedObjectModelCache()
-        let sut = try MigrationStepBuilder(plan: BoundTestMigrationPlan.self, modelCache: cache)
+        let model = NSManagedObjectModel()
+        let cache = FakeManagedObjectModelCache(model: model)
+        let sut = try makeSUT(plan: TestMigrationPlan.self, modelCache: cache)
 
-        let model = sut.currentModel
+        let currentModel = sut.currentModel
 
-        #expect(model === cache.bindModel(for: BoundTestSchema.self))
+        #expect(currentModel === model)
+        #expect(cache.requestedSchemas == [ObjectIdentifier(TestSchemaV5.self)])
     }
 
     @Test func rejectsAPlanWithoutSchemas() {
+        let validator = FakeMigrationPlanValidator()
+
         let error = #expect(throws: MigrationError.self) {
-            _ = try MigrationStepBuilder(plan: EmptyTestMigrationPlan.self, modelCache: ManagedObjectModelCache())
+            _ = try makeSUT(plan: EmptyTestMigrationPlan.self, validator: validator)
         }
 
-        #expect(isInvalidPlan(error))
+        #expect(reason(of: error) == "The plan has no schemas")
+        #expect(validator.validatedPlans.isEmpty)
     }
 
-    @Test func rejectsAPlanWithAMissingStage() {
+    @Test func passesTheValidatorsRejectionOn() {
+        let validator = FakeMigrationPlanValidator(error: .invalidPlan(reason: "Stage 0 doesn't go from schema 0 to schema 1"))
+
         let error = #expect(throws: MigrationError.self) {
-            _ = try MigrationStepBuilder(plan: MissingStageTestMigrationPlan.self, modelCache: ManagedObjectModelCache())
+            _ = try makeSUT(plan: TestMigrationPlan.self, validator: validator)
         }
 
-        #expect(isInvalidPlan(error))
+        #expect(reason(of: error) == "Stage 0 doesn't go from schema 0 to schema 1")
+        #expect(validator.validatedPlans == [ObjectIdentifier(TestMigrationPlan.self)])
     }
 
-    @Test func rejectsStagesThatDoNotFollowTheSchemaOrder() {
+    @Test func passesAMappingErrorOn() throws {
+        let mappingModelBuilder = FakeMappingModelBuilder(error: .noInferredMapping(from: "1", to: "2", underlying: TestFailure()))
+        let sut = try makeSUT(plan: TestMigrationPlan.self, mappingModelBuilder: mappingModelBuilder)
+
         let error = #expect(throws: MigrationError.self) {
-            _ = try MigrationStepBuilder(plan: MisorderedTestMigrationPlan.self, modelCache: ManagedObjectModelCache())
+            _ = try sut.steps()
         }
 
-        #expect(isInvalidPlan(error))
+        let isNoInferredMapping = switch error {
+        case .noInferredMapping?: true
+        default: false
+        }
+        #expect(isNoInferredMapping)
     }
 
-    @Test func rejectsAChangedSchemaAndNamesItsActualChecksum() {
-        let error = #expect(throws: MigrationError.self) {
-            _ = try MigrationStepBuilder(plan: ChangedSchemaTestMigrationPlan.self, modelCache: ManagedObjectModelCache())
-        }
-
-        let reason: String? = switch error {
+    private func reason(of error: MigrationError?) -> String? {
+        switch error {
         case .invalidPlan(let reason)?: reason
         default: nil
         }
-        let checksum = managedObjectModel(for: ChangedTestSchema.self).versionChecksum
-        #expect(reason?.contains(checksum) == true)
-    }
-
-    private func isInvalidPlan(_ error: MigrationError?) -> Bool {
-        switch error {
-        case .invalidPlan?: true
-        default: false
-        }
     }
 }
+
+private struct TestFailure: Error {}

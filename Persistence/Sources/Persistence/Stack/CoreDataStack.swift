@@ -23,9 +23,16 @@ public final class CoreDataStack {
     private let container: NSPersistentContainer
 
     public convenience init(plan: any MigrationPlanProtocol.Type, storage: Storage) throws {
+        let modelBuilder = ManagedObjectModelBuilder()
         try self.init(
             name: String(describing: plan),
-            stepBuilder: MigrationStepBuilder(plan: plan, modelCache: .shared),
+            stepBuilder: MigrationStepBuilder(
+                plan: plan,
+                validator: MigrationPlanValidator(modelBuilder: modelBuilder),
+                modelBuilder: modelBuilder,
+                mappingModelBuilder: MappingModelBuilder(),
+                modelCache: ManagedObjectModelCache.shared
+            ),
             migrator: ProgressiveMigrator(),
             storage: storage
         )
