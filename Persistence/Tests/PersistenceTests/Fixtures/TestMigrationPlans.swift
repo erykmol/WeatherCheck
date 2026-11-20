@@ -10,7 +10,7 @@ import CoreData
 import Persistence
 
 enum TestPlanParts {
-    static var schemas: [any VersionedSchema.Type] {
+    static var schemas: [any VersionedSchemaProtocol.Type] {
         [TestSchemaV1.self, TestSchemaV2.self, TestSchemaV3.self, TestSchemaV4.self, TestSchemaV5.self]
     }
 
@@ -24,8 +24,8 @@ enum TestPlanParts {
     }
 }
 
-enum TestMigrationPlan: MigrationPlan {
-    static var schemas: [any VersionedSchema.Type] {
+enum TestMigrationPlan: MigrationPlanProtocol {
+    static var schemas: [any VersionedSchemaProtocol.Type] {
         TestPlanParts.schemas
     }
 
@@ -34,8 +34,8 @@ enum TestMigrationPlan: MigrationPlan {
     }
 }
 
-enum FailingTestMigrationPlan: MigrationPlan {
-    static var schemas: [any VersionedSchema.Type] {
+enum FailingTestMigrationPlan: MigrationPlanProtocol {
+    static var schemas: [any VersionedSchemaProtocol.Type] {
         TestPlanParts.schemas
     }
 
@@ -44,8 +44,8 @@ enum FailingTestMigrationPlan: MigrationPlan {
     }
 }
 
-enum EmptyTestMigrationPlan: MigrationPlan {
-    static var schemas: [any VersionedSchema.Type] {
+enum EmptyTestMigrationPlan: MigrationPlanProtocol {
+    static var schemas: [any VersionedSchemaProtocol.Type] {
         []
     }
 
@@ -54,8 +54,8 @@ enum EmptyTestMigrationPlan: MigrationPlan {
     }
 }
 
-enum MissingStageTestMigrationPlan: MigrationPlan {
-    static var schemas: [any VersionedSchema.Type] {
+enum MissingStageTestMigrationPlan: MigrationPlanProtocol {
+    static var schemas: [any VersionedSchemaProtocol.Type] {
         [TestSchemaV1.self, TestSchemaV2.self]
     }
 
@@ -64,8 +64,8 @@ enum MissingStageTestMigrationPlan: MigrationPlan {
     }
 }
 
-enum MisorderedTestMigrationPlan: MigrationPlan {
-    static var schemas: [any VersionedSchema.Type] {
+enum MisorderedTestMigrationPlan: MigrationPlanProtocol {
+    static var schemas: [any VersionedSchemaProtocol.Type] {
         [TestSchemaV1.self, TestSchemaV2.self]
     }
 
@@ -74,8 +74,8 @@ enum MisorderedTestMigrationPlan: MigrationPlan {
     }
 }
 
-enum BoundTestMigrationPlan: MigrationPlan {
-    static var schemas: [any VersionedSchema.Type] {
+enum BoundTestMigrationPlan: MigrationPlanProtocol {
+    static var schemas: [any VersionedSchemaProtocol.Type] {
         [BoundTestSchema.self]
     }
 
@@ -84,8 +84,8 @@ enum BoundTestMigrationPlan: MigrationPlan {
     }
 }
 
-enum ChangedSchemaTestMigrationPlan: MigrationPlan {
-    static var schemas: [any VersionedSchema.Type] {
+enum ChangedSchemaTestMigrationPlan: MigrationPlanProtocol {
+    static var schemas: [any VersionedSchemaProtocol.Type] {
         [ChangedTestSchema.self]
     }
 

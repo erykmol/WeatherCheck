@@ -10,7 +10,7 @@ import Foundation
 import Networking
 
 @MainActor
-final class PreviewHistoryStore: SearchHistoryStoring {
+final class PreviewHistoryStore: SearchHistoryStoreProtocol {
     private var cities: [City]
 
     init(cities: [City] = []) {

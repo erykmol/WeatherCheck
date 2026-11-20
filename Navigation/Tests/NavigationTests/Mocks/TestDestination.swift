@@ -8,7 +8,7 @@
 import Foundation
 import Navigation
 
-enum TestDestination: NavigationDestination {
+enum TestDestination: NavigationDestinationProtocol {
     case first, second
     case modal
     case fullScreen

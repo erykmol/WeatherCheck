@@ -9,7 +9,7 @@ import Foundation
 import CoreData
 import Persistence
 
-enum SearchHistorySchemaV1: VersionedSchema {
+enum SearchHistorySchemaV1: VersionedSchemaProtocol {
     static let versionIdentifier = "1"
     static let versionChecksum = "z4r/Axk+X+gqP1Mqhpd1rgS+GAuTt69QSLRZwUsJjtY="
 

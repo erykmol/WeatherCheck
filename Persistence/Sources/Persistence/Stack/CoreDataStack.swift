@@ -22,7 +22,7 @@ public final class CoreDataStack {
     public let viewContext: NSManagedObjectContext
     private let container: NSPersistentContainer
 
-    public convenience init(plan: MigrationPlan.Type, storage: Storage) throws {
+    public convenience init(plan: any MigrationPlanProtocol.Type, storage: Storage) throws {
         try self.init(
             name: String(describing: plan),
             stepBuilder: MigrationStepBuilder(plan: plan, modelCache: .shared),

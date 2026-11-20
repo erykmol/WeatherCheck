@@ -8,7 +8,7 @@
 import Foundation
 
 @MainActor
-public final class SearchHistoryStore: SearchHistoryStoring {
+public final class SearchHistoryStore: SearchHistoryStoreProtocol {
     private let records: any SearchHistoryRecordsProtocol
     private let retention: SearchHistoryRetention
     private let now: () -> Date

@@ -7,20 +7,15 @@
 
 import Foundation
 
-public protocol NetworkingManagerProtocol: Sendable {
-    @discardableResult
-    func send(_ endpoint: Endpoint) async throws(NetworkError) -> Data
-}
-
 public struct NetworkingManager: NetworkingManagerProtocol {
     private let builder: RequestBuilder
-    private let session: URLSessionProtocol
+    private let session: any URLSessionProtocol
     
     private let errorMessage: @Sendable (Data) -> String?
 
     public init(
         builder: RequestBuilder,
-        session: URLSessionProtocol = URLSession.shared,
+        session: any URLSessionProtocol = URLSession.shared,
         errorMessage: @escaping @Sendable (Data) -> String? = { _ in nil }
     ) {
         self.builder = builder

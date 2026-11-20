@@ -9,7 +9,7 @@ import Foundation
 @testable import CitySearch
 
 @MainActor
-final class FakeHistoryStore: SearchHistoryStoring {
+final class FakeHistoryStore: SearchHistoryStoreProtocol {
     private var cities: [City]
 
     init(cities: [City] = []) {

@@ -9,9 +9,9 @@ import Foundation
 
 public enum MigrationError: Error {
     case invalidPlan(reason: String)
-    case noInferredMapping(from: String, to: String, underlying: Error)
-    case unreadableStore(underlying: Error)
+    case noInferredMapping(from: String, to: String, underlying: any Error)
+    case unreadableStore(underlying: any Error)
     case unknownStoreVersion
-    case stepFailed(step: Int, underlying: Error)
+    case stepFailed(step: Int, underlying: any Error)
     case incompleteMigration
 }

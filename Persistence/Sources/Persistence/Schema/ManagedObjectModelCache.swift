@@ -14,7 +14,7 @@ final class ManagedObjectModelCache {
 
     private var models: [ObjectIdentifier: NSManagedObjectModel] = [:]
 
-    func bindModel(for schema: any VersionedSchema.Type) -> NSManagedObjectModel {
+    func bindModel(for schema: any VersionedSchemaProtocol.Type) -> NSManagedObjectModel {
         let key = ObjectIdentifier(schema)
         if let model = models[key] {
             return model

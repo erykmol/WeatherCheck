@@ -43,7 +43,7 @@ enum RelationTestEntity {
     }
 }
 
-enum RelationTestSchemaV1: VersionedSchema {
+enum RelationTestSchemaV1: VersionedSchemaProtocol {
     static let versionIdentifier = "relation-1"
     static let versionChecksum = "B0DbNyr4/U7/zQ69ySsQx1CHLbSfatd4G5o1cVtWlR0="
 
@@ -52,7 +52,7 @@ enum RelationTestSchemaV1: VersionedSchema {
     }
 }
 
-enum RelationTestSchemaV2: VersionedSchema {
+enum RelationTestSchemaV2: VersionedSchemaProtocol {
     static let versionIdentifier = "relation-2"
     static let versionChecksum = "yuLf/HDXkvIuu3V3GAvrDp/s4Roczrd0pKmpKrmqHMI="
 
@@ -61,8 +61,8 @@ enum RelationTestSchemaV2: VersionedSchema {
     }
 }
 
-enum RelationTestMigrationPlan: MigrationPlan {
-    static var schemas: [any VersionedSchema.Type] {
+enum RelationTestMigrationPlan: MigrationPlanProtocol {
+    static var schemas: [any VersionedSchemaProtocol.Type] {
         [RelationTestSchemaV1.self, RelationTestSchemaV2.self]
     }
 

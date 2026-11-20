@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-public struct NavigationContainer<Destination: NavigationDestination, Root: View, Screen: View>: View {
+public struct NavigationContainer<Destination: NavigationDestinationProtocol, Root: View, Screen: View>: View {
     @Bindable private var store: NavigationStore<Destination>
     private let root: Root
     private let screen: (Destination) -> Screen

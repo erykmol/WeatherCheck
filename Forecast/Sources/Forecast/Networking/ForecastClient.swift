@@ -8,10 +8,6 @@
 import Foundation
 import Networking
 
-protocol ForecastClientProtocol: Sendable {
-    func forecast(latitude: Double, longitude: Double) async throws(ForecastError) -> WeatherForecast
-}
-
 struct ForecastClient: ForecastClientProtocol {
     private let networkManager: any NetworkingManagerProtocol
     private let api: any ForecastAPIProtocol

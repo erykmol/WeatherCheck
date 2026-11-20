@@ -8,10 +8,6 @@
 import Foundation
 import Networking
 
-protocol GeocodingClientProtocol: Sendable {
-    func searchCities(named name: String) async throws(SearchError) -> [City]
-}
-
 struct GeocodingClient: GeocodingClientProtocol {
     private let networkManager: any NetworkingManagerProtocol
     private let decoder: any ResponseDecoderProtocol

@@ -45,7 +45,7 @@ final class CitySearchViewModel {
     private let geocoding: any GeocodingClientProtocol
     private let validator: any CityNameValidatorProtocol
     private let networkMonitor: any NetworkMonitorProtocol
-    private let historyStore: any SearchHistoryStoring
+    private let historyStore: any SearchHistoryStoreProtocol
     private let debounce: Duration
     private let onCitySelected: (City) -> Void
 
@@ -53,7 +53,7 @@ final class CitySearchViewModel {
         geocoding: any GeocodingClientProtocol,
         validator: any CityNameValidatorProtocol,
         networkMonitor: any NetworkMonitorProtocol,
-        history: any SearchHistoryStoring,
+        history: any SearchHistoryStoreProtocol,
         debounce: Duration = Constants.debounce,
         onCitySelected: @escaping (City) -> Void
     ) {
