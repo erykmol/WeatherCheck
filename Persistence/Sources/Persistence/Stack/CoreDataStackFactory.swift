@@ -8,7 +8,7 @@
 import Foundation
 
 @MainActor
-public struct CoreDataStackFactory {
+public struct CoreDataStackFactory: CoreDataStackFactoryProtocol {
     private let plan: MigrationPlan.Type
 
     public init(plan: MigrationPlan.Type) {
