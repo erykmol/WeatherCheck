@@ -35,7 +35,7 @@ struct ProgressiveMigrator {
         }
     }
 
-    static func temporaryStoreURL(for storeURL: URL) -> URL {
+    private static func temporaryStoreURL(for storeURL: URL) -> URL {
         storeURL
             .deletingLastPathComponent()
             .appending(path: Constants.temporaryStorePrefix + storeURL.lastPathComponent)
