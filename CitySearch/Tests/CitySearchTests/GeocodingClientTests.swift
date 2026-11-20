@@ -13,11 +13,14 @@ import NetworkingTestHelpers
 
 struct GeocodingClientTests {
     private func makeSUT(session: StubURLSession) -> GeocodingClient {
-        GeocodingClient(networkManager: NetworkingManager(
-            builder: RequestBuilder(baseURL: GeocodingAPI.baseURL),
-            session: session,
-            errorMessage: OpenMeteoErrorDecoder().reason(from:)
-        ))
+        GeocodingClient(
+            networkManager: NetworkingManager(
+                builder: RequestBuilder(baseURL: GeocodingAPI.baseURL),
+                session: session,
+                errorMessage: OpenMeteoErrorDecoder().reason(from:)
+            ),
+            decoder: ResponseDecoder()
+        )
     }
 
     @Test func mapsResultsToCities() async throws {
