@@ -9,7 +9,7 @@ import Foundation
 import CitySearch
 import Navigation
 
-nonisolated enum Destination: NavigationDestination {
+nonisolated enum Destination: NavigationDestinationProtocol {
     case forecast(City)
 
     var presentation: NavigationPresentation {

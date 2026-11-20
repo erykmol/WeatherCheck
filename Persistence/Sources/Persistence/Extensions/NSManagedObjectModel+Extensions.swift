@@ -9,7 +9,7 @@ import Foundation
 import CoreData
 
 extension NSManagedObjectModel {
-    convenience init(schema: any VersionedSchema.Type, bindingClasses: Bool) {
+    convenience init(schema: any VersionedSchemaProtocol.Type, bindingClasses: Bool) {
         self.init()
         let entities = schema.makeEntities()
         if !bindingClasses {

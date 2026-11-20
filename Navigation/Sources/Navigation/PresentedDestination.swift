@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct PresentedDestination<Destination: NavigationDestination>: Identifiable {
+struct PresentedDestination<Destination: NavigationDestinationProtocol>: Identifiable {
     let destination: Destination
 
     var id: Destination {

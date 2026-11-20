@@ -18,7 +18,7 @@ enum TestEntity {
     }
 }
 
-enum TestSchemaV1: VersionedSchema {
+enum TestSchemaV1: VersionedSchemaProtocol {
     static let versionIdentifier = "1"
     static let versionChecksum = "cfkzmq0oQ8uTLgESWTYYEN/YwuAshcZ3hcPJLDTTm7w="
 
@@ -33,7 +33,7 @@ enum TestSchemaV1: VersionedSchema {
     }
 }
 
-enum TestSchemaV2: VersionedSchema {
+enum TestSchemaV2: VersionedSchemaProtocol {
     static let versionIdentifier = "2"
     static let versionChecksum = "ZGSq/Ow9qY0NzT2JudAZ471nDPch6CxMJsOqLrLUSig="
 
@@ -49,7 +49,7 @@ enum TestSchemaV2: VersionedSchema {
     }
 }
 
-enum TestSchemaV3: VersionedSchema {
+enum TestSchemaV3: VersionedSchemaProtocol {
     static let versionIdentifier = "3"
     static let versionChecksum = "STvYgYJf66r+bAJ1jcByWQSyGE5kd9z73vps57KC80Q="
 
@@ -65,7 +65,7 @@ enum TestSchemaV3: VersionedSchema {
     }
 }
 
-enum TestSchemaV4: VersionedSchema {
+enum TestSchemaV4: VersionedSchemaProtocol {
     static let versionIdentifier = "4"
     static let versionChecksum = "zGniNm5F03hyqyTfUfpeqDALTN7rCLtENH7JLIGxKmI="
 
@@ -81,7 +81,7 @@ enum TestSchemaV4: VersionedSchema {
     }
 }
 
-enum TestSchemaV5: VersionedSchema {
+enum TestSchemaV5: VersionedSchemaProtocol {
     static let versionIdentifier = "5"
     static let versionChecksum = "RXPQQt82E2yLKu5kTwak+TIU0e23SnFh8z2LyViFyLc="
 
@@ -98,7 +98,7 @@ enum TestSchemaV5: VersionedSchema {
     }
 }
 
-enum ChangedTestSchema: VersionedSchema {
+enum ChangedTestSchema: VersionedSchemaProtocol {
     static let versionIdentifier = "changed"
     static let versionChecksum = "checksum-before-the-change"
 
@@ -118,7 +118,7 @@ func unrelatedManagedObjectModel() -> NSManagedObjectModel {
 @objc(BoundTestObject)
 final class BoundTestObject: NSManagedObject {}
 
-enum BoundTestSchema: VersionedSchema {
+enum BoundTestSchema: VersionedSchemaProtocol {
     static let versionIdentifier = "bound"
     static let versionChecksum = "GvHO5At3IquomIUtjxBm6pxd+r5XwEzNigdcm8fH0Gs="
 
@@ -134,7 +134,7 @@ enum BoundTestSchema: VersionedSchema {
     }
 }
 
-func managedObjectModel(for schema: VersionedSchema.Type) -> NSManagedObjectModel {
+func managedObjectModel(for schema: any VersionedSchemaProtocol.Type) -> NSManagedObjectModel {
     let model = NSManagedObjectModel(schema: schema, bindingClasses: false)
     model.makeImmutable()
     return model

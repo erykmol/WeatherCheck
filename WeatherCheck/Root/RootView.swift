@@ -14,9 +14,9 @@ import Forecast
 
 struct RootView: View {
     @State private var navigation = NavigationStore<Destination>()
-    private let history: any SearchHistoryStoring
+    private let history: any SearchHistoryStoreProtocol
 
-    init(history: any SearchHistoryStoring) {
+    init(history: any SearchHistoryStoreProtocol) {
         self.history = history
     }
 

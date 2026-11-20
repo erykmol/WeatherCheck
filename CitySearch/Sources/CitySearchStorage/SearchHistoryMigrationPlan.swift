@@ -8,8 +8,8 @@
 import Foundation
 import Persistence
 
-enum SearchHistoryMigrationPlan: MigrationPlan {
-    static var schemas: [any VersionedSchema.Type] {
+enum SearchHistoryMigrationPlan: MigrationPlanProtocol {
+    static var schemas: [any VersionedSchemaProtocol.Type] {
         [SearchHistorySchemaV1.self]
     }
 

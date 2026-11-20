@@ -1,5 +1,5 @@
 //
-//  SearchHistoryStoring.swift
+//  SearchHistoryStoreProtocol.swift
 //  CitySearch
 //
 //  Created by Eryk Mól on 18/11/2026.
@@ -8,7 +8,7 @@
 import Foundation
 
 @MainActor
-public protocol SearchHistoryStoring {
+public protocol SearchHistoryStoreProtocol {
     func load() throws -> [City]
 
     func record(_ city: City) throws

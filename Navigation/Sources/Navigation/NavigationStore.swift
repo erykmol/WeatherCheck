@@ -10,7 +10,7 @@ import Observation
 
 @MainActor
 @Observable
-public final class NavigationStore<Destination: NavigationDestination> {
+public final class NavigationStore<Destination: NavigationDestinationProtocol> {
 
     public var path: [Destination]
 

@@ -9,9 +9,9 @@ import Foundation
 
 @MainActor
 public struct CoreDataStackFactory: CoreDataStackFactoryProtocol {
-    private let plan: MigrationPlan.Type
+    private let plan: any MigrationPlanProtocol.Type
 
-    public init(plan: MigrationPlan.Type) {
+    public init(plan: any MigrationPlanProtocol.Type) {
         self.plan = plan
     }
 
