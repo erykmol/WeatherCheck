@@ -12,6 +12,10 @@ let package = Package(
             name: "CitySearch",
             targets: ["CitySearch"]
         ),
+        .library(
+            name: "CitySearchStorage",
+            targets: ["CitySearchStorage"]
+        ),
     ],
     dependencies: [
         .package(path: "../Networking"),
@@ -24,9 +28,19 @@ let package = Package(
             dependencies: [
                 .product(name: "Networking", package: "Networking"),
                 .product(name: "DesignSystem", package: "DesignSystem"),
-                .product(name: "Persistence", package: "Persistence"),
             ],
             resources: [.process("Resources")],
+            swiftSettings: [
+                .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
+                .enableUpcomingFeature("InferIsolatedConformances"),
+            ],
+        ),
+        .target(
+            name: "CitySearchStorage",
+            dependencies: [
+                "CitySearch",
+                .product(name: "Persistence", package: "Persistence"),
+            ],
             swiftSettings: [
                 .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
                 .enableUpcomingFeature("InferIsolatedConformances"),
@@ -37,6 +51,12 @@ let package = Package(
             dependencies: [
                 "CitySearch",
                 .product(name: "NetworkingTestHelpers", package: "Networking"),
+            ],
+            swiftSettings: [
+                .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
+                .enableUpcomingFeature("InferIsolatedConformances"),
+            ],
+        ),
                 .product(name: "Persistence", package: "Persistence"),
             ],
             swiftSettings: [

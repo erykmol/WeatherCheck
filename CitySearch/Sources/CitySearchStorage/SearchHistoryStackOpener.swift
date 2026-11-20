@@ -1,22 +1,24 @@
 //
 //  SearchHistoryStackOpener.swift
-//  CitySearch
+//  CitySearchStorage
 //
 //  Created by Eryk Mól on 19/11/2026.
 //
 
 import Foundation
+import OSLog
 import Persistence
+import CitySearch
 
 @MainActor
-struct SearchHistoryStackOpener {
-    private let factory: CoreDataStackFactory
+struct SearchHistoryStackOpener<Factory: CoreDataStackFactoryProtocol> {
+    private let factory: Factory
 
-    init(factory: CoreDataStackFactory) {
+    init(factory: Factory) {
         self.factory = factory
     }
 
-    func openStack(storage: CoreDataStack.Storage) throws -> CoreDataStack {
+    func openStack(storage: CoreDataStack.Storage) throws -> Factory.Stack {
         do {
             return try factory.makeStack(storage: storage)
         } catch {

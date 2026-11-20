@@ -1,12 +1,13 @@
 //
 //  CityEntity.swift
-//  CitySearch
+//  CitySearchStorage
 //
 //  Created by Eryk Mól on 18/11/2026.
 //
 
 import Foundation
 import CoreData
+import CitySearch
 
 final class CityEntity: NSManagedObject {
     static let entityName = "CityEntity"
@@ -30,12 +31,6 @@ final class CityEntity: NSManagedObject {
         NSFetchRequest<CityEntity>(entityName: entityName)
     }
 
-    static func fetchNewestFirst() -> NSFetchRequest<CityEntity> {
-        let request = fetchAll()
-        request.sortDescriptors = [NSSortDescriptor(keyPath: \CityEntity.lastSearchedAt, ascending: false)]
-        return request
-    }
-
     static func fetch(id: Int) -> NSFetchRequest<CityEntity> {
         let request = fetchAll()
         request.predicate = NSPredicate(format: "%K == %lld", #keyPath(CityEntity.cityID), Int64(id))
@@ -43,8 +38,10 @@ final class CityEntity: NSManagedObject {
         return request
     }
 
-    static func searched(since date: Date) -> NSPredicate {
-        NSPredicate(format: "%K >= %@", #keyPath(CityEntity.lastSearchedAt), date as NSDate)
+    static func fetch(ids: [Int]) -> NSFetchRequest<CityEntity> {
+        let request = fetchAll()
+        request.predicate = NSPredicate(format: "%K IN %@", #keyPath(CityEntity.cityID), ids.map { Int64($0) })
+        return request
     }
 
     func update(from city: City, searchedAt date: Date) {

@@ -1,6 +1,6 @@
 //
 //  SearchHistorySchemaV1.swift
-//  CitySearch
+//  CitySearchStorage
 //
 //  Created by Eryk Mól on 19/11/2026.
 //
