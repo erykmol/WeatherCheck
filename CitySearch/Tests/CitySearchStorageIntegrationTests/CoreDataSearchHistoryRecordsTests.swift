@@ -8,6 +8,7 @@
 import Foundation
 import Testing
 import Persistence
+import PersistenceTestHelpers
 import CitySearch
 @testable import CitySearchStorage
 
@@ -98,7 +99,10 @@ struct CoreDataSearchHistoryRecordsTests {
         defer { try? FileManager.default.removeItem(at: url.deletingLastPathComponent()) }
         try FileManager.default.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
         try Data("not a database".utf8).write(to: url)
-        let opener = SearchHistoryStackOpener(factory: CoreDataStackFactory(plan: SearchHistoryMigrationPlan.self))
+        let opener = SearchHistoryStackOpener(
+            factory: CoreDataStackFactory(plan: SearchHistoryMigrationPlan.self),
+            deleter: StoreFilesDeleter()
+        )
         let stack = try opener.openStack(storage: .file(url))
         defer { try? stack.close() }
         let sut = CoreDataSearchHistoryRecords(stack: stack)

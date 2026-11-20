@@ -55,14 +55,6 @@ public final class CoreDataStack {
         viewContext.mergePolicy = NSMergePolicy.mergeByPropertyObjectTrump
     }
 
-    public func close() throws {
-        viewContext.reset()
-        let coordinator = container.persistentStoreCoordinator
-        for store in coordinator.persistentStores {
-            try coordinator.remove(store)
-        }
-    }
-
     private static func prepareStore(
         for storage: Storage,
         model: NSManagedObjectModel,
@@ -97,4 +89,5 @@ public final class CoreDataStack {
 
 private enum Constants {
     static let inMemoryPath = "/dev/null"
+    static let storeFileExtension = ".sqlite"
 }

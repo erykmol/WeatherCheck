@@ -9,6 +9,8 @@ import Foundation
 import Testing
 import CoreData
 import Persistence
+import PersistenceTestHelpers
+import PersistenceTestFixtures
 
 @MainActor
 struct CoreDataStackTests {
@@ -58,6 +60,13 @@ struct CoreDataStackTests {
             false
         }
         #expect(isInvalidPlan)
+    }
+
+    private func fileURL(of storage: CoreDataStack.Storage) -> URL? {
+        switch storage {
+        case .file(let url): url
+        case .inMemory: nil
+        }
     }
 
     private func insertItem(titled title: String, into stack: CoreDataStack) throws {

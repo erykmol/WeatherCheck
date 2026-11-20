@@ -11,6 +11,10 @@ let package = Package(
             name: "Persistence",
             targets: ["Persistence"]
         ),
+        .library(
+            name: "PersistenceTestHelpers",
+            targets: ["PersistenceTestHelpers"]
+        ),
     ],
     targets: [
         .target(
@@ -21,9 +25,27 @@ let package = Package(
                 .enableUpcomingFeature("ExistentialAny"),
             ],
         ),
+        .target(
+            name: "PersistenceTestHelpers",
+            dependencies: ["Persistence"],
+            swiftSettings: [
+                .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
+                .enableUpcomingFeature("InferIsolatedConformances"),
+                .enableUpcomingFeature("ExistentialAny"),
+            ],
+        ),
+        .target(
+            name: "PersistenceTestFixtures",
+            dependencies: ["Persistence"],
+            swiftSettings: [
+                .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
+                .enableUpcomingFeature("InferIsolatedConformances"),
+                .enableUpcomingFeature("ExistentialAny"),
+            ],
+        ),
         .testTarget(
             name: "PersistenceTests",
-            dependencies: ["Persistence"],
+            dependencies: ["Persistence", "PersistenceTestFixtures"],
             swiftSettings: [
                 .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
                 .enableUpcomingFeature("InferIsolatedConformances"),

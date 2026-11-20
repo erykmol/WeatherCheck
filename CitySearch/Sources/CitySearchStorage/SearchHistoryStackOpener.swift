@@ -13,9 +13,11 @@ import CitySearch
 @MainActor
 struct SearchHistoryStackOpener<Factory: CoreDataStackFactoryProtocol> {
     private let factory: Factory
+    private let deleter: any StoreFilesDeleterProtocol
 
-    init(factory: Factory) {
+    init(factory: Factory, deleter: any StoreFilesDeleterProtocol) {
         self.factory = factory
+        self.deleter = deleter
     }
 
     func openStack(storage: CoreDataStack.Storage) throws -> Factory.Stack {
@@ -26,7 +28,7 @@ struct SearchHistoryStackOpener<Factory: CoreDataStackFactoryProtocol> {
             logger.error(
                 "Couldn't open the search history, starting a new one: \(String(describing: error), privacy: .public)"
             )
-            try factory.deleteStoreFiles(at: url)
+            try deleter.deleteStoreFiles(at: url)
             return try factory.makeStack(storage: storage)
         }
     }

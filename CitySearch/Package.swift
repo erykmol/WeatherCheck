@@ -78,6 +78,7 @@ let package = Package(
                 "CitySearch",
                 "CitySearchStorage",
                 .product(name: "Persistence", package: "Persistence"),
+                .product(name: "PersistenceTestHelpers", package: "Persistence"),
             ],
             swiftSettings: [
                 .enableUpcomingFeature("NonisolatedNonsendingByDefault"),

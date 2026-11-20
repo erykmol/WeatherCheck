@@ -11,7 +11,6 @@ import Persistence
 @MainActor
 final class FakeStackFactory: CoreDataStackFactoryProtocol {
     private var results: [Result<String, MigrationError>]
-    private(set) var deletedURLs: [URL] = []
 
     init(results: [Result<String, MigrationError>]) {
         self.results = results
@@ -19,9 +18,5 @@ final class FakeStackFactory: CoreDataStackFactoryProtocol {
 
     func makeStack(storage: CoreDataStack.Storage) throws -> String {
         try results.removeFirst().get()
-    }
-
-    func deleteStoreFiles(at url: URL) {
-        deletedURLs.append(url)
     }
 }
