@@ -57,6 +57,22 @@ let package = Package(
                 .enableUpcomingFeature("InferIsolatedConformances"),
             ],
         ),
+        .testTarget(
+            name: "CitySearchStorageTests",
+            dependencies: [
+                "CitySearchStorage",
+                .product(name: "Persistence", package: "Persistence"),
+            ],
+            swiftSettings: [
+                .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
+                .enableUpcomingFeature("InferIsolatedConformances"),
+            ],
+        ),
+        .testTarget(
+            name: "CitySearchStorageIntegrationTests",
+            dependencies: [
+                "CitySearch",
+                "CitySearchStorage",
                 .product(name: "Persistence", package: "Persistence"),
             ],
             swiftSettings: [
