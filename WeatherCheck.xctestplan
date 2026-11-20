@@ -73,6 +73,13 @@
         "identifier" : "CitySearchStorageIntegrationTests",
         "name" : "CitySearchStorageIntegrationTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:Forecast",
+        "identifier" : "ForecastTests",
+        "name" : "ForecastTests"
+      }
     }
   ],
   "version" : 1
