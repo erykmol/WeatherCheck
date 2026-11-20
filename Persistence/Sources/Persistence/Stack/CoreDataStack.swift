@@ -14,8 +14,8 @@ public final class CoreDataStack {
         case file(URL)
         case inMemory
 
-        public static func applicationSupport(fileName: String) -> Storage {
-            .file(.applicationSupportDirectory.appending(path: fileName))
+        public static func applicationSupport(for plan: any MigrationPlanProtocol.Type) -> Storage {
+            .file(.applicationSupportDirectory.appending(path: String(describing: plan) + Constants.storeFileExtension))
         }
     }
 

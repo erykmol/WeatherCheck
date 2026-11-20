@@ -32,7 +32,7 @@ struct WeatherCheckApp: App {
 
     private static func makeHistoryRecords() -> CoreDataSearchHistoryRecords {
         do {
-            return try CoreDataSearchHistoryRecords(storage: .applicationSupport(fileName: Constants.historyFileName))
+            return try CoreDataSearchHistoryRecords(storage: .searchHistory)
         } catch {
             logger.error("Couldn't open the search history, it won't be kept: \(String(describing: error), privacy: .public)")
         }
@@ -45,6 +45,5 @@ struct WeatherCheckApp: App {
 }
 
 private enum Constants {
-    static let historyFileName = "SearchHistory.sqlite"
     static let historyRetention = SearchHistoryRetention(maxCount: 10)
 }
