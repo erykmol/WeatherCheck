@@ -1,0 +1,358 @@
+{
+  "sourceLanguage" : "pl",
+  "strings" : {
+    "cloud_cover_full" : {
+      "comment" : "Cloud cover of 90% or more.",
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Całkowite zachmurzenie"
+          }
+        }
+      }
+    },
+    "cloud_cover_high" : {
+      "comment" : "Cloud cover from 50% to 89%.",
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Duże zachmurzenie"
+          }
+        }
+      }
+    },
+    "cloud_cover_low" : {
+      "comment" : "Cloud cover below 20%.",
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Małe zachmurzenie"
+          }
+        }
+      }
+    },
+    "cloud_cover_moderate" : {
+      "comment" : "Cloud cover from 20% to 49%.",
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Umiarkowane zachmurzenie"
+          }
+        }
+      }
+    },
+    "cloud_cover_tile_title" : {
+      "comment" : "Title of the cloud cover tile.",
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zachmurzenie"
+          }
+        }
+      }
+    },
+    "condition_clear" : {
+      "comment" : "Weather condition: clear sky (WMO 0).",
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bezchmurnie"
+          }
+        }
+      }
+    },
+    "condition_drizzle" : {
+      "comment" : "Weather condition: drizzle (WMO 51-57).",
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mżawka"
+          }
+        }
+      }
+    },
+    "condition_fog" : {
+      "comment" : "Weather condition: fog (WMO 45, 48).",
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mgła"
+          }
+        }
+      }
+    },
+    "condition_heavy_rain" : {
+      "comment" : "Weather condition: heavy rain (WMO 65, 67, 82).",
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ulewa"
+          }
+        }
+      }
+    },
+    "condition_mainly_clear" : {
+      "comment" : "Weather condition: mainly clear (WMO 1).",
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Przeważnie bezchmurnie"
+          }
+        }
+      }
+    },
+    "condition_overcast" : {
+      "comment" : "Weather condition: overcast (WMO 3).",
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pochmurno"
+          }
+        }
+      }
+    },
+    "condition_partly_cloudy" : {
+      "comment" : "Weather condition: partly cloudy (WMO 2).",
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Częściowe zachmurzenie"
+          }
+        }
+      }
+    },
+    "condition_rain" : {
+      "comment" : "Weather condition: rain (WMO 61, 63, 66, 80, 81).",
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deszcz"
+          }
+        }
+      }
+    },
+    "condition_snow" : {
+      "comment" : "Weather condition: snow (WMO 71-77, 85, 86).",
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Śnieg"
+          }
+        }
+      }
+    },
+    "condition_thunderstorm" : {
+      "comment" : "Weather condition: thunderstorm (WMO 95-99).",
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Burza"
+          }
+        }
+      }
+    },
+    "condition_unknown" : {
+      "comment" : "Weather condition the app doesn't recognise.",
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nieznane warunki"
+          }
+        }
+      }
+    },
+    "daily_forecast_title" : {
+      "comment" : "Header of the 7-day forecast card.",
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prognoza 7-dniowa"
+          }
+        }
+      }
+    },
+    "daily_forecast_today" : {
+      "comment" : "Label of today in the 7-day forecast.",
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dziś"
+          }
+        }
+      }
+    },
+    "error_details %@" : {
+      "comment" : "Error details from the API. The argument is the API's reason, in English.",
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Szczegóły: %@"
+          }
+        }
+      }
+    },
+    "forecast_error_message" : {
+      "comment" : "Description shown when the forecast API returns an error.",
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Serwer pogodowy zwrócił błąd. Spróbuj ponownie za chwilę."
+          }
+        }
+      }
+    },
+    "forecast_error_title" : {
+      "comment" : "Title shown when the forecast API returns an error.",
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nie udało się pobrać prognozy"
+          }
+        }
+      }
+    },
+    "forecast_updated_at %@" : {
+      "comment" : "When the forecast was fetched. The argument is a time, e.g. 14:32.",
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zaktualizowano o %@"
+          }
+        }
+      }
+    },
+    "hourly_forecast_now" : {
+      "comment" : "Label of the first hour in the hourly forecast.",
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Teraz"
+          }
+        }
+      }
+    },
+    "hourly_forecast_title" : {
+      "comment" : "Header of the hourly forecast card.",
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prognoza na 24 godziny"
+          }
+        }
+      }
+    },
+    "loading_accessibility_label" : {
+      "comment" : "Accessibility label of the forecast screen while it loads.",
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ładowanie prognozy"
+          }
+        }
+      }
+    },
+    "no_internet_error_message" : {
+      "comment" : "Description of the offline state.",
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sprawdź połączenie i spróbuj ponownie."
+          }
+        }
+      }
+    },
+    "no_internet_error_title" : {
+      "comment" : "Title of the offline state.",
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Brak połączenia z internetem"
+          }
+        }
+      }
+    },
+    "rain_chance_tile_caption" : {
+      "comment" : "Caption of the chance of rain tile: the value is for the current hour.",
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "W tej godzinie"
+          }
+        }
+      }
+    },
+    "rain_chance_tile_title" : {
+      "comment" : "Title of the chance of rain tile.",
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Szansa opadów"
+          }
+        }
+      }
+    },
+    "retry_button" : {
+      "comment" : "Button retrying the forecast request.",
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spróbuj ponownie"
+          }
+        }
+      }
+    },
+    "today_temperature_range %@ %@" : {
+      "comment" : "Today's high and low under the current temperature. Arguments are temperatures, e.g. 8°.",
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Maks. %@ · Min. %@"
+          }
+        }
+      }
+    },
+    "weather_data_attribution" : {
+      "comment" : "Data credit required by the Open-Meteo licence. Keep both links.",
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dane pogodowe: [Open-Meteo.com](https://open-meteo.com) ([CC BY 4.0](https://creativecommons.org/licenses/by/4.0/))"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

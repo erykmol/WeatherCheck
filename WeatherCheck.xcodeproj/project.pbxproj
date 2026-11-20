@@ -12,6 +12,7 @@
 		480600821343D0AF51D687CD /* Persistence in Frameworks */ = {isa = PBXBuildFile; productRef = 8C48AD6C8C6E465B094FEE59 /* Persistence */; };
 		5DD237EE30AFCFA800B0B6EC /* CitySearchStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 5DD237ED30AFCFA800B0B6EC /* CitySearchStorage */; };
 		78D95D98E0F1852C1378995B /* CitySearch in Frameworks */ = {isa = PBXBuildFile; productRef = 3FFC875420A740DE6484F7EF /* CitySearch */; };
+		B59DCF771D57F567BECAB61C /* Forecast in Frameworks */ = {isa = PBXBuildFile; productRef = F76824B80266081BA8D575C2 /* Forecast */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -37,6 +38,7 @@
 		5DD2353C30ADA9B800B0B6EC /* WeatherCheck.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WeatherCheck.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5DD2354B30ADA9B900B0B6EC /* WeatherCheckTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WeatherCheckTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5DD2355530ADA9B900B0B6EC /* WeatherCheckUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WeatherCheckUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		662E8191B1EFE64430413FE0 /* Forecast */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Forecast; sourceTree = SOURCE_ROOT; };
 		9C01A1896D0DA817AB13483E /* Networking */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Networking; sourceTree = SOURCE_ROOT; };
 		A341D8D331457EB220799957 /* CitySearch */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = CitySearch; sourceTree = SOURCE_ROOT; };
 		D8C175A7EFBC2EC4E3EBCF1A /* DesignSystem */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = DesignSystem; sourceTree = SOURCE_ROOT; };
@@ -66,6 +68,7 @@
 			files = (
 				78D95D98E0F1852C1378995B /* CitySearch in Frameworks */,
 				4432FD8F5C6412A712510E60 /* DesignSystem in Frameworks */,
+				B59DCF771D57F567BECAB61C /* Forecast in Frameworks */,
 				1B443D8D7A7F9A4413AB81F8 /* Navigation in Frameworks */,
 				480600821343D0AF51D687CD /* Persistence in Frameworks */,
 				5DD237EE30AFCFA800B0B6EC /* CitySearchStorage in Frameworks */,
@@ -106,6 +109,7 @@
 			children = (
 				A341D8D331457EB220799957 /* CitySearch */,
 				D8C175A7EFBC2EC4E3EBCF1A /* DesignSystem */,
+				662E8191B1EFE64430413FE0 /* Forecast */,
 				4869632C752236C5DEB7B971 /* Navigation */,
 				9C01A1896D0DA817AB13483E /* Networking */,
 				209FE7206EC5B6C0C8AD9472 /* Persistence */,
@@ -134,6 +138,7 @@
 				5DD237EC30AFCF9400B0B6EC /* PBXTargetDependency */,
 				D8B59B3D9DE8E084D4280847 /* PBXTargetDependency */,
 				4EEBBF7D70CEFACB595F4E21 /* PBXTargetDependency */,
+				421189C27B1EFC8E0F59467F /* PBXTargetDependency */,
 				82FB7215857FD3400D0F9295 /* PBXTargetDependency */,
 				77B08C18D370D361DCF53C00 /* PBXTargetDependency */,
 			);
@@ -142,6 +147,7 @@
 			);
 			name = WeatherCheck;
 			packageProductDependencies = (
+				F76824B80266081BA8D575C2 /* Forecast */,
 				89B46764BD5FA6F636871DD6 /* DesignSystem */,
 				A80A6F78B6380686C95E8093 /* Navigation */,
 				3FFC875420A740DE6484F7EF /* CitySearch */,
@@ -274,6 +280,10 @@
 			isa = PBXTargetDependency;
 			target = 5DD2353B30ADA9B800B0B6EC /* WeatherCheck */;
 			targetProxy = 4BEC087F0CDA9358A4D41A0C /* PBXContainerItemProxy */;
+		};
+		421189C27B1EFC8E0F59467F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = 117CCCE5B611A1EDE8348D30 /* Forecast */;
 		};
 		4EEBBF7D70CEFACB595F4E21 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -653,6 +663,10 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = CitySearch;
 		};
+		117CCCE5B611A1EDE8348D30 /* Forecast */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Forecast;
+		};
 		3FFC875420A740DE6484F7EF /* CitySearch */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = CitySearch;
@@ -688,6 +702,10 @@
 		DFEE2010B3B74E2C6C757BCC /* DesignSystem */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = DesignSystem;
+		};
+		F76824B80266081BA8D575C2 /* Forecast */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Forecast;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

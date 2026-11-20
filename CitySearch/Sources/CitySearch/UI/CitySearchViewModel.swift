@@ -50,7 +50,7 @@ final class CitySearchViewModel {
     private let onCitySelected: (City) -> Void
 
     init(
-        geocoding: any GeocodingClientProtocol = GeocodingClient(),
+        geocoding: any GeocodingClientProtocol,
         validator: any CityNameValidatorProtocol,
         networkMonitor: any NetworkMonitorProtocol,
         history: any SearchHistoryStoring,

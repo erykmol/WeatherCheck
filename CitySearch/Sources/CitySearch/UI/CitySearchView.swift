@@ -16,6 +16,7 @@ public struct CitySearchView: View {
 
     public init(history: any SearchHistoryStoring, onCitySelected: @escaping (City) -> Void) {
         self.init(viewModel: CitySearchViewModel(
+            geocoding: GeocodingClient(decoder: ResponseDecoder()),
             validator: CityNameValidator(),
             networkMonitor: NetworkMonitor(),
             history: history,
