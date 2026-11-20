@@ -52,5 +52,14 @@ let package = Package(
                 .enableUpcomingFeature("ExistentialAny"),
             ],
         ),
+        .testTarget(
+            name: "PersistenceIntegrationTests",
+            dependencies: ["Persistence", "PersistenceTestHelpers", "PersistenceTestFixtures"],
+            swiftSettings: [
+                .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
+                .enableUpcomingFeature("InferIsolatedConformances"),
+                .enableUpcomingFeature("ExistentialAny"),
+            ],
+        ),
     ]
 )

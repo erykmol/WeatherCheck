@@ -52,6 +52,15 @@
                ReferencedContainer = "container:WeatherCheck.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "PersistenceIntegrationTests"
+               BuildableName = "PersistenceIntegrationTests"
+               ReferencedContainer = "container:Persistence">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction
