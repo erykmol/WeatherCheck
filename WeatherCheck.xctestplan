@@ -1,0 +1,79 @@
+{
+  "configurations" : [
+    {
+      "id" : "3458277C-5A87-42E3-969D-6EC0AEAD8F9C",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "performanceAntipatternCheckerEnabled" : true,
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:WeatherCheck.xcodeproj",
+      "identifier" : "5DD2353B30ADA9B800B0B6EC",
+      "name" : "WeatherCheck"
+    },
+    "testInteropMode" : "complete"
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:WeatherCheck.xcodeproj",
+        "identifier" : "5DD2354A30ADA9B900B0B6EC",
+        "name" : "WeatherCheckTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:WeatherCheck.xcodeproj",
+        "identifier" : "5DD2355430ADA9B900B0B6EC",
+        "name" : "WeatherCheckUITests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:Networking",
+        "identifier" : "NetworkingTests",
+        "name" : "NetworkingTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:Navigation",
+        "identifier" : "NavigationTests",
+        "name" : "NavigationTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:CitySearch",
+        "identifier" : "CitySearchTests",
+        "name" : "CitySearchTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:Persistence",
+        "identifier" : "PersistenceTests",
+        "name" : "PersistenceTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:CitySearch",
+        "identifier" : "CitySearchStorageTests",
+        "name" : "CitySearchStorageTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:CitySearch",
+        "identifier" : "CitySearchStorageIntegrationTests",
+        "name" : "CitySearchStorageIntegrationTests"
+      }
+    }
+  ],
+  "version" : 1
+}
