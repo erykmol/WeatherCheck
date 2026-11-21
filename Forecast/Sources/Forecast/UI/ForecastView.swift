@@ -23,6 +23,7 @@ public struct ForecastView: View {
 
     public var body: some View {
         content
+            .animation(.default, value: viewModel.state)
             .navigationTitle(viewModel.navigationTitle)
             .navigationBarTitleDisplayMode(.inline)
             .background {
