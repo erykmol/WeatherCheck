@@ -12,18 +12,12 @@ import Observation
 @Observable
 public final class NavigationStore<Destination: NavigationDestinationProtocol> {
 
-    public var path: [Destination]
-
-    public var presented: Destination? {
-        sheet?.destination ?? fullScreenCover?.destination
-    }
+    public var path: [Destination] = []
 
     var sheet: PresentedDestination<Destination>?
     var fullScreenCover: PresentedDestination<Destination>?
 
-    public init(path: [Destination] = []) {
-        self.path = path
-    }
+    public init() {}
 
     public func show(_ destination: Destination) {
         switch destination.presentation {
@@ -36,19 +30,5 @@ public final class NavigationStore<Destination: NavigationDestinationProtocol> {
             sheet = nil
             fullScreenCover = PresentedDestination(destination: destination)
         }
-    }
-
-    public func pop() {
-        guard !path.isEmpty else { return }
-        path.removeLast()
-    }
-
-    public func popToRoot() {
-        path.removeAll()
-    }
-
-    public func dismiss() {
-        sheet = nil
-        fullScreenCover = nil
     }
 }

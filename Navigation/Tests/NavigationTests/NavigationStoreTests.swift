@@ -7,62 +7,68 @@
 
 import Foundation
 import Testing
-import Navigation
+@testable import Navigation
 
 @MainActor
 struct NavigationStoreTests {
     @Test func startsAtTheRootWithNothingPresented() {
         let sut = NavigationStore<TestDestination>()
+
         #expect(sut.path.isEmpty)
-        #expect(sut.presented == nil)
+        #expect(sut.sheet == nil)
+        #expect(sut.fullScreenCover == nil)
     }
 
     @Test func showPushesPushDestinations() {
         let sut = NavigationStore<TestDestination>()
+
         sut.show(.first)
         sut.show(.second)
+
         #expect(sut.path == [.first, .second])
-        #expect(sut.presented == nil)
+        #expect(sut.sheet == nil)
+        #expect(sut.fullScreenCover == nil)
     }
 
-    @Test(arguments: [TestDestination.modal, .fullScreen])
-    func showPresentsModalDestinationsOverThePath(destination: TestDestination) {
-        let sut = NavigationStore(path: [TestDestination.first])
-        sut.show(destination)
-        #expect(sut.presented == destination)
+    @Test func showPresentsASheetOverThePath() {
+        let sut = NavigationStore<TestDestination>()
+        sut.show(.first)
+
+        sut.show(.modal)
+
+        #expect(sut.sheet?.destination == .modal)
+        #expect(sut.fullScreenCover == nil)
         #expect(sut.path == [.first])
     }
 
-    @Test func aModalReplacesTheOneOnScreen() {
+    @Test func showPresentsAFullScreenCoverOverThePath() {
         let sut = NavigationStore<TestDestination>()
-        sut.show(.modal)
+        sut.show(.first)
+
         sut.show(.fullScreen)
-        #expect(sut.presented == .fullScreen)
-    }
 
-    @Test func dismissClosesTheModalAndKeepsThePath() {
-        let sut = NavigationStore(path: [TestDestination.first])
-        sut.show(.modal)
-        sut.dismiss()
-        #expect(sut.presented == nil)
+        #expect(sut.fullScreenCover?.destination == .fullScreen)
+        #expect(sut.sheet == nil)
         #expect(sut.path == [.first])
     }
 
-    @Test func popRemovesTheTopScreen() {
-        let sut = NavigationStore(path: [TestDestination.first, .second])
-        sut.pop()
-        #expect(sut.path == [.first])
-    }
-
-    @Test func popAtTheRootDoesNothing() {
+    @Test func aFullScreenCoverReplacesASheet() {
         let sut = NavigationStore<TestDestination>()
-        sut.pop()
-        #expect(sut.path.isEmpty)
+        sut.show(.modal)
+
+        sut.show(.fullScreen)
+
+        #expect(sut.fullScreenCover?.destination == .fullScreen)
+        #expect(sut.sheet == nil)
     }
 
-    @Test func popToRootClearsThePath() {
-        let sut = NavigationStore(path: [TestDestination.first, .second])
-        sut.popToRoot()
-        #expect(sut.path.isEmpty)
+    @Test func aSheetReplacesAFullScreenCover() {
+        let sut = NavigationStore<TestDestination>()
+        sut.show(.fullScreen)
+
+        sut.show(.modal)
+
+        #expect(sut.sheet?.destination == .modal)
+        #expect(sut.fullScreenCover == nil)
     }
 }
