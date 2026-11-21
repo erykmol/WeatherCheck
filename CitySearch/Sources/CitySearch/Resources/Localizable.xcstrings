@@ -1,8 +1,18 @@
 {
   "sourceLanguage" : "pl",
   "strings" : {
-    "clear_history_dialog_button" : {
-      "comment" : "Destructive button in the clear-history dialog.",
+    "Cancel" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anuluj"
+          }
+        }
+      }
+    },
+    "clear_history_alert_button" : {
+      "comment" : "Destructive button in the clear-history alert.",
       "localizations" : {
         "pl" : {
           "stringUnit" : {
@@ -12,8 +22,8 @@
         }
       }
     },
-    "clear_history_dialog_title" : {
-      "comment" : "Title of the dialog confirming that recent searches will be cleared.",
+    "clear_history_alert_title" : {
+      "comment" : "Title of the alert confirming that recent searches will be cleared.",
       "localizations" : {
         "pl" : {
           "stringUnit" : {

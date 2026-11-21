@@ -38,16 +38,18 @@ public struct CitySearchView: View {
             .autocorrectionDisabled()
             .task { viewModel.loadHistory() }
             .task { await viewModel.observeConnectivity() }
-            .confirmationDialog(
-                Localizable.clearHistoryDialogTitle,
-                isPresented: $isConfirmingClear,
-                titleVisibility: .visible
             .task(id: viewModel.request) { await viewModel.searchIfNeeded() }
+            .alert(
+                Localizable.clearHistoryAlertTitle,
+                isPresented: $isConfirmingClear
             ) {
                 Button(role: .destructive) {
-                    viewModel.clearHistory()
+                    withAnimation { viewModel.clearHistory() }
                 } label: {
-                    Localizable.clearHistoryDialogButton
+                    Localizable.clearHistoryAlertButton
+                }
+                Button(role: .cancel, action: {}) {
+                    Localizable.cancel
                 }
             }
     }
