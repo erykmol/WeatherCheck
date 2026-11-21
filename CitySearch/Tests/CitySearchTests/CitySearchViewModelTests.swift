@@ -33,16 +33,16 @@ struct CitySearchViewModelTests {
     @Test func showsResultsForAValidName() async {
         let sut = makeSUT(.success([.lodz]))
 
-        await sut.search()
+        await sut.searchIfNeeded()
 
-        #expect(sut.content == .results([.lodz]))
+        #expect(sut.content == .results([.lodz], query: "Łódź"))
     }
 
     @Test func showsNoResultsForTheValidatedName() async {
         let sut = makeSUT(.success([]), validation: .valid("Kraqow"))
         sut.query = " Kraqow "
 
-        await sut.search()
+        await sut.searchIfNeeded()
 
         #expect(sut.content == .noResults(query: "Kraqow"))
     }
@@ -50,7 +50,7 @@ struct CitySearchViewModelTests {
     @Test func flagsAnInvalidNameWithoutSearching() async {
         let sut = makeSUT(.success([.lodz]), validation: .invalid)
 
-        await sut.search()
+        await sut.searchIfNeeded()
 
         #expect(sut.content == .invalidName)
     }
@@ -58,7 +58,7 @@ struct CitySearchViewModelTests {
     @Test func flagsANameThatIsTooLongWithoutSearching() async {
         let sut = makeSUT(.success([.lodz]), validation: .tooLong)
 
-        await sut.search()
+        await sut.searchIfNeeded()
 
         #expect(sut.content == .nameTooLong)
     }
@@ -67,7 +67,7 @@ struct CitySearchViewModelTests {
     func goesBackToHistoryWithoutASearchableName(validation: CityNameValidation) async {
         let sut = makeSUT(.success([.lodz]), validation: validation)
 
-        await sut.search()
+        await sut.searchIfNeeded()
 
         #expect(sut.content == .idle)
     }
@@ -75,7 +75,7 @@ struct CitySearchViewModelTests {
     @Test func showsHistoryWithTheOfflineFlagWhenThereIsNoConnection() async {
         let sut = makeSUT(.failure(.offline))
 
-        await sut.search()
+        await sut.searchIfNeeded()
 
         #expect(sut.content == .idle)
         #expect(sut.isOffline)
@@ -83,13 +83,13 @@ struct CitySearchViewModelTests {
 
     @Test func clearsTheOfflineFlagAfterASuccessfulSearch() async {
         let sut = makeSUT(.failure(.offline), .success([.lodz]))
-        await sut.search()
+        await sut.searchIfNeeded()
         #expect(sut.isOffline)
 
-        await sut.search()
+        await sut.searchIfNeeded()
 
         #expect(!sut.isOffline)
-        #expect(sut.content == .results([.lodz]))
+        #expect(sut.content == .results([.lodz], query: "Łódź"))
     }
 
     @Test func showsTheOfflineBannerWhenTheConnectionDrops() async {
@@ -104,15 +104,15 @@ struct CitySearchViewModelTests {
         let sut = makeSUT(.success([.lodz]), connectivity: [.disconnected])
         await sut.observeConnectivity()
 
-        await sut.search()
+        await sut.searchIfNeeded()
 
-        #expect(sut.content == .results([.lodz]))
+        #expect(sut.content == .results([.lodz], query: "Łódź"))
         #expect(sut.isOffline)
     }
 
     @Test func searchesAgainWhenTheConnectionComesBack() async {
         let sut = makeSUT(.failure(.offline), connectivity: [.connected])
-        await sut.search()
+        await sut.searchIfNeeded()
         let before = sut.request
 
         await sut.observeConnectivity()
@@ -133,7 +133,7 @@ struct CitySearchViewModelTests {
     @Test func passesTheAPIReasonOn() async {
         let sut = makeSUT(.failure(.server(message: "Parameter count must be between 1 and 100.")))
 
-        await sut.search()
+        await sut.searchIfNeeded()
 
         #expect(sut.content == .failed(message: "Parameter count must be between 1 and 100."))
     }
@@ -184,5 +184,16 @@ struct CitySearchViewModelTests {
         sut.clearHistory()
 
         #expect(sut.history.isEmpty)
+    }
+    
+    @Test func keepsTheResultsWhenTheValidatedNameHasNotChanged() async {
+        let sut = makeSUT(.success([.lodz]))
+        sut.query = "Łódź"
+        await sut.searchIfNeeded()
+
+        sut.query = "Łódź "
+        await sut.searchIfNeeded()
+
+        #expect(sut.content == .results([.lodz], query: "Łódź"))
     }
 }

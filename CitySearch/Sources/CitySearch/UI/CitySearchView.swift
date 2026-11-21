@@ -65,7 +65,7 @@ public struct CitySearchView: View {
             )
         case .searching:
             SearchingView()
-        case .results(let cities):
+        case .results(let cities, _):
             ResultsList(
                 cities: cities,
                 query: viewModel.query,
