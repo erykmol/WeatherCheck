@@ -30,6 +30,12 @@ final class ForecastViewModel {
 
     let location: ForecastLocation
     private(set) var state: State = .loading
+    private var hasConnection = true
+    private var lastRefreshFailedOffline = false
+
+    var isOffline: Bool {
+        !hasConnection || lastRefreshFailedOffline
+    }
 
     private let client: any ForecastClientProtocol
     private let networkMonitor: any NetworkMonitorProtocol
@@ -59,9 +65,23 @@ final class ForecastViewModel {
     }
 
     func observeConnectivity() async {
-        for await connectivity in networkMonitor.connectivityUpdates() where connectivity == .connected {
-            guard case .offline = state else { continue }
-            await retry()
+        for await connectivity in networkMonitor.connectivityUpdates() {
+            switch connectivity {
+            case .disconnected:
+                hasConnection = false
+            case .connected:
+                let wasOffline = isOffline
+                hasConnection = true
+                lastRefreshFailedOffline = false
+                switch state {
+                case .offline:
+                    await retry()
+                case .loaded where wasOffline:
+                    await refresh()
+                case .loading, .loaded, .failed:
+                    break
+                }
+            }
         }
     }
 
@@ -73,10 +93,14 @@ final class ForecastViewModel {
     private func fetch(keepingForecastOnFailure: Bool = false) async {
         do throws(ForecastError) {
             let forecast = try await client.forecast(latitude: location.latitude, longitude: location.longitude)
+            lastRefreshFailedOffline = false
             state = .loaded(forecast, updatedAt: now())
         } catch {
             guard !Task.isCancelled else { return }
             if keepingForecastOnFailure, case .loaded = state {
+                if case .offline = error {
+                    lastRefreshFailedOffline = true
+                }
                 logger.error("Refresh failed, keeping the last forecast: \(String(describing: error), privacy: .public)")
                 return
             }

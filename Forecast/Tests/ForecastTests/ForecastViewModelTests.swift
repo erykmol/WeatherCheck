@@ -104,11 +104,50 @@ struct ForecastViewModelTests {
     }
 
     @Test func keepsTheForecastWhenTheConnectionComesBack() async {
-        let sut = makeSUT(.success(.placeholder), connectivity: [.connected])
+        let sut = makeSUT(.success(.placeholder), .success(.refreshed), connectivity: [.connected])
         await sut.load()
 
         await sut.observeConnectivity()
 
         #expect(sut.state == .loaded(.placeholder, updatedAt: updatedAt))
+    }
+
+    @Test func showsTheOfflineBannerOverTheForecastWhenTheConnectionDrops() async {
+        let sut = makeSUT(.success(.placeholder), connectivity: [.disconnected])
+        await sut.load()
+
+        await sut.observeConnectivity()
+
+        #expect(sut.isOffline)
+        #expect(sut.state == .loaded(.placeholder, updatedAt: updatedAt))
+    }
+
+    @Test func showsTheOfflineBannerWhenARefreshFailsWithoutAConnection() async {
+        let sut = makeSUT(.success(.placeholder), .failure(.offline))
+        await sut.load()
+
+        await sut.refresh()
+
+        #expect(sut.isOffline)
+    }
+
+    @Test func doesNotShowTheOfflineBannerWhenARefreshFailsForAnotherReason() async {
+        let sut = makeSUT(.success(.placeholder), .failure(.server(message: "Latitude must be in range")))
+        await sut.load()
+
+        await sut.refresh()
+
+        #expect(!sut.isOffline)
+    }
+
+    @Test func refreshesAndHidesTheBannerWhenTheConnectionComesBack() async {
+        let sut = makeSUT(.success(.placeholder), .failure(.offline), .success(.refreshed), connectivity: [.connected])
+        await sut.load()
+        await sut.refresh()
+
+        await sut.observeConnectivity()
+
+        #expect(!sut.isOffline)
+        #expect(sut.state == .loaded(.refreshed, updatedAt: updatedAt))
     }
 }

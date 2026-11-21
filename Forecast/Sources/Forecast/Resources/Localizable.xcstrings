@@ -298,6 +298,17 @@
         }
       }
     },
+    "offline_banner_message" : {
+      "comment" : "Description in the offline banner shown over the last forecast.",
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wyświetlamy ostatnio pobraną prognozę. Zaktualizujemy ją po odzyskaniu połączenia."
+          }
+        }
+      }
+    },
     "rain_chance_tile_caption" : {
       "comment" : "Caption of the chance of rain tile: the value is for the current hour.",
       "localizations" : {

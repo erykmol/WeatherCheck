@@ -15,7 +15,7 @@ final class CitySearchViewModel {
     enum Content: Equatable {
         case idle
         case searching
-        case results([City])
+        case results([City], query: String)
         case noResults(query: String)
         case invalidName
         case nameTooLong
@@ -73,7 +73,7 @@ final class CitySearchViewModel {
         }
     }
 
-    func search() async {
+    func searchIfNeeded() async {
         switch validator.validate(query) {
         case .empty, .tooShort:
             content = .idle
@@ -82,6 +82,10 @@ final class CitySearchViewModel {
         case .tooLong:
             content = .nameTooLong
         case .valid(let name):
+            if case .results(_, let previousName) = content, previousName == name {
+                return
+            }
+            
             do {
                 try await Task.sleep(for: debounce)
             } catch {
@@ -128,7 +132,7 @@ final class CitySearchViewModel {
             let cities = try await geocoding.searchCities(named: name)
             guard !Task.isCancelled else { return }
             lastSearchFailedOffline = false
-            content = cities.isEmpty ? .noResults(query: name) : .results(cities)
+            content = cities.isEmpty ? .noResults(query: name) : .results(cities, query: name)
         } catch {
             guard !Task.isCancelled else { return }
             switch error {

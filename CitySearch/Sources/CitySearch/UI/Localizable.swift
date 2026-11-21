@@ -17,8 +17,8 @@ enum Localizable {
     static var historySectionTitle: Text { Text("history_section_title", bundle: .module) }
     static var historyClearButton: Text { Text("history_clear_button", bundle: .module) }
     static var historyRemoveButton: Text { Text("history_remove_button", bundle: .module) }
-    static var clearHistoryDialogTitle: Text { Text("clear_history_dialog_title", bundle: .module) }
-    static var clearHistoryDialogButton: Text { Text("clear_history_dialog_button", bundle: .module) }
+    static var clearHistoryAlertTitle: Text { Text("clear_history_alert_title", bundle: .module) }
+    static var clearHistoryAlertButton: Text { Text("clear_history_alert_button", bundle: .module) }
 
     static var emptyHistoryTitle: Text { Text("empty_history_title", bundle: .module) }
     static var emptyHistoryMessage: Text { Text("empty_history_message", bundle: .module) }
@@ -41,4 +41,6 @@ enum Localizable {
         Text("error_details \(details)", bundle: .module)
     }
     static var retryButton: Text { Text("retry_button", bundle: .module) }
+    
+    static var cancel: Text { Text("Cancel", bundle: .module) }
 }

@@ -47,6 +47,7 @@ enum Localizable {
 
     static var noInternetErrorTitle: Text { Text("no_internet_error_title", bundle: .module) }
     static var noInternetErrorMessage: Text { Text("no_internet_error_message", bundle: .module) }
+    static var offlineBannerMessage: Text { Text("offline_banner_message", bundle: .module) }
 
     static var forecastErrorTitle: Text { Text("forecast_error_title", bundle: .module) }
     static var forecastErrorMessage: Text { Text("forecast_error_message", bundle: .module) }

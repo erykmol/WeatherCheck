@@ -21,6 +21,7 @@ public enum Palette {
     public static let accent = catalog("Accent")
     public static let onAccent = catalog("OnAccent")
     public static let rain = catalog("Rain")
+    public static let cloud = catalog("Cloud")
     public static let sun = catalog("Sun")
     public static let warning = catalog("Warning")
     public static let warningBackground = catalog("WarningBackground")
