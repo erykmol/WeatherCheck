@@ -49,6 +49,24 @@ struct RequestBuilderTests {
         #expect(request.url?.query() == "key=caf%C3%A9")
     }
 
+    @Test func percentEncodesPlusSignsInTheQuery() throws {
+        let sut = RequestBuilder(baseURL: Self.baseURL)
+        let endpoint = Endpoint(method: .GET, path: "v1/items", query: [URLQueryItem(name: "a+b", value: "1+1")])
+
+        let request = try sut.makeRequest(for: endpoint)
+
+        #expect(request.url?.query() == "a%2Bb=1%2B1")
+    }
+
+    @Test func keepsSpacesPercentEncodedInTheQuery() throws {
+        let sut = RequestBuilder(baseURL: Self.baseURL)
+        let endpoint = Endpoint(method: .GET, path: "v1/items", query: [URLQueryItem(name: "key", value: "a b")])
+
+        let request = try sut.makeRequest(for: endpoint)
+
+        #expect(request.url?.query() == "key=a%20b")
+    }
+
     @Test func leavesOutTheQueryWhenThereAreNoItems() throws {
         let sut = RequestBuilder(baseURL: Self.baseURL)
 

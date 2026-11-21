@@ -19,6 +19,9 @@ public struct RequestBuilder: Sendable {
         
         if !endpoint.query.isEmpty {
             components?.queryItems = endpoint.query
+            let plusEncodedQuery = components?.percentEncodedQuery?
+                .replacingOccurrences(of: Constants.plus, with: Constants.encodedPlus)
+            components?.percentEncodedQuery = plusEncodedQuery
         }
         
         guard let url = components?.url else {
@@ -36,4 +39,9 @@ public struct RequestBuilder: Sendable {
         
         return request
     }
+}
+
+private enum Constants {
+    static let plus = "+"
+    static let encodedPlus = "%2B"
 }
