@@ -16,12 +16,13 @@ struct SearchHistoryStackOpenerTests {
 
     @Test func keepsAStoreThatOpens() throws {
         let factory = FakeStackFactory(results: [.success("stored")])
-        let sut = SearchHistoryStackOpener(factory: factory)
+        let deleter = FakeStoreFilesDeleter()
+        let sut = SearchHistoryStackOpener(factory: factory, deleter: deleter)
 
         let stack = try sut.openStack(storage: .file(url))
 
         #expect(stack == "stored")
-        #expect(factory.deletedURLs.isEmpty)
+        #expect(deleter.deletedURLs.isEmpty)
     }
 
     @Test(arguments: [
@@ -32,34 +33,37 @@ struct SearchHistoryStackOpenerTests {
     ])
     func startsANewStoreWhenTheStoreCantBeOpened(error: MigrationError) throws {
         let factory = FakeStackFactory(results: [.failure(error), .success("new")])
-        let sut = SearchHistoryStackOpener(factory: factory)
+        let deleter = FakeStoreFilesDeleter()
+        let sut = SearchHistoryStackOpener(factory: factory, deleter: deleter)
 
         let stack = try sut.openStack(storage: .file(url))
 
         #expect(stack == "new")
-        #expect(factory.deletedURLs == [url])
+        #expect(deleter.deletedURLs == [url])
     }
 
     @Test func keepsTheStoreFilesWhenThePlanIsInvalid() {
         let factory = FakeStackFactory(results: [.failure(.invalidPlan(reason: "The plan has no schemas"))])
-        let sut = SearchHistoryStackOpener(factory: factory)
+        let deleter = FakeStoreFilesDeleter()
+        let sut = SearchHistoryStackOpener(factory: factory, deleter: deleter)
 
         #expect(throws: MigrationError.self) {
             _ = try sut.openStack(storage: .file(url))
         }
 
-        #expect(factory.deletedURLs.isEmpty)
+        #expect(deleter.deletedURLs.isEmpty)
     }
 
     @Test func doesNotStartOverAnInMemoryStore() {
         let factory = FakeStackFactory(results: [.failure(.unknownStoreVersion)])
-        let sut = SearchHistoryStackOpener(factory: factory)
+        let deleter = FakeStoreFilesDeleter()
+        let sut = SearchHistoryStackOpener(factory: factory, deleter: deleter)
 
         #expect(throws: MigrationError.self) {
             _ = try sut.openStack(storage: .inMemory)
         }
 
-        #expect(factory.deletedURLs.isEmpty)
+        #expect(deleter.deletedURLs.isEmpty)
     }
 }
 

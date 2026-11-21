@@ -14,8 +14,8 @@ public final class CoreDataStack {
         case file(URL)
         case inMemory
 
-        public static func applicationSupport(fileName: String) -> Storage {
-            .file(.applicationSupportDirectory.appending(path: fileName))
+        public static func applicationSupport(for plan: any MigrationPlanProtocol.Type) -> Storage {
+            .file(.applicationSupportDirectory.appending(path: String(describing: plan) + Constants.storeFileExtension))
         }
     }
 
@@ -23,9 +23,16 @@ public final class CoreDataStack {
     private let container: NSPersistentContainer
 
     public convenience init(plan: any MigrationPlanProtocol.Type, storage: Storage) throws {
+        let modelBuilder = ManagedObjectModelBuilder()
         try self.init(
             name: String(describing: plan),
-            stepBuilder: MigrationStepBuilder(plan: plan, modelCache: .shared),
+            stepBuilder: MigrationStepBuilder(
+                plan: plan,
+                validator: MigrationPlanValidator(modelBuilder: modelBuilder),
+                modelBuilder: modelBuilder,
+                mappingModelBuilder: MappingModelBuilder(),
+                modelCache: ManagedObjectModelCache.shared
+            ),
             migrator: ProgressiveMigrator(),
             storage: storage
         )
@@ -53,14 +60,6 @@ public final class CoreDataStack {
         viewContext = container.viewContext
         viewContext.automaticallyMergesChangesFromParent = true
         viewContext.mergePolicy = NSMergePolicy.mergeByPropertyObjectTrump
-    }
-
-    public func close() throws {
-        viewContext.reset()
-        let coordinator = container.persistentStoreCoordinator
-        for store in coordinator.persistentStores {
-            try coordinator.remove(store)
-        }
     }
 
     private static func prepareStore(
@@ -97,4 +96,5 @@ public final class CoreDataStack {
 
 private enum Constants {
     static let inMemoryPath = "/dev/null"
+    static let storeFileExtension = ".sqlite"
 }

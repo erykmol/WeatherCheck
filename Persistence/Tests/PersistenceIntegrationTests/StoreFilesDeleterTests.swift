@@ -1,36 +1,30 @@
 //
-//  CoreDataStackFactoryTests.swift
+//  StoreFilesDeleterTests.swift
 //  Persistence
 //
-//  Created by Eryk Mól on 19/11/2026.
+//  Created by Eryk Mól on 20/11/2026.
 //
 
 import Foundation
 import Testing
 import CoreData
 import Persistence
+import PersistenceTestHelpers
+import PersistenceTestFixtures
 
 @MainActor
-struct CoreDataStackFactoryTests {
-    @Test func makesAStackOnThePlansCurrentSchema() throws {
-        let sut = CoreDataStackFactory(plan: TestMigrationPlan.self)
-
-        let stack = try sut.makeStack(storage: .inMemory)
-
-        let model = stack.viewContext.persistentStoreCoordinator?.managedObjectModel
-        #expect(model?.versionChecksum == TestSchemaV5.versionChecksum)
-    }
-
+struct StoreFilesDeleterTests {
     @Test func deletingTheStoreFilesRemovesItsData() throws {
         let store = try TestStore()
-        let sut = CoreDataStackFactory(plan: TestMigrationPlan.self)
-        let writer = try sut.makeStack(storage: .file(store.url))
+        let factory = CoreDataStackFactory(plan: TestMigrationPlan.self)
+        let writer = try factory.makeStack(storage: .file(store.url))
         try insertItem(titled: "Apples", into: writer)
         try writer.close()
+        let sut = StoreFilesDeleter()
 
         try sut.deleteStoreFiles(at: store.url)
 
-        let reopened = try sut.makeStack(storage: .file(store.url))
+        let reopened = try factory.makeStack(storage: .file(store.url))
         defer { try? reopened.close() }
         #expect(try itemTitles(in: reopened).isEmpty)
     }
@@ -41,7 +35,7 @@ struct CoreDataStackFactoryTests {
         for file in files {
             try Data("not a database".utf8).write(to: file)
         }
-        let sut = CoreDataStackFactory(plan: TestMigrationPlan.self)
+        let sut = StoreFilesDeleter()
 
         try sut.deleteStoreFiles(at: store.url)
 
@@ -50,7 +44,7 @@ struct CoreDataStackFactoryTests {
 
     @Test func deletingMissingStoreFilesDoesNothing() throws {
         let store = try TestStore()
-        let sut = CoreDataStackFactory(plan: TestMigrationPlan.self)
+        let sut = StoreFilesDeleter()
 
         try sut.deleteStoreFiles(at: store.url)
 

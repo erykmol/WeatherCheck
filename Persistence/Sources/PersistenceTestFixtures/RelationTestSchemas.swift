@@ -9,9 +9,9 @@ import Foundation
 import CoreData
 import Persistence
 
-enum RelationTestEntity {
-    static let owner = "Owner"
-    static let pet = "Pet"
+public enum RelationTestEntity {
+    public static let owner = "Owner"
+    public static let pet = "Pet"
 
     static func make(petHasNickname: Bool) -> [NSEntityDescription] {
         let owner = NSEntityDescription(name: Self.owner, properties: [NSAttributeDescription(name: "name", type: .stringAttributeType)])
@@ -43,30 +43,30 @@ enum RelationTestEntity {
     }
 }
 
-enum RelationTestSchemaV1: VersionedSchemaProtocol {
-    static let versionIdentifier = "relation-1"
-    static let versionChecksum = "B0DbNyr4/U7/zQ69ySsQx1CHLbSfatd4G5o1cVtWlR0="
+public enum RelationTestSchemaV1: VersionedSchemaProtocol {
+    public static let versionIdentifier = "relation-1"
+    public static let versionChecksum = "B0DbNyr4/U7/zQ69ySsQx1CHLbSfatd4G5o1cVtWlR0="
 
-    static func makeEntities() -> [NSEntityDescription] {
+    public static func makeEntities() -> [NSEntityDescription] {
         RelationTestEntity.make(petHasNickname: false)
     }
 }
 
-enum RelationTestSchemaV2: VersionedSchemaProtocol {
-    static let versionIdentifier = "relation-2"
-    static let versionChecksum = "yuLf/HDXkvIuu3V3GAvrDp/s4Roczrd0pKmpKrmqHMI="
+public enum RelationTestSchemaV2: VersionedSchemaProtocol {
+    public static let versionIdentifier = "relation-2"
+    public static let versionChecksum = "yuLf/HDXkvIuu3V3GAvrDp/s4Roczrd0pKmpKrmqHMI="
 
-    static func makeEntities() -> [NSEntityDescription] {
+    public static func makeEntities() -> [NSEntityDescription] {
         RelationTestEntity.make(petHasNickname: true)
     }
 }
 
-enum RelationTestMigrationPlan: MigrationPlanProtocol {
-    static var schemas: [any VersionedSchemaProtocol.Type] {
+public enum RelationTestMigrationPlan: MigrationPlanProtocol {
+    public static var schemas: [any VersionedSchemaProtocol.Type] {
         [RelationTestSchemaV1.self, RelationTestSchemaV2.self]
     }
 
-    static var stages: [MigrationStage] {
+    public static var stages: [MigrationStage] {
         [.custom(from: RelationTestSchemaV1.self, to: RelationTestSchemaV2.self, policies: [:])]
     }
 }

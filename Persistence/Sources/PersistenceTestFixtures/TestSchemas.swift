@@ -7,22 +7,22 @@
 
 import Foundation
 import CoreData
-@testable import Persistence
+import Persistence
 
-enum TestEntity {
-    static let item = "Item"
-    static let tag = "Tag"
+public enum TestEntity {
+    public static let item = "Item"
+    public static let tag = "Tag"
 
     static func makeTag() -> NSEntityDescription {
         NSEntityDescription(name: tag, properties: [NSAttributeDescription(name: "name", type: .stringAttributeType)])
     }
 }
 
-enum TestSchemaV1: VersionedSchemaProtocol {
-    static let versionIdentifier = "1"
-    static let versionChecksum = "cfkzmq0oQ8uTLgESWTYYEN/YwuAshcZ3hcPJLDTTm7w="
+public enum TestSchemaV1: VersionedSchemaProtocol {
+    public static let versionIdentifier = "1"
+    public static let versionChecksum = "cfkzmq0oQ8uTLgESWTYYEN/YwuAshcZ3hcPJLDTTm7w="
 
-    static func makeEntities() -> [NSEntityDescription] {
+    public static func makeEntities() -> [NSEntityDescription] {
         [
             NSEntityDescription(name: TestEntity.item, properties: [
                 NSAttributeDescription(name: "label", type: .stringAttributeType),
@@ -33,11 +33,11 @@ enum TestSchemaV1: VersionedSchemaProtocol {
     }
 }
 
-enum TestSchemaV2: VersionedSchemaProtocol {
-    static let versionIdentifier = "2"
-    static let versionChecksum = "ZGSq/Ow9qY0NzT2JudAZ471nDPch6CxMJsOqLrLUSig="
+public enum TestSchemaV2: VersionedSchemaProtocol {
+    public static let versionIdentifier = "2"
+    public static let versionChecksum = "ZGSq/Ow9qY0NzT2JudAZ471nDPch6CxMJsOqLrLUSig="
 
-    static func makeEntities() -> [NSEntityDescription] {
+    public static func makeEntities() -> [NSEntityDescription] {
         [
             NSEntityDescription(name: TestEntity.item, properties: [
                 NSAttributeDescription(name: "label", type: .stringAttributeType),
@@ -49,11 +49,11 @@ enum TestSchemaV2: VersionedSchemaProtocol {
     }
 }
 
-enum TestSchemaV3: VersionedSchemaProtocol {
-    static let versionIdentifier = "3"
-    static let versionChecksum = "STvYgYJf66r+bAJ1jcByWQSyGE5kd9z73vps57KC80Q="
+public enum TestSchemaV3: VersionedSchemaProtocol {
+    public static let versionIdentifier = "3"
+    public static let versionChecksum = "STvYgYJf66r+bAJ1jcByWQSyGE5kd9z73vps57KC80Q="
 
-    static func makeEntities() -> [NSEntityDescription] {
+    public static func makeEntities() -> [NSEntityDescription] {
         [
             NSEntityDescription(name: TestEntity.item, properties: [
                 NSAttributeDescription(name: "title", type: .stringAttributeType, renamedFrom: "label"),
@@ -65,11 +65,11 @@ enum TestSchemaV3: VersionedSchemaProtocol {
     }
 }
 
-enum TestSchemaV4: VersionedSchemaProtocol {
-    static let versionIdentifier = "4"
-    static let versionChecksum = "zGniNm5F03hyqyTfUfpeqDALTN7rCLtENH7JLIGxKmI="
+public enum TestSchemaV4: VersionedSchemaProtocol {
+    public static let versionIdentifier = "4"
+    public static let versionChecksum = "zGniNm5F03hyqyTfUfpeqDALTN7rCLtENH7JLIGxKmI="
 
-    static func makeEntities() -> [NSEntityDescription] {
+    public static func makeEntities() -> [NSEntityDescription] {
         [
             NSEntityDescription(name: TestEntity.item, properties: [
                 NSAttributeDescription(name: "title", type: .stringAttributeType),
@@ -81,11 +81,11 @@ enum TestSchemaV4: VersionedSchemaProtocol {
     }
 }
 
-enum TestSchemaV5: VersionedSchemaProtocol {
-    static let versionIdentifier = "5"
-    static let versionChecksum = "RXPQQt82E2yLKu5kTwak+TIU0e23SnFh8z2LyViFyLc="
+public enum TestSchemaV5: VersionedSchemaProtocol {
+    public static let versionIdentifier = "5"
+    public static let versionChecksum = "RXPQQt82E2yLKu5kTwak+TIU0e23SnFh8z2LyViFyLc="
 
-    static func makeEntities() -> [NSEntityDescription] {
+    public static func makeEntities() -> [NSEntityDescription] {
         [
             NSEntityDescription(name: TestEntity.item, properties: [
                 NSAttributeDescription(name: "title", type: .stringAttributeType),
@@ -98,16 +98,16 @@ enum TestSchemaV5: VersionedSchemaProtocol {
     }
 }
 
-enum ChangedTestSchema: VersionedSchemaProtocol {
-    static let versionIdentifier = "changed"
-    static let versionChecksum = "checksum-before-the-change"
+public enum ChangedTestSchema: VersionedSchemaProtocol {
+    public static let versionIdentifier = "changed"
+    public static let versionChecksum = "checksum-before-the-change"
 
-    static func makeEntities() -> [NSEntityDescription] {
+    public static func makeEntities() -> [NSEntityDescription] {
         [NSEntityDescription(name: "Changed", properties: [NSAttributeDescription(name: "value", type: .stringAttributeType)])]
     }
 }
 
-func unrelatedManagedObjectModel() -> NSManagedObjectModel {
+public func unrelatedManagedObjectModel() -> NSManagedObjectModel {
     let model = NSManagedObjectModel()
     model.entities = [
         NSEntityDescription(name: "Other", properties: [NSAttributeDescription(name: "somethingElse", type: .stringAttributeType)]),
@@ -116,13 +116,13 @@ func unrelatedManagedObjectModel() -> NSManagedObjectModel {
 }
 
 @objc(BoundTestObject)
-final class BoundTestObject: NSManagedObject {}
+public final class BoundTestObject: NSManagedObject {}
 
-enum BoundTestSchema: VersionedSchemaProtocol {
-    static let versionIdentifier = "bound"
-    static let versionChecksum = "GvHO5At3IquomIUtjxBm6pxd+r5XwEzNigdcm8fH0Gs="
+public enum BoundTestSchema: VersionedSchemaProtocol {
+    public static let versionIdentifier = "bound"
+    public static let versionChecksum = "GvHO5At3IquomIUtjxBm6pxd+r5XwEzNigdcm8fH0Gs="
 
-    static func makeEntities() -> [NSEntityDescription] {
+    public static func makeEntities() -> [NSEntityDescription] {
         [
             NSEntityDescription(
                 name: "Bound",
@@ -134,8 +134,14 @@ enum BoundTestSchema: VersionedSchemaProtocol {
     }
 }
 
-func managedObjectModel(for schema: any VersionedSchemaProtocol.Type) -> NSManagedObjectModel {
-    let model = NSManagedObjectModel(schema: schema, bindingClasses: false)
-    model.makeImmutable()
+public func managedObjectModel(for schema: any VersionedSchemaProtocol.Type) -> NSManagedObjectModel {
+    let entities = schema.makeEntities()
+    for entity in entities {
+        entity.managedObjectClassName = NSStringFromClass(NSManagedObject.self)
+    }
+    let model = NSManagedObjectModel()
+    model.entities = entities
+    model.versionIdentifiers = [schema.versionIdentifier]
+    _ = NSPersistentStoreCoordinator(managedObjectModel: model)
     return model
 }

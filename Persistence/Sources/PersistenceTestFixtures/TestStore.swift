@@ -8,11 +8,11 @@
 import Foundation
 import CoreData
 
-final class TestStore {
-    let url: URL
+public final class TestStore {
+    public let url: URL
     private let directory: URL
 
-    init() throws {
+    public init() throws {
         directory = URL.temporaryDirectory.appending(path: UUID().uuidString)
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
         url = directory.appending(path: "Test.sqlite")
@@ -22,11 +22,17 @@ final class TestStore {
         try? FileManager.default.removeItem(at: directory)
     }
 
-    func fileExists(at url: URL) -> Bool {
+    public func fileExists(at url: URL) -> Bool {
         FileManager.default.fileExists(atPath: url.path(percentEncoded: false))
     }
 
-    func seed(_ model: NSManagedObjectModel, entity: String = TestEntity.item, with objects: [[String: Any]]) throws {
+    public func filesBesideTheStore() throws -> [String] {
+        try FileManager.default
+            .contentsOfDirectory(atPath: directory.path(percentEncoded: false))
+            .filter { !$0.hasPrefix(url.lastPathComponent) }
+    }
+
+    public func seed(_ model: NSManagedObjectModel, entity: String = TestEntity.item, with objects: [[String: Any]]) throws {
         try withContext(model) { context in
             for values in objects {
                 NSEntityDescription
@@ -37,7 +43,7 @@ final class TestStore {
         }
     }
 
-    func items(_ model: NSManagedObjectModel) throws -> [TestItem] {
+    public func items(_ model: NSManagedObjectModel) throws -> [TestItem] {
         try withContext(model) { context in
             let request = NSFetchRequest<NSManagedObject>(entityName: TestEntity.item)
             request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
@@ -45,7 +51,7 @@ final class TestStore {
         }
     }
 
-    func tagNames(_ model: NSManagedObjectModel) throws -> [String] {
+    public func tagNames(_ model: NSManagedObjectModel) throws -> [String] {
         try withContext(model) { context in
             let request = NSFetchRequest<NSManagedObject>(entityName: TestEntity.tag)
             request.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
@@ -53,7 +59,7 @@ final class TestStore {
         }
     }
 
-    func seedOwner(named ownerName: String, withPetNamed petName: String, in model: NSManagedObjectModel) throws {
+    public func seedOwner(named ownerName: String, withPetNamed petName: String, in model: NSManagedObjectModel) throws {
         try withContext(model) { context in
             let owner = NSEntityDescription.insertNewObject(forEntityName: RelationTestEntity.owner, into: context)
             owner.setValue(ownerName, forKey: "name")
@@ -64,7 +70,7 @@ final class TestStore {
         }
     }
 
-    func petOwnerNames(_ model: NSManagedObjectModel) throws -> [String] {
+    public func petOwnerNames(_ model: NSManagedObjectModel) throws -> [String] {
         try withContext(model) { context in
             try context
                 .fetch(NSFetchRequest<NSManagedObject>(entityName: RelationTestEntity.pet))
@@ -72,7 +78,7 @@ final class TestStore {
         }
     }
 
-    func isOn(_ model: NSManagedObjectModel) throws -> Bool {
+    public func isOn(_ model: NSManagedObjectModel) throws -> Bool {
         let metadata = try NSPersistentStoreCoordinator.metadataForPersistentStore(type: .sqlite, at: url, options: nil)
         return model.isConfiguration(withName: nil, compatibleWithStoreMetadata: metadata)
     }

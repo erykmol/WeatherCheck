@@ -8,15 +8,22 @@
 import Foundation
 import CoreData
 
-struct TestItem: Equatable {
-    let title: String
-    let note: String?
-    let amount: Double
-    let unit: String
+public struct TestItem: Equatable {
+    public let title: String
+    public let note: String?
+    public let amount: Double
+    public let unit: String
+
+    public init(title: String, note: String?, amount: Double, unit: String) {
+        self.title = title
+        self.note = note
+        self.amount = amount
+        self.unit = unit
+    }
 }
 
 extension TestItem {
-    init(_ object: NSManagedObject) {
+    public init(_ object: NSManagedObject) {
         self.init(
             title: object.value(forKey: "title") as? String ?? "",
             note: object.value(forKey: "note") as? String,

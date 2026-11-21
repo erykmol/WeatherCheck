@@ -12,6 +12,4 @@ public protocol CoreDataStackFactoryProtocol {
     associatedtype Stack
 
     func makeStack(storage: CoreDataStack.Storage) throws -> Stack
-
-    func deleteStoreFiles(at url: URL) throws
 }

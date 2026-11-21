@@ -80,6 +80,13 @@
         "identifier" : "ForecastTests",
         "name" : "ForecastTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:Persistence",
+        "identifier" : "PersistenceIntegrationTests",
+        "name" : "PersistenceIntegrationTests"
+      }
     }
   ],
   "version" : 1

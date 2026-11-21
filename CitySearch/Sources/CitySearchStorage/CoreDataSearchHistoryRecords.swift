@@ -20,7 +20,8 @@ public final class CoreDataSearchHistoryRecords: SearchHistoryRecordsProtocol {
 
     public convenience init(storage: CoreDataStack.Storage) throws {
         let opener = SearchHistoryStackOpener(
-            factory: CoreDataStackFactory(plan: SearchHistoryMigrationPlan.self)
+            factory: CoreDataStackFactory(plan: SearchHistoryMigrationPlan.self),
+            deleter: StoreFilesDeleter()
         )
         try self.init(stack: opener.openStack(storage: storage))
     }

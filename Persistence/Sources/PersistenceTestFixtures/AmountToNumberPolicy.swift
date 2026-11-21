@@ -8,8 +8,8 @@
 import Foundation
 import CoreData
 
-final class AmountToNumberPolicy: NSEntityMigrationPolicy {
-    override func createDestinationInstances(
+public final class AmountToNumberPolicy: NSEntityMigrationPolicy {
+    public override func createDestinationInstances(
         forSource source: NSManagedObject,
         in mapping: NSEntityMapping,
         manager: NSMigrationManager

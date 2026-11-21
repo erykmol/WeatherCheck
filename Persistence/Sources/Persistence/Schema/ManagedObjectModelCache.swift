@@ -9,18 +9,22 @@ import Foundation
 import CoreData
 
 @MainActor
-final class ManagedObjectModelCache {
-    static let shared = ManagedObjectModelCache()
+final class ManagedObjectModelCache: ManagedObjectModelCacheProtocol {
+    static let shared = ManagedObjectModelCache(modelBuilder: ManagedObjectModelBuilder())
 
+    private let modelBuilder: any ManagedObjectModelBuilderProtocol
     private var models: [ObjectIdentifier: NSManagedObjectModel] = [:]
+
+    init(modelBuilder: any ManagedObjectModelBuilderProtocol) {
+        self.modelBuilder = modelBuilder
+    }
 
     func bindModel(for schema: any VersionedSchemaProtocol.Type) -> NSManagedObjectModel {
         let key = ObjectIdentifier(schema)
         if let model = models[key] {
             return model
         }
-        let model = NSManagedObjectModel(schema: schema, bindingClasses: true)
-        model.makeImmutable()
+        let model = modelBuilder.model(for: schema, bindingClasses: true)
         models[key] = model
         return model
     }
