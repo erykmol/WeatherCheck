@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 110;
+	objectVersion = 90;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -240,7 +240,7 @@
 			);
 			mainGroup = F405E6F6D03B5B1EAE860DAA;
 			minimizedProjectReferenceProxies = 1;
-			preferredProjectObjectVersion = 100;
+			preferredProjectObjectVersion = 90;
 			productRefGroup = 4A41D61B3FEB54E10F8A68D5 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -731,5 +731,4 @@
 /* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 62560EB7D8C89736DA1E0CCA /* Project object */;
-	validationLevel = 1;
 }
