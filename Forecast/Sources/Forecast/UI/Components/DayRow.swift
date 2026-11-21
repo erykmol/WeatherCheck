@@ -32,8 +32,7 @@ struct DayRow: View {
             .frame(width: Constants.weekdayWidth, alignment: .leading)
 
             VStack(spacing: Spacing.xxSmall) {
-                Image(systemName: day.condition.symbolName(isDay: true))
-                    .symbolRenderingMode(.multicolor)
+                ConditionSymbol(condition: day.condition, isDay: true)
                 if let rainChance = day.rainChance {
                     Text(rainChance, format: .percent)
                         .font(Typography.smallLabel)

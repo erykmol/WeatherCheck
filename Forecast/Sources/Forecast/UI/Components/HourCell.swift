@@ -27,8 +27,7 @@ struct HourCell: View {
             }
             .font(Typography.secondaryEmphasized)
 
-            Image(systemName: hour.condition.symbolName(isDay: hour.isDay))
-                .symbolRenderingMode(.multicolor)
+            ConditionSymbol(condition: hour.condition, isDay: hour.isDay)
                 .font(Typography.largeIcon)
                 .frame(height: Constants.hourIconHeight)
 

@@ -43,8 +43,7 @@ struct HeroSection: View {
             Label {
                 current.condition.title
             } icon: {
-                Image(systemName: current.condition.symbolName(isDay: current.isDay))
-                    .symbolRenderingMode(.multicolor)
+                ConditionSymbol(condition: current.condition, isDay: current.isDay)
             }
             .font(Typography.prominent)
 
