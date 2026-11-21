@@ -8,10 +8,10 @@
 import Foundation
 import Networking
 
-nonisolated enum GeocodingAPI {
+nonisolated struct GeocodingAPI: GeocodingAPIProtocol {
     static let baseURL = URL(staticString: "https://geocoding-api.open-meteo.com/")
 
-    static func search(name: String) -> Endpoint {
+    func search(name: String) -> Endpoint {
         Endpoint(
             method: .GET,
             path: "v1/search",

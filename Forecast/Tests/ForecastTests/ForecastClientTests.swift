@@ -8,13 +8,14 @@
 import Foundation
 import Testing
 import Networking
+import NetworkingTestHelpers
 @testable import Forecast
 
 struct ForecastClientTests {
     private func makeSUT(
         networkManager: FakeNetworkingManager = FakeNetworkingManager(result: .success(Data())),
         api: FakeForecastAPI = FakeForecastAPI(endpoint: Endpoint(method: .GET, path: "v1/forecast")),
-        decoder: FakeResponseDecoder = FakeResponseDecoder(result: .success(.fixture())),
+        decoder: FakeResponseDecoder = FakeResponseDecoder(result: .success(ForecastResponse.fixture())),
         mapper: FakeForecastMapper = FakeForecastMapper(result: .success(.placeholder))
     ) -> ForecastClient {
         ForecastClient(networkManager: networkManager, api: api, decoder: decoder, mapper: mapper)
@@ -41,7 +42,7 @@ struct ForecastClientTests {
 
     @Test func decodesTheDataItReceives() async throws {
         let data = Data("forecast".utf8)
-        let decoder = FakeResponseDecoder(result: .success(.fixture()))
+        let decoder = FakeResponseDecoder(result: .success(ForecastResponse.fixture()))
         let sut = makeSUT(networkManager: FakeNetworkingManager(result: .success(data)), decoder: decoder)
 
         _ = try await sut.forecast(latitude: 51.75, longitude: 19.46667)
@@ -51,7 +52,7 @@ struct ForecastClientTests {
 
     @Test func passesTheDecodedResponseToTheMapper() async throws {
         let mapper = FakeForecastMapper(result: .success(.placeholder))
-        let decoder = FakeResponseDecoder(result: .success(.fixture(currentTime: "2026-11-18T09:15")))
+        let decoder = FakeResponseDecoder(result: .success(ForecastResponse.fixture(currentTime: "2026-11-18T09:15")))
         let sut = makeSUT(decoder: decoder, mapper: mapper)
 
         _ = try await sut.forecast(latitude: 51.75, longitude: 19.46667)
