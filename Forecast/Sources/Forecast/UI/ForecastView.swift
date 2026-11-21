@@ -24,6 +24,7 @@ public struct ForecastView: View {
     public var body: some View {
         content
             .animation(.default, value: viewModel.state)
+            .animation(.default, value: viewModel.isOffline)
             .navigationTitle(viewModel.navigationTitle)
             .navigationBarTitleDisplayMode(.inline)
             .background {
@@ -42,7 +43,7 @@ public struct ForecastView: View {
         switch viewModel.state {
         case .loading:
             ScrollView {
-                ForecastContent(location: viewModel.location, forecast: .placeholder, updatedAt: nil)
+                ForecastContent(location: viewModel.location, forecast: .placeholder, updatedAt: nil, isOffline: false)
                     .redacted(reason: .placeholder)
             }
             .scrollDisabled(true)
@@ -50,7 +51,12 @@ public struct ForecastView: View {
             .accessibilityLabel(Localizable.loadingAccessibilityLabel)
         case .loaded(let forecast, let updatedAt):
             ScrollView {
-                ForecastContent(location: viewModel.location, forecast: forecast, updatedAt: updatedAt)
+                ForecastContent(
+                    location: viewModel.location,
+                    forecast: forecast,
+                    updatedAt: updatedAt,
+                    isOffline: viewModel.isOffline
+                )
             }
             .refreshable {
                 await viewModel.refresh()
@@ -77,6 +83,12 @@ public struct ForecastView: View {
 #Preview("Loaded") {
     NavigationStack {
         ForecastView(viewModel: .preview(.forecast(.placeholder)))
+    }
+}
+
+#Preview("Loaded offline") {
+    NavigationStack {
+        ForecastView(viewModel: .preview(.forecast(.placeholder), connectivity: [.disconnected]))
     }
 }
 

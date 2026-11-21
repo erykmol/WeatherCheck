@@ -13,15 +13,20 @@ struct ForecastContent: View {
     private let location: ForecastLocation
     private let forecast: WeatherForecast
     private let updatedAt: Date?
+    private let isOffline: Bool
 
-    init(location: ForecastLocation, forecast: WeatherForecast, updatedAt: Date?) {
+    init(location: ForecastLocation, forecast: WeatherForecast, updatedAt: Date?, isOffline: Bool) {
         self.location = location
         self.forecast = forecast
         self.updatedAt = updatedAt
+        self.isOffline = isOffline
     }
 
     var body: some View {
         VStack(spacing: Spacing.xxLarge) {
+            if isOffline {
+                OfflineBanner()
+            }
             HeroSection(location: location, current: forecast.current, today: forecast.today)
             MetricTiles(current: forecast.current)
             HourlySection(hours: forecast.hours)

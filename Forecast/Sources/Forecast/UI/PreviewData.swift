@@ -10,8 +10,17 @@ import Networking
 
 #if DEBUG
 struct PreviewNetworkMonitor: NetworkMonitorProtocol {
+    private let updates: [Connectivity]
+
+    init(updates: [Connectivity] = []) {
+        self.updates = updates
+    }
+
     func connectivityUpdates() -> AsyncStream<Connectivity> {
-        AsyncStream { $0.finish() }
+        AsyncStream { continuation in
+            updates.forEach { continuation.yield($0) }
+            continuation.finish()
+        }
     }
 }
 
@@ -44,11 +53,14 @@ struct PreviewForecastClient: ForecastClientProtocol {
 }
 
 extension ForecastViewModel {
-    static func preview(_ response: PreviewForecastClient.Response) -> ForecastViewModel {
+    static func preview(
+        _ response: PreviewForecastClient.Response,
+        connectivity: [Connectivity] = []
+    ) -> ForecastViewModel {
         ForecastViewModel(
             location: .preview,
             client: PreviewForecastClient(response: response),
-            networkMonitor: PreviewNetworkMonitor()
+            networkMonitor: PreviewNetworkMonitor(updates: connectivity)
         )
     }
 }
