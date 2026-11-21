@@ -38,11 +38,11 @@ public struct CitySearchView: View {
             .autocorrectionDisabled()
             .task { viewModel.loadHistory() }
             .task { await viewModel.observeConnectivity() }
-            .task(id: viewModel.request) { await viewModel.search() }
             .confirmationDialog(
                 Localizable.clearHistoryDialogTitle,
                 isPresented: $isConfirmingClear,
                 titleVisibility: .visible
+            .task(id: viewModel.request) { await viewModel.searchIfNeeded() }
             ) {
                 Button(role: .destructive) {
                     viewModel.clearHistory()
@@ -56,17 +56,13 @@ public struct CitySearchView: View {
     private var content: some View {
         switch viewModel.content {
         case .idle:
-            if viewModel.history.isEmpty && !viewModel.isOffline {
-                EmptyHistoryView()
-            } else {
-                HistoryList(
-                    cities: viewModel.history,
-                    isOffline: viewModel.isOffline,
-                    onSelect: { viewModel.select($0) },
-                    onRemove: { viewModel.remove($0) },
-                    onClear: { isConfirmingClear = true }
-                )
-            }
+            HistoryList(
+                cities: viewModel.history,
+                isOffline: viewModel.isOffline,
+                onSelect: { viewModel.select($0) },
+                onRemove: { city in withAnimation { viewModel.remove(city) } },
+                onClear: { isConfirmingClear = true }
+            )
         case .searching:
             SearchingView()
         case .results(let cities):
@@ -88,69 +84,6 @@ public struct CitySearchView: View {
     }
 }
 
-struct HistoryList: View {
-    private let cities: [City]
-    private let isOffline: Bool
-    private let onSelect: (City) -> Void
-    private let onRemove: (City) -> Void
-    private let onClear: () -> Void
-
-    init(
-        cities: [City],
-        isOffline: Bool,
-        onSelect: @escaping (City) -> Void,
-        onRemove: @escaping (City) -> Void,
-        onClear: @escaping () -> Void
-    ) {
-        self.cities = cities
-        self.isOffline = isOffline
-        self.onSelect = onSelect
-        self.onRemove = onRemove
-        self.onClear = onClear
-    }
-
-    var body: some View {
-        List {
-            if isOffline {
-                OfflineSection()
-            }
-            if !cities.isEmpty {
-                Section {
-                    ForEach(cities) { city in
-                        Button {
-                            onSelect(city)
-                        } label: {
-                            CityRow(
-                                title: AttributedString(city.name),
-                                subtitle: city.subtitle,
-                                systemImage: Constants.historyIcon
-                            )
-                        }
-                        .swipeActions(edge: .trailing) {
-                            Button(role: .destructive) {
-                                onRemove(city)
-                            } label: {
-                                Localizable.historyRemoveButton
-                            }
-                        }
-                    }
-                } header: {
-                    HStack {
-                        Localizable.historySectionTitle
-                        Spacer()
-                        Button {
-                            onClear()
-                        } label: {
-                            Localizable.historyClearButton
-                        }
-                        .font(Typography.secondary)
-                    }
-                }
-            }
-        }
-        .listStyle(.insetGrouped)
-    }
-}
 
 struct OfflineSection: View {
     var body: some View {
