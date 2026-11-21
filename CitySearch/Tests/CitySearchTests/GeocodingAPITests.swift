@@ -12,13 +12,17 @@ import Networking
 
 struct GeocodingAPITests {
     @Test func searchesForTheGivenName() {
-        let endpoint = GeocodingAPI.search(name: "Łódź")
+        let sut = GeocodingAPI()
+
+        let endpoint = sut.search(name: "Łódź")
 
         #expect(endpoint.query.contains(URLQueryItem(name: "name", value: "Łódź")))
     }
 
     @Test func asksForPolishNames() {
-        let endpoint = GeocodingAPI.search(name: "Łódź")
+        let sut = GeocodingAPI()
+
+        let endpoint = sut.search(name: "Łódź")
 
         #expect(endpoint.query.contains(URLQueryItem(name: "language", value: "pl")))
     }

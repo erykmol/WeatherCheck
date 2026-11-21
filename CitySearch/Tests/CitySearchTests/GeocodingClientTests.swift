@@ -12,23 +12,53 @@ import NetworkingTestHelpers
 @testable import CitySearch
 
 struct GeocodingClientTests {
-    private func makeSUT(session: StubURLSession) -> GeocodingClient {
-        GeocodingClient(
-            networkManager: NetworkingManager(
-                builder: RequestBuilder(baseURL: GeocodingAPI.baseURL),
-                session: session,
-                errorMessage: OpenMeteoErrorDecoder().reason(from:)
-            ),
-            decoder: ResponseDecoder()
-        )
+    private func makeSUT(
+        networkManager: FakeNetworkingManager = FakeNetworkingManager(result: .success(Data())),
+        api: FakeGeocodingAPI = FakeGeocodingAPI(endpoint: Endpoint(method: .GET, path: "v1/search")),
+        decoder: FakeResponseDecoder = FakeResponseDecoder(result: .success(GeocodingResponse(results: [])))
+    ) -> GeocodingClient {
+        GeocodingClient(networkManager: networkManager, api: api, decoder: decoder)
     }
 
-    @Test func mapsResultsToCities() async throws {
-        let session = StubURLSession { request in
-            let body = #"{"results":[{"id":3093133,"name":"Łódź","latitude":51.75,"longitude":19.46667,"country":"Polska","admin1":"Łódzkie"}]}"#
-            return (.stub(200, for: request), Data(body.utf8))
-        }
-        let sut = makeSUT(session: session)
+    @Test func asksTheAPIForTheEndpointOfTheName() async throws {
+        let api = FakeGeocodingAPI(endpoint: Endpoint(method: .GET, path: "v1/search"))
+        let sut = makeSUT(api: api)
+
+        _ = try await sut.searchCities(named: "Łódź")
+
+        #expect(api.receivedNames == ["Łódź"])
+    }
+
+    @Test func sendsTheEndpointFromTheAPI() async throws {
+        let networkManager = FakeNetworkingManager(result: .success(Data()))
+        let api = FakeGeocodingAPI(endpoint: Endpoint(method: .GET, path: "v1/endpoint-from-the-api"))
+        let sut = makeSUT(networkManager: networkManager, api: api)
+
+        _ = try await sut.searchCities(named: "Łódź")
+
+        #expect(networkManager.sentEndpoints.map(\.path) == ["v1/endpoint-from-the-api"])
+    }
+
+    @Test func decodesTheDataItReceives() async throws {
+        let data = Data("cities".utf8)
+        let decoder = FakeResponseDecoder(result: .success(GeocodingResponse(results: [])))
+        let sut = makeSUT(networkManager: FakeNetworkingManager(result: .success(data)), decoder: decoder)
+
+        _ = try await sut.searchCities(named: "Łódź")
+
+        #expect(decoder.receivedData == [data])
+    }
+
+    @Test func returnsTheCitiesOfTheResults() async throws {
+        let place = GeocodingResponse.Place(
+            id: 3093133,
+            name: "Łódź",
+            latitude: 51.75,
+            longitude: 19.46667,
+            country: "Polska",
+            admin1: "Łódzkie"
+        )
+        let sut = makeSUT(decoder: FakeResponseDecoder(result: .success(GeocodingResponse(results: [place]))))
 
         let cities = try await sut.searchCities(named: "Łódź")
 
@@ -36,32 +66,25 @@ struct GeocodingClientTests {
     }
 
     @Test func treatsMissingResultsAsNoCities() async throws {
-        let session = StubURLSession { request in
-            (.stub(200, for: request), Data(#"{"generationtime_ms":0.5}"#.utf8))
-        }
-        let sut = makeSUT(session: session)
+        let sut = makeSUT(decoder: FakeResponseDecoder(result: .success(GeocodingResponse(results: nil))))
 
         let cities = try await sut.searchCities(named: "Kraqow")
 
         #expect(cities.isEmpty)
     }
 
-    @Test func passesTheAPIReasonOn() async {
-        let session = StubURLSession { request in
-            (.stub(400, for: request), Data(#"{"error":true,"reason":"Parameter count must be between 1 and 100."}"#.utf8))
-        }
-        let sut = makeSUT(session: session)
+    @Test func turnsARequestErrorIntoASearchError() async {
+        let sut = makeSUT(networkManager: FakeNetworkingManager(result: .failure(.offline)))
 
-        await #expect(throws: SearchError.server(message: "Parameter count must be between 1 and 100.")) {
+        await #expect(throws: SearchError.offline) {
             try await sut.searchCities(named: "Łódź")
         }
     }
 
-    @Test func mapsNoConnectionToOffline() async {
-        let session = StubURLSession { _ in throw URLError(.notConnectedToInternet) }
-        let sut = makeSUT(session: session)
+    @Test func turnsADecodingErrorIntoASearchError() async {
+        let sut = makeSUT(decoder: FakeResponseDecoder(result: .failure(.unexpected("Couldn't decode the data"))))
 
-        await #expect(throws: SearchError.offline) {
+        await #expect(throws: SearchError.unknown) {
             try await sut.searchCities(named: "Łódź")
         }
     }
