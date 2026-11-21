@@ -28,6 +28,8 @@ public struct CitySearchView: View {
 
     public var body: some View {
         content
+            .animation(.default, value: viewModel.content)
+            .animation(.default, value: viewModel.isOffline)
             .navigationTitle(Localizable.searchTitle)
             .searchable(
                 text: $viewModel.query,
