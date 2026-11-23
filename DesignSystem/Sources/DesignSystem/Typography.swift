@@ -26,7 +26,7 @@ public enum Typography {
     public static let largeIcon = Font.title2
     public static let accessory = Font.footnote.weight(.semibold)
     
-    public static func display(size: CGFloat) -> Font {
+    public static func makeDisplayFont(size: CGFloat) -> Font {
         .system(size: size, weight: .thin)
     }
 }

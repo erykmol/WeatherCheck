@@ -41,7 +41,7 @@ struct HeroSection: View {
             .unredacted()
 
             Text(TemperatureFormat.string(current.temperature))
-                .font(Typography.display(size: temperatureSize))
+                .font(Typography.makeDisplayFont(size: temperatureSize))
                 .monospacedDigit()
 
             Label {
