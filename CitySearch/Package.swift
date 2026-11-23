@@ -63,6 +63,7 @@ let package = Package(
         .testTarget(
             name: "CitySearchStorageTests",
             dependencies: [
+                "CitySearch",
                 "CitySearchStorage",
                 .product(name: "Persistence", package: "Persistence"),
             ],
