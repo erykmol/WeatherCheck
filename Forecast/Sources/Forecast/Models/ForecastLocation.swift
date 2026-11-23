@@ -13,7 +13,12 @@ public struct ForecastLocation: Hashable, Sendable {
     public let latitude: Double
     public let longitude: Double
 
-    public init(name: String, subtitle: String, latitude: Double, longitude: Double) {
+    public init(
+        name: String,
+        subtitle: String,
+        latitude: Double,
+        longitude: Double
+    ) {
         self.name = name
         self.subtitle = subtitle
         self.latitude = latitude

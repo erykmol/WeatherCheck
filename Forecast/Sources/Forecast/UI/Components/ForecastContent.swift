@@ -15,7 +15,12 @@ struct ForecastContent: View {
     private let updatedAt: Date?
     private let isOffline: Bool
 
-    init(location: ForecastLocation, forecast: WeatherForecast, updatedAt: Date?, isOffline: Bool) {
+    init(
+        location: ForecastLocation,
+        forecast: WeatherForecast,
+        updatedAt: Date?,
+        isOffline: Bool
+    ) {
         self.location = location
         self.forecast = forecast
         self.updatedAt = updatedAt

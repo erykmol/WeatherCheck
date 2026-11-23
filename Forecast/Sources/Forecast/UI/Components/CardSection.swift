@@ -14,7 +14,11 @@ struct CardSection<Content: View>: View {
     private let systemImage: String
     private let content: Content
 
-    init(title: Text, systemImage: String, @ViewBuilder content: () -> Content) {
+    init(
+        title: Text,
+        systemImage: String,
+        @ViewBuilder content: () -> Content
+    ) {
         self.title = title
         self.systemImage = systemImage
         self.content = content()

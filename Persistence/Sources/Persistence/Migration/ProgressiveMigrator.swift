@@ -41,7 +41,11 @@ struct ProgressiveMigrator {
             .appending(path: Constants.temporaryStorePrefix + storeURL.lastPathComponent)
     }
 
-    private func migrate(storeAt storeURL: URL, with migrationStep: MigrationStep, step: Int) throws(MigrationError) {
+    private func migrate(
+        storeAt storeURL: URL,
+        with migrationStep: MigrationStep,
+        step: Int
+    ) throws(MigrationError) {
         let temporaryURL = Self.temporaryStoreURL(for: storeURL)
         let coordinator = NSPersistentStoreCoordinator(managedObjectModel: migrationStep.destinationModel)
         do {

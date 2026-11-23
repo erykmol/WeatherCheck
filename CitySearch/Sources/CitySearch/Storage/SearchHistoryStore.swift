@@ -17,7 +17,11 @@ public final class SearchHistoryStore: SearchHistoryStoreProtocol {
         self.init(records: records, retention: retention, now: { .now })
     }
 
-    init(records: any SearchHistoryRecordsProtocol, retention: SearchHistoryRetention, now: @escaping () -> Date) {
+    init(
+        records: any SearchHistoryRecordsProtocol,
+        retention: SearchHistoryRetention,
+        now: @escaping () -> Date
+    ) {
         self.records = records
         self.retention = retention
         self.now = now

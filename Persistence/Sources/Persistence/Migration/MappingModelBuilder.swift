@@ -129,7 +129,10 @@ struct MappingModelBuilder: MappingModelBuilderProtocol {
         call(#selector(NSObject.value(forKey:)), on: Constants.sourceVariable, with: [NSExpression(forConstantValue: key)])
     }
 
-    private func destinationInstances(ofMapping mappingName: String, for sourceInstances: NSExpression) -> NSExpression {
+    private func destinationInstances(
+        ofMapping mappingName: String,
+        for sourceInstances: NSExpression
+    ) -> NSExpression {
         call(
             #selector(NSMigrationManager.destinationInstances(forEntityMappingName:sourceInstances:)),
             on: Constants.managerVariable,
@@ -137,7 +140,11 @@ struct MappingModelBuilder: MappingModelBuilderProtocol {
         )
     }
 
-    private func call(_ selector: Selector, on variable: String, with arguments: [NSExpression] = []) -> NSExpression {
+    private func call(
+        _ selector: Selector,
+        on variable: String,
+        with arguments: [NSExpression] = []
+    ) -> NSExpression {
         NSExpression(
             forFunction: NSExpression(forVariable: variable),
             selectorName: NSStringFromSelector(selector),

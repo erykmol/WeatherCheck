@@ -15,7 +15,10 @@ public struct ResponseDecoder: ResponseDecoderProtocol {
     }
 
     @concurrent
-    private func decodeOffTheCallersActor<T: Decodable & Sendable>(_ type: T.Type, from data: Data) async throws(NetworkError) -> T {
+    private func decodeOffTheCallersActor<T: Decodable & Sendable>(
+        _ type: T.Type,
+        from data: Data
+    ) async throws(NetworkError) -> T {
         do {
             return try JSONDecoder().decode(type, from: data)
         } catch {

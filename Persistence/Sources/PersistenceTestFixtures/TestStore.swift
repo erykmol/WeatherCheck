@@ -32,7 +32,11 @@ public final class TestStore {
             .filter { !$0.hasPrefix(url.lastPathComponent) }
     }
 
-    public func seed(_ model: NSManagedObjectModel, entity: String = TestEntity.item, with objects: [[String: Any]]) throws {
+    public func seed(
+        _ model: NSManagedObjectModel,
+        entity: String = TestEntity.item,
+        with objects: [[String: Any]]
+    ) throws {
         try withContext(model) { context in
             for values in objects {
                 NSEntityDescription
@@ -59,7 +63,11 @@ public final class TestStore {
         }
     }
 
-    public func seedOwner(named ownerName: String, withPetNamed petName: String, in model: NSManagedObjectModel) throws {
+    public func seedOwner(
+        named ownerName: String,
+        withPetNamed petName: String,
+        in model: NSManagedObjectModel
+    ) throws {
         try withContext(model) { context in
             let owner = NSEntityDescription.insertNewObject(forEntityName: RelationTestEntity.owner, into: context)
             owner.setValue(ownerName, forKey: "name")

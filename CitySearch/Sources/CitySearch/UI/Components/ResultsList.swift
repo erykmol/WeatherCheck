@@ -14,7 +14,12 @@ struct ResultsList: View {
     private let isOffline: Bool
     private let onSelect: (City) -> Void
 
-    init(cities: [City], query: String, isOffline: Bool, onSelect: @escaping (City) -> Void) {
+    init(
+        cities: [City],
+        query: String,
+        isOffline: Bool,
+        onSelect: @escaping (City) -> Void
+    ) {
         self.cities = cities
         self.query = query
         self.isOffline = isOffline

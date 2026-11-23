@@ -18,7 +18,11 @@ struct WeatherForecastTests {
         )
     }
 
-    private func makeDay(_ id: String, min: Double, max: Double) -> WeatherForecast.Day {
+    private func makeDay(
+        _ id: String,
+        min: Double,
+        max: Double
+    ) -> WeatherForecast.Day {
         WeatherForecast.Day(
             id: id,
             isToday: false,

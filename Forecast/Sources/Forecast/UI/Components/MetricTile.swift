@@ -16,7 +16,13 @@ struct MetricTile: View {
     private let caption: Text
     private let tint: Color
 
-    init(title: Text, systemImage: String, percent: Int?, caption: Text, tint: Color) {
+    init(
+        title: Text,
+        systemImage: String,
+        percent: Int?,
+        caption: Text,
+        tint: Color
+    ) {
         self.title = title
         self.systemImage = systemImage
         self.percent = percent

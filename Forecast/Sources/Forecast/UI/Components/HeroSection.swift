@@ -16,7 +16,11 @@ struct HeroSection: View {
 
     @ScaledMetric(relativeTo: .largeTitle) private var temperatureSize = Typography.displaySize
 
-    init(location: ForecastLocation, current: WeatherForecast.Current, today: WeatherForecast.Day?) {
+    init(
+        location: ForecastLocation,
+        current: WeatherForecast.Current,
+        today: WeatherForecast.Day?
+    ) {
         self.location = location
         self.current = current
         self.today = today
