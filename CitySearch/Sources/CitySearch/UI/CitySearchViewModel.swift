@@ -97,7 +97,7 @@ final class CitySearchViewModel {
     }
 
     func observeConnectivity() async {
-        for await connectivity in networkMonitor.connectivityUpdates() {
+        for await connectivity in networkMonitor.monitorConnectivity() {
             switch connectivity {
             case .disconnected:
                 hasConnection = false

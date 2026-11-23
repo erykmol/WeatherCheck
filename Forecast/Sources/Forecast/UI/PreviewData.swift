@@ -16,7 +16,7 @@ struct PreviewNetworkMonitor: NetworkMonitorProtocol {
         self.updates = updates
     }
 
-    func connectivityUpdates() -> AsyncStream<Connectivity> {
+    func monitorConnectivity() -> AsyncStream<Connectivity> {
         AsyncStream { continuation in
             updates.forEach { continuation.yield($0) }
             continuation.finish()

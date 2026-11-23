@@ -36,7 +36,7 @@ final class PreviewHistoryStore: SearchHistoryStoreProtocol {
 }
 
 struct PreviewNetworkMonitor: NetworkMonitorProtocol {
-    func connectivityUpdates() -> AsyncStream<Connectivity> {
+    func monitorConnectivity() -> AsyncStream<Connectivity> {
         AsyncStream { $0.finish() }
     }
 }

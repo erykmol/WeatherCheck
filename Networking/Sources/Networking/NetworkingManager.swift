@@ -25,10 +25,10 @@ public struct NetworkingManager: NetworkingManagerProtocol {
 
     @discardableResult
     public func send(_ endpoint: Endpoint) async throws(NetworkError) -> Data {
-        try await perform(builder.makeRequest(for: endpoint))
+        try await performCheckingStatus(builder.makeRequest(for: endpoint))
     }
 
-    private func perform(_ request: URLRequest) async throws(NetworkError) -> Data {
+    private func performCheckingStatus(_ request: URLRequest) async throws(NetworkError) -> Data {
         let (data, response): (Data, URLResponse)
         do {
             (data, response) = try await session.data(for: request)
