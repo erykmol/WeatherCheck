@@ -26,10 +26,10 @@ struct SearchHistoryStoreTests {
     }
 
     @Test func listsTheLatestSearchFirst() throws {
-        var now = Date(timeIntervalSinceReferenceDate: 0)
+        var now = Date(timeIntervalSinceReferenceDate: 0.0)
         let sut = makeSUT(now: { now })
         try sut.record(.krakow)
-        now += 60
+        now += 60.0
 
         try sut.record(.lodz)
 
@@ -37,12 +37,12 @@ struct SearchHistoryStoreTests {
     }
 
     @Test func movesARepeatedCityToTheTopWithoutDuplicatingIt() throws {
-        var now = Date(timeIntervalSinceReferenceDate: 0)
+        var now = Date(timeIntervalSinceReferenceDate: 0.0)
         let sut = makeSUT(now: { now })
         try sut.record(.lodz)
-        now += 60
+        now += 60.0
         try sut.record(.krakow)
-        now += 60
+        now += 60.0
 
         try sut.record(.lodz)
 
@@ -60,10 +60,10 @@ struct SearchHistoryStoreTests {
     }
 
     @Test func removesOneCity() throws {
-        var now = Date(timeIntervalSinceReferenceDate: 0)
+        var now = Date(timeIntervalSinceReferenceDate: 0.0)
         let sut = makeSUT(now: { now })
         try sut.record(.lodz)
-        now += 60
+        now += 60.0
         try sut.record(.krakow)
 
         try sut.remove(.lodz)
@@ -82,48 +82,48 @@ struct SearchHistoryStoreTests {
     }
 
     @Test func listsOnlyTheLatestCitiesUpToTheMaximumCount() throws {
-        var now = Date(timeIntervalSinceReferenceDate: 0)
+        var now = Date(timeIntervalSinceReferenceDate: 0.0)
         let sut = makeSUT(retention: SearchHistoryRetention(maxCount: 2), now: { now })
 
         for id in 1...3 {
             try sut.record(.numbered(id))
-            now += 60
+            now += 60.0
         }
 
         #expect(try sut.load() == [.numbered(3), .numbered(2)])
     }
 
     @Test func leavesOutCitiesSearchedBeforeTheMaximumAge() throws {
-        var now = Date(timeIntervalSinceReferenceDate: 0)
-        let sut = makeSUT(retention: SearchHistoryRetention(maxAge: 3_600), now: { now })
+        var now = Date(timeIntervalSinceReferenceDate: 0.0)
+        let sut = makeSUT(retention: SearchHistoryRetention(maxAge: 3_600.0), now: { now })
         try sut.record(.krakow)
-        now += 1_800
+        now += 1_800.0
         try sut.record(.lodz)
 
-        now += 2_400
+        now += 2_400.0
 
         #expect(try sut.load() == [.lodz])
     }
 
     @Test func deletesCitiesBeyondTheMaximumCount() throws {
-        var now = Date(timeIntervalSinceReferenceDate: 0)
+        var now = Date(timeIntervalSinceReferenceDate: 0.0)
         let records = FakeSearchHistoryRecords()
         let sut = makeSUT(records: records, retention: SearchHistoryRetention(maxCount: 2), now: { now })
 
         for id in 1...3 {
             try sut.record(.numbered(id))
-            now += 60
+            now += 60.0
         }
 
         #expect(Set(records.entries().map(\.city)) == [.numbered(3), .numbered(2)])
     }
 
     @Test func deletesCitiesOlderThanTheMaximumAge() throws {
-        var now = Date(timeIntervalSinceReferenceDate: 0)
+        var now = Date(timeIntervalSinceReferenceDate: 0.0)
         let records = FakeSearchHistoryRecords()
-        let sut = makeSUT(records: records, retention: SearchHistoryRetention(maxAge: 3_600), now: { now })
+        let sut = makeSUT(records: records, retention: SearchHistoryRetention(maxAge: 3_600.0), now: { now })
         try sut.record(.krakow)
-        now += 7_200
+        now += 7_200.0
 
         try sut.record(.lodz)
 

@@ -32,5 +32,5 @@ struct OfflineBanner: View {
 
 private enum Constants {
     static let offlineIcon = "wifi.slash"
-    static let cornerRadius: CGFloat = 14
+    static let cornerRadius: CGFloat = 14.0
 }

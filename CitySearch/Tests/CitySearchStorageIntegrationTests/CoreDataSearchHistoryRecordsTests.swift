@@ -14,7 +14,7 @@ import CitySearch
 
 @MainActor
 struct CoreDataSearchHistoryRecordsTests {
-    private let searchedAt = Date(timeIntervalSinceReferenceDate: 0)
+    private let searchedAt = Date(timeIntervalSinceReferenceDate: 0.0)
 
     private func makeSUT() throws -> CoreDataSearchHistoryRecords {
         try CoreDataSearchHistoryRecords(storage: .inMemory)
@@ -39,7 +39,7 @@ struct CoreDataSearchHistoryRecordsTests {
         let sut = try makeSUT()
         try sut.save(SearchHistoryEntry(city: .lodz, searchedAt: searchedAt))
         let updated = City(id: City.lodz.id, name: "Lodz", region: nil, country: "Poland", latitude: 51.76, longitude: 19.46)
-        let entry = SearchHistoryEntry(city: updated, searchedAt: searchedAt + 60)
+        let entry = SearchHistoryEntry(city: updated, searchedAt: searchedAt + 60.0)
 
         try sut.save(entry)
 

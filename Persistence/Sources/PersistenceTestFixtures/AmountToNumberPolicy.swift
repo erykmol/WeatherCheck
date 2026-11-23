@@ -19,7 +19,7 @@ public final class AmountToNumberPolicy: NSEntityMigrationPolicy {
         destination.setValue(source.value(forKey: "title"), forKey: "title")
         destination.setValue(source.value(forKey: "note"), forKey: "note")
         let amount = (source.value(forKey: "amount") as? String).flatMap { Double($0) }
-        destination.setValue(amount ?? 0, forKey: "amount")
+        destination.setValue(amount ?? 0.0, forKey: "amount")
         manager.associate(sourceInstance: source, withDestinationInstance: destination, for: mapping)
     }
 }

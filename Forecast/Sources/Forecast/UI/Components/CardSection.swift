@@ -45,5 +45,5 @@ struct CardSection<Content: View>: View {
 }
 
 private enum Constants {
-    static let cardCornerRadius: CGFloat = 14
+    static let cardCornerRadius: CGFloat = 14.0
 }

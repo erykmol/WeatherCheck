@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 public enum Typography {
-    public static let displaySize: CGFloat = 88
+    public static let displaySize: CGFloat = 88.0
 
     public static let metric = Font.largeTitle.weight(.semibold)
     public static let title = Font.title.weight(.semibold)

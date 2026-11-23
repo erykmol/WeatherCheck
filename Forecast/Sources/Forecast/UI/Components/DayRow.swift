@@ -57,8 +57,8 @@ struct DayRow: View {
 }
 
 private enum Constants {
-    static let dayRowHeight: CGFloat = 52
-    static let dayIconWidth: CGFloat = 40
-    static let weekdayWidth: CGFloat = 56
-    static let temperatureWidth: CGFloat = 36
+    static let dayRowHeight: CGFloat = 52.0
+    static let dayIconWidth: CGFloat = 40.0
+    static let weekdayWidth: CGFloat = 56.0
+    static let temperatureWidth: CGFloat = 36.0
 }

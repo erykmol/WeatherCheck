@@ -51,6 +51,6 @@ struct CityRow: View {
 }
 
 private enum Constants {
-    static let rowIconWidth: CGFloat = 28
+    static let rowIconWidth: CGFloat = 28.0
     static let chevronIcon = "chevron.right"
 }

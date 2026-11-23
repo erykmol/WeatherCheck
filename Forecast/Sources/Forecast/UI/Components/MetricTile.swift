@@ -68,8 +68,8 @@ struct MetricTile: View {
 }
 
 private enum Constants {
-    static let percentTotal: Double = 100
-    static let cardCornerRadius: CGFloat = 14
+    static let percentTotal: Double = 100.0
+    static let cardCornerRadius: CGFloat = 14.0
     static let missingValue = "–"
     static let minimumScaleFactor: CGFloat = 0.5
 }

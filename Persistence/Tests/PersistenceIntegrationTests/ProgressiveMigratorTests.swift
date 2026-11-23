@@ -48,7 +48,7 @@ struct ProgressiveMigratorTests {
 
         #expect(try store.items(current) == [
             TestItem(title: "Apples", note: nil, amount: 2.5, unit: "pcs"),
-            TestItem(title: "Pears", note: nil, amount: 3, unit: "pcs"),
+            TestItem(title: "Pears", note: nil, amount: 3.0, unit: "pcs"),
         ])
         #expect(try store.filesBesideTheStore().isEmpty)
     }

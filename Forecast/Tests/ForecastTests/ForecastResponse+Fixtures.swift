@@ -23,10 +23,10 @@ extension ForecastResponse {
             String(format: "2026-11-%02dT%02d:00", 18 + offset / 24, offset % 24)
         }
         return ForecastResponse(
-            current: Current(time: currentTime, temperature: 6.4, cloudCover: 85, weatherCode: 3, isDay: 1),
+            current: Current(time: currentTime, temperature: 6.4, cloudCover: 85.0, weatherCode: 3, isDay: 1),
             hourly: Hourly(
                 time: times,
-                temperature: temperatures ?? hours.map { Double($0) / 10 },
+                temperature: temperatures ?? hours.map { Double($0) / 10.0 },
                 precipitationProbability: rainChances ?? hours.map { Double($0) },
                 weatherCode: hourlyWeatherCodes ?? hours.map { _ in 61 },
                 isDay: hours.map { _ in 1 }
@@ -36,7 +36,7 @@ extension ForecastResponse {
                 weatherCode: [61, 3],
                 temperatureMax: dailyHighs,
                 temperatureMin: dailyLows,
-                precipitationProbabilityMax: [60, 20]
+                precipitationProbabilityMax: [60.0, 20.0]
             )
         )
     }

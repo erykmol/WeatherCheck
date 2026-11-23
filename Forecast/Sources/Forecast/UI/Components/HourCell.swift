@@ -51,8 +51,8 @@ struct HourCell: View {
 }
 
 private enum Constants {
-    static let hourCellWidth: CGFloat = 48
-    static let hourIconHeight: CGFloat = 28
+    static let hourCellWidth: CGFloat = 48.0
+    static let hourIconHeight: CGFloat = 28.0
 
     static let missingValue = "–"
 }

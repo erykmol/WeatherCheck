@@ -11,11 +11,11 @@ import Testing
 
 struct SearchHistoryRetentionTests {
     @Test func cutsOffAtTheMaximumAgeBeforeNow() {
-        let sut = SearchHistoryRetention(maxAge: 60)
+        let sut = SearchHistoryRetention(maxAge: 60.0)
 
-        let cutoff = sut.cutoff(before: Date(timeIntervalSinceReferenceDate: 1_000))
+        let cutoff = sut.cutoff(before: Date(timeIntervalSinceReferenceDate: 1_000.0))
 
-        #expect(cutoff == Date(timeIntervalSinceReferenceDate: 940))
+        #expect(cutoff == Date(timeIntervalSinceReferenceDate: 940.0))
     }
 
     @Test func hasNoCutoffWithoutAMaximumAge() {

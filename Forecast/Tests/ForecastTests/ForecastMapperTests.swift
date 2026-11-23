@@ -52,7 +52,7 @@ struct ForecastMapperTests {
     }
 
     @Test func skipsHoursWithoutATemperature() throws {
-        var temperatures: [Double?] = (0..<48).map { Double($0) / 10 }
+        var temperatures: [Double?] = (0..<48).map { Double($0) / 10.0 }
         temperatures[15] = nil
         let sut = ForecastMapper()
 

@@ -13,7 +13,7 @@ public struct SearchHistoryRetention: Sendable {
 
     public init(maxCount: Int? = nil, maxAge: TimeInterval? = nil) {
         precondition(maxCount.map { $0 > 0 } ?? true, "maxCount must be greater than zero")
-        precondition(maxAge.map { $0 > 0 } ?? true, "maxAge must be greater than zero")
+        precondition(maxAge.map { $0 > 0.0 } ?? true, "maxAge must be greater than zero")
         self.maxCount = maxCount
         self.maxAge = maxAge
     }
