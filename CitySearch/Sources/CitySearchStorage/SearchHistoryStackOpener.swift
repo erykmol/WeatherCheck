@@ -20,7 +20,7 @@ struct SearchHistoryStackOpener<Factory: CoreDataStackFactoryProtocol> {
         self.deleter = deleter
     }
 
-    func openStack(storage: CoreDataStack.Storage) throws -> Factory.Stack {
+    func openStackRecreatingOnFailure(storage: CoreDataStack.Storage) throws -> Factory.Stack {
         do {
             return try factory.makeStack(storage: storage)
         } catch {

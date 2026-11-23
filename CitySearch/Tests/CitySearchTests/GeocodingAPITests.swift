@@ -14,7 +14,7 @@ struct GeocodingAPITests {
     @Test func searchesForTheGivenName() {
         let sut = GeocodingAPI()
 
-        let endpoint = sut.search(name: "Łódź")
+        let endpoint = sut.makeSearchEndpoint(name: "Łódź")
 
         #expect(endpoint.query.contains(URLQueryItem(name: "name", value: "Łódź")))
     }
@@ -22,7 +22,7 @@ struct GeocodingAPITests {
     @Test func asksForPolishNames() {
         let sut = GeocodingAPI()
 
-        let endpoint = sut.search(name: "Łódź")
+        let endpoint = sut.makeSearchEndpoint(name: "Łódź")
 
         #expect(endpoint.query.contains(URLQueryItem(name: "language", value: "pl")))
     }

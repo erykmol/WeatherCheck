@@ -18,7 +18,7 @@ public struct SearchHistoryRetention: Sendable {
         self.maxAge = maxAge
     }
 
-    func cutoff(before now: Date) -> Date? {
+    func calculateCutoff(before now: Date) -> Date? {
         maxAge.map { now.addingTimeInterval(-$0) }
     }
 }

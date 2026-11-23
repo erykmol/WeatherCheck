@@ -67,7 +67,7 @@ final class CitySearchViewModel {
 
     func loadHistory() {
         do {
-            history = try historyStore.load()
+            history = try historyStore.loadCities()
         } catch {
             logger.error("Couldn't load search history: \(String(describing: error), privacy: .public)")
         }
@@ -92,7 +92,7 @@ final class CitySearchViewModel {
                 return
             }
             content = .searching
-            await searchCities(named: name)
+            await showCitiesOrError(named: name)
         }
     }
 
@@ -115,19 +115,19 @@ final class CitySearchViewModel {
     }
 
     func select(_ city: City) {
-        updateHistory { try historyStore.record(city) }
+        updateHistory { try historyStore.saveApplyingRetention(city) }
         onCitySelected(city)
     }
 
     func remove(_ city: City) {
-        updateHistory { try historyStore.remove(city) }
+        updateHistory { try historyStore.delete(city) }
     }
 
     func clearHistory() {
-        updateHistory { try historyStore.removeAll() }
+        updateHistory { try historyStore.deleteAll() }
     }
 
-    private func searchCities(named name: String) async {
+    private func showCitiesOrError(named name: String) async {
         do throws(SearchError) {
             let cities = try await geocoding.searchCities(named: name)
             guard !Task.isCancelled else { return }
@@ -150,7 +150,7 @@ final class CitySearchViewModel {
     private func updateHistory(_ change: () throws -> Void) {
         do {
             try change()
-            history = try historyStore.load()
+            history = try historyStore.loadCities()
         } catch {
             logger.error("Couldn't update search history: \(String(describing: error), privacy: .public)")
         }

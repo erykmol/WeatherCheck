@@ -11,7 +11,7 @@ import Networking
 struct GeocodingAPI: GeocodingAPIProtocol {
     static let baseURL = URL(staticString: "https://geocoding-api.open-meteo.com/")
 
-    func search(name: String) -> Endpoint {
+    func makeSearchEndpoint(name: String) -> Endpoint {
         Endpoint(
             method: .GET,
             path: "v1/search",

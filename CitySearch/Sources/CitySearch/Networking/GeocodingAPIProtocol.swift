@@ -9,5 +9,5 @@ import Foundation
 import Networking
 
 protocol GeocodingAPIProtocol: Sendable {
-    func search(name: String) -> Endpoint
+    func makeSearchEndpoint(name: String) -> Endpoint
 }

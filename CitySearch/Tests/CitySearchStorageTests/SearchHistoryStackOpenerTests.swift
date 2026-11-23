@@ -19,7 +19,7 @@ struct SearchHistoryStackOpenerTests {
         let deleter = FakeStoreFilesDeleter()
         let sut = SearchHistoryStackOpener(factory: factory, deleter: deleter)
 
-        let stack = try sut.openStack(storage: .file(url))
+        let stack = try sut.openStackRecreatingOnFailure(storage: .file(url))
 
         #expect(stack == "stored")
         #expect(deleter.deletedURLs.isEmpty)
@@ -36,7 +36,7 @@ struct SearchHistoryStackOpenerTests {
         let deleter = FakeStoreFilesDeleter()
         let sut = SearchHistoryStackOpener(factory: factory, deleter: deleter)
 
-        let stack = try sut.openStack(storage: .file(url))
+        let stack = try sut.openStackRecreatingOnFailure(storage: .file(url))
 
         #expect(stack == "new")
         #expect(deleter.deletedURLs == [url])
@@ -48,7 +48,7 @@ struct SearchHistoryStackOpenerTests {
         let sut = SearchHistoryStackOpener(factory: factory, deleter: deleter)
 
         #expect(throws: MigrationError.self) {
-            _ = try sut.openStack(storage: .file(url))
+            _ = try sut.openStackRecreatingOnFailure(storage: .file(url))
         }
 
         #expect(deleter.deletedURLs.isEmpty)
@@ -60,7 +60,7 @@ struct SearchHistoryStackOpenerTests {
         let sut = SearchHistoryStackOpener(factory: factory, deleter: deleter)
 
         #expect(throws: MigrationError.self) {
-            _ = try sut.openStack(storage: .inMemory)
+            _ = try sut.openStackRecreatingOnFailure(storage: .inMemory)
         }
 
         #expect(deleter.deletedURLs.isEmpty)

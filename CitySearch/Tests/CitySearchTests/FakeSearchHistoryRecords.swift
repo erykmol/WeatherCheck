@@ -12,7 +12,7 @@ import Foundation
 final class FakeSearchHistoryRecords: SearchHistoryRecordsProtocol {
     private var stored: [Int: SearchHistoryEntry] = [:]
 
-    func entries() -> [SearchHistoryEntry] {
+    func loadEntries() -> [SearchHistoryEntry] {
         Array(stored.values)
     }
 

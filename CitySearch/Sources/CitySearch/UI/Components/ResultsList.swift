@@ -37,7 +37,7 @@ struct ResultsList: View {
                         onSelect(city)
                     } label: {
                         CityRow(
-                            title: highlighted(city.name),
+                            title: highlightQuery(in: city.name),
                             subtitle: city.subtitle,
                             systemImage: Constants.resultIcon
                         )
@@ -50,7 +50,7 @@ struct ResultsList: View {
         .listStyle(.insetGrouped)
     }
 
-    private func highlighted(_ name: String) -> AttributedString {
+    private func highlightQuery(in name: String) -> AttributedString {
         var title = AttributedString(name)
         let typed = query.trimmingCharacters(in: .whitespaces)
         guard !typed.isEmpty,

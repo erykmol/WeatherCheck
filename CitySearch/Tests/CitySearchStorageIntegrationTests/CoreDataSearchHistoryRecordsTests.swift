@@ -23,7 +23,7 @@ struct CoreDataSearchHistoryRecordsTests {
     @Test func startsEmpty() throws {
         let sut = try makeSUT()
 
-        #expect(try sut.entries().isEmpty)
+        #expect(try sut.loadEntries().isEmpty)
     }
 
     @Test func savesAnEntry() throws {
@@ -32,7 +32,7 @@ struct CoreDataSearchHistoryRecordsTests {
 
         try sut.save(entry)
 
-        #expect(try sut.entries() == [entry])
+        #expect(try sut.loadEntries() == [entry])
     }
 
     @Test func replacesTheEntryOfTheSameCity() throws {
@@ -43,7 +43,7 @@ struct CoreDataSearchHistoryRecordsTests {
 
         try sut.save(entry)
 
-        #expect(try sut.entries() == [entry])
+        #expect(try sut.loadEntries() == [entry])
     }
 
     @Test func keepsMissingRegionAndCountryMissing() throws {
@@ -52,7 +52,7 @@ struct CoreDataSearchHistoryRecordsTests {
 
         try sut.save(entry)
 
-        #expect(try sut.entries() == [entry])
+        #expect(try sut.loadEntries() == [entry])
     }
 
     @Test func deletesTheEntriesOfTheGivenCities() throws {
@@ -63,7 +63,7 @@ struct CoreDataSearchHistoryRecordsTests {
 
         try sut.delete(cityIDs: [City.lodz.id])
 
-        #expect(try sut.entries() == [krakow])
+        #expect(try sut.loadEntries() == [krakow])
     }
 
     @Test func deletesAllEntries() throws {
@@ -73,11 +73,11 @@ struct CoreDataSearchHistoryRecordsTests {
 
         try sut.deleteAll()
 
-        #expect(try sut.entries().isEmpty)
+        #expect(try sut.loadEntries().isEmpty)
     }
 
     @Test func keepsTheEntriesInTheStoreFile() throws {
-        let url = temporaryStoreURL()
+        let url = makeTemporaryStoreURL()
         defer { try? FileManager.default.removeItem(at: url.deletingLastPathComponent()) }
         let factory = CoreDataStackFactory(plan: SearchHistoryMigrationPlan.self)
         let writerStack = try factory.makeStack(storage: .file(url))
@@ -88,14 +88,14 @@ struct CoreDataSearchHistoryRecordsTests {
         defer { try? stack.close() }
         let sut = CoreDataSearchHistoryRecords(stack: stack)
 
-        let entries = try sut.entries()
+        let entries = try sut.loadEntries()
 
         #expect(entries == [entry])
     }
 
     // Core Data's "file is not a database" errors and "starting a new one: unreadableStore" are logged on purpose.
     @Test func startsANewStoreWhenTheStoreFileIsDamaged() throws {
-        let url = temporaryStoreURL()
+        let url = makeTemporaryStoreURL()
         defer { try? FileManager.default.removeItem(at: url.deletingLastPathComponent()) }
         try FileManager.default.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
         try Data("not a database".utf8).write(to: url)
@@ -103,17 +103,17 @@ struct CoreDataSearchHistoryRecordsTests {
             factory: CoreDataStackFactory(plan: SearchHistoryMigrationPlan.self),
             deleter: StoreFilesDeleter()
         )
-        let stack = try opener.openStack(storage: .file(url))
+        let stack = try opener.openStackRecreatingOnFailure(storage: .file(url))
         defer { try? stack.close() }
         let sut = CoreDataSearchHistoryRecords(stack: stack)
         let entry = SearchHistoryEntry(city: .lodz, searchedAt: searchedAt)
 
         try sut.save(entry)
 
-        #expect(try sut.entries() == [entry])
+        #expect(try sut.loadEntries() == [entry])
     }
 
-    private func temporaryStoreURL() -> URL {
+    private func makeTemporaryStoreURL() -> URL {
         URL.temporaryDirectory.appending(path: UUID().uuidString).appending(path: "SearchHistory.sqlite")
     }
 }

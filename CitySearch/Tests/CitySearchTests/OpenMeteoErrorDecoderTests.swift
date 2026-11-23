@@ -13,7 +13,7 @@ struct OpenMeteoErrorDecoderTests {
     @Test func readsTheReasonFromTheErrorBody() {
         let sut = OpenMeteoErrorDecoder()
 
-        let reason = sut.reason(from: Data(#"{"error":true,"reason":"Parameter count must be between 1 and 100."}"#.utf8))
+        let reason = sut.decodeReason(from: Data(#"{"error":true,"reason":"Parameter count must be between 1 and 100."}"#.utf8))
 
         #expect(reason == "Parameter count must be between 1 and 100.")
     }
@@ -21,7 +21,7 @@ struct OpenMeteoErrorDecoderTests {
     @Test func hasNoReasonWhenTheBodyIsNotAnErrorBody() {
         let sut = OpenMeteoErrorDecoder()
 
-        let reason = sut.reason(from: Data("<html>Bad Gateway</html>".utf8))
+        let reason = sut.decodeReason(from: Data("<html>Bad Gateway</html>".utf8))
 
         #expect(reason == nil)
     }

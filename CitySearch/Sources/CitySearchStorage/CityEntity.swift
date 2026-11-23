@@ -27,19 +27,19 @@ final class CityEntity: NSManagedObject {
         self.init(entity: entity, insertInto: context)
     }
 
-    static func fetchAll() -> NSFetchRequest<CityEntity> {
+    static func makeFetchAllRequest() -> NSFetchRequest<CityEntity> {
         NSFetchRequest<CityEntity>(entityName: entityName)
     }
 
-    static func fetch(id: Int) -> NSFetchRequest<CityEntity> {
-        let request = fetchAll()
+    static func makeFetchRequest(id: Int) -> NSFetchRequest<CityEntity> {
+        let request = makeFetchAllRequest()
         request.predicate = NSPredicate(format: "%K == %lld", #keyPath(CityEntity.cityID), Int64(id))
         request.fetchLimit = 1
         return request
     }
 
-    static func fetch(ids: [Int]) -> NSFetchRequest<CityEntity> {
-        let request = fetchAll()
+    static func makeFetchRequest(ids: [Int]) -> NSFetchRequest<CityEntity> {
+        let request = makeFetchAllRequest()
         request.predicate = NSPredicate(format: "%K IN %@", #keyPath(CityEntity.cityID), ids.map { Int64($0) })
         return request
     }

@@ -22,7 +22,7 @@ final class FakeGeocodingAPI: GeocodingAPIProtocol {
         names.withLock { $0 }
     }
 
-    func search(name: String) -> Endpoint {
+    func makeSearchEndpoint(name: String) -> Endpoint {
         names.withLock { $0.append(name) }
         return endpoint
     }
