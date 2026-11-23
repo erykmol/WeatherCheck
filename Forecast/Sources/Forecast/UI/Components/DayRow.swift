@@ -41,13 +41,13 @@ struct DayRow: View {
             }
             .frame(width: Constants.dayIconWidth)
 
-            Text(TemperatureFormat.string(day.minTemperature))
+            Text(TemperatureFormat.format(day.minTemperature))
                 .foregroundStyle(Palette.textSecondary)
                 .frame(width: Constants.temperatureWidth, alignment: .trailing)
 
             TemperatureRangeBar(range: day.minTemperature...day.maxTemperature, bounds: bounds)
 
-            Text(TemperatureFormat.string(day.maxTemperature))
+            Text(TemperatureFormat.format(day.maxTemperature))
                 .frame(width: Constants.temperatureWidth, alignment: .trailing)
         }
         .monospacedDigit()

@@ -41,7 +41,7 @@ struct HourCell: View {
             .font(Typography.label)
             .foregroundStyle(Palette.rain)
 
-            Text(TemperatureFormat.string(hour.temperature))
+            Text(TemperatureFormat.format(hour.temperature))
                 .font(Typography.headline)
                 .monospacedDigit()
         }

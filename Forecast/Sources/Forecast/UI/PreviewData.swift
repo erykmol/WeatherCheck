@@ -37,7 +37,7 @@ struct PreviewForecastClient: ForecastClientProtocol {
         self.response = response
     }
 
-    func forecast(latitude: Double, longitude: Double) async throws(ForecastError) -> WeatherForecast {
+    func fetchForecast(latitude: Double, longitude: Double) async throws(ForecastError) -> WeatherForecast {
         switch response {
         case .forecast(let forecast):
             return forecast

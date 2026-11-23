@@ -11,7 +11,7 @@ import Networking
 struct ForecastAPI: ForecastAPIProtocol {
     static let baseURL = URL(staticString: "https://api.open-meteo.com/")
 
-    func forecast(latitude: Double, longitude: Double) -> Endpoint {
+    func makeForecastEndpoint(latitude: Double, longitude: Double) -> Endpoint {
         Endpoint(
             method: .GET,
             path: "v1/forecast",

@@ -25,7 +25,7 @@ extension WeatherCondition {
         }
     }
 
-    func symbolName(isDay: Bool) -> String {
+    func makeSymbolName(isDay: Bool) -> String {
         switch self {
         case .clear: isDay ? "sun.max.fill" : "moon.stars.fill"
         case .mainlyClear, .partlyCloudy: isDay ? "cloud.sun.fill" : "cloud.moon.fill"
@@ -41,7 +41,7 @@ extension WeatherCondition {
 }
 
 enum CloudCoverDescription {
-    static func title(for percent: Int) -> Text {
+    static func makeTitle(for percent: Int) -> Text {
         switch percent {
         case ..<Constants.fewClouds: Localizable.cloudCoverLow
         case ..<Constants.someClouds: Localizable.cloudCoverModerate
@@ -52,7 +52,7 @@ enum CloudCoverDescription {
 }
 
 enum TemperatureFormat {
-    static func string(_ celsius: Double) -> String {
+    static func format(_ celsius: Double) -> String {
         "\(Int(celsius.rounded()))°"
     }
 }

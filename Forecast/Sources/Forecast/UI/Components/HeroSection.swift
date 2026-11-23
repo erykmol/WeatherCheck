@@ -40,7 +40,7 @@ struct HeroSection: View {
             }
             .unredacted()
 
-            Text(TemperatureFormat.string(current.temperature))
+            Text(TemperatureFormat.format(current.temperature))
                 .font(Typography.makeDisplayFont(size: temperatureSize))
                 .monospacedDigit()
 
@@ -53,8 +53,8 @@ struct HeroSection: View {
 
             if let today {
                 Localizable.todayTemperatureRange(
-                    max: TemperatureFormat.string(today.maxTemperature),
-                    min: TemperatureFormat.string(today.minTemperature)
+                    max: TemperatureFormat.format(today.maxTemperature),
+                    min: TemperatureFormat.format(today.minTemperature)
                 )
                 .font(Typography.secondary)
                 .foregroundStyle(Palette.textSecondary)

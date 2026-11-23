@@ -8,7 +8,7 @@
 import Foundation
 
 struct ForecastMapper: ForecastMapperProtocol {
-    func forecast(from response: ForecastResponse) throws(ForecastError) -> WeatherForecast {
+    func mapForecast(from response: ForecastResponse) throws(ForecastError) -> WeatherForecast {
         let hourly = response.hourly
         let daily = response.daily
         let currentHour = response.current.time.prefix(Constants.hourKeyLength)
@@ -20,40 +20,40 @@ struct ForecastMapper: ForecastMapperProtocol {
         let end = min(start + Constants.hourCount, hourly.time.count)
 
         let hours = (start..<end).compactMap { index -> WeatherForecast.Hour? in
-            guard let temperature = value(in: hourly.temperature, at: index) else { return nil }
+            guard let temperature = readValue(in: hourly.temperature, at: index) else { return nil }
             let time = hourly.time[index]
             return WeatherForecast.Hour(
                 id: time,
                 isNow: index == start,
                 hour: String(time.dropFirst(Constants.hourOffset).prefix(Constants.hourLength)),
                 temperature: temperature,
-                rainChance: value(in: hourly.precipitationProbability, at: index).map(percent),
-                condition: WeatherCondition(code: value(in: hourly.weatherCode, at: index) ?? Constants.unknownCode),
-                isDay: value(in: hourly.isDay, at: index) == 1
+                rainChance: readValue(in: hourly.precipitationProbability, at: index).map(roundToPercent),
+                condition: WeatherCondition(code: readValue(in: hourly.weatherCode, at: index) ?? Constants.unknownCode),
+                isDay: readValue(in: hourly.isDay, at: index) == 1
             )
         }
 
         let days = daily.time.indices.compactMap { index -> WeatherForecast.Day? in
             guard
-                let low = value(in: daily.temperatureMin, at: index),
-                let high = value(in: daily.temperatureMax, at: index)
+                let low = readValue(in: daily.temperatureMin, at: index),
+                let high = readValue(in: daily.temperatureMax, at: index)
             else { return nil }
             let date = daily.time[index]
             return WeatherForecast.Day(
                 id: date,
                 isToday: index == daily.time.startIndex,
-                weekday: weekday(for: date),
+                weekday: formatWeekday(for: date),
                 minTemperature: min(low, high),
                 maxTemperature: max(low, high),
-                rainChance: value(in: daily.precipitationProbabilityMax, at: index).map(percent),
-                condition: WeatherCondition(code: value(in: daily.weatherCode, at: index) ?? Constants.unknownCode)
+                rainChance: readValue(in: daily.precipitationProbabilityMax, at: index).map(roundToPercent),
+                condition: WeatherCondition(code: readValue(in: daily.weatherCode, at: index) ?? Constants.unknownCode)
             )
         }
 
         let current = WeatherForecast.Current(
             temperature: response.current.temperature,
-            cloudCover: percent(response.current.cloudCover),
-            rainChance: value(in: hourly.precipitationProbability, at: start).map(percent),
+            cloudCover: roundToPercent(response.current.cloudCover),
+            rainChance: readValue(in: hourly.precipitationProbability, at: start).map(roundToPercent),
             condition: WeatherCondition(code: response.current.weatherCode),
             isDay: response.current.isDay == 1
         )
@@ -61,15 +61,15 @@ struct ForecastMapper: ForecastMapperProtocol {
         return WeatherForecast(current: current, hours: hours, days: days)
     }
 
-    private func value<T>(in array: [T?], at index: Int) -> T? {
+    private func readValue<T>(in array: [T?], at index: Int) -> T? {
         array.indices.contains(index) ? array[index] : nil
     }
 
-    private func percent(_ value: Double) -> Int {
+    private func roundToPercent(_ value: Double) -> Int {
         Int(value.rounded())
     }
 
-    private func weekday(for isoDate: String) -> String {
+    private func formatWeekday(for isoDate: String) -> String {
         guard let date = try? Date(isoDate, strategy: Date.ISO8601FormatStyle().year().month().day()) else {
             return isoDate
         }

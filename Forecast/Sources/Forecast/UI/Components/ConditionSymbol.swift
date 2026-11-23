@@ -20,7 +20,7 @@ struct ConditionSymbol: View {
 
     var body: some View {
         let layers = layerColors
-        Image(systemName: condition.symbolName(isDay: isDay))
+        Image(systemName: condition.makeSymbolName(isDay: isDay))
             .symbolRenderingMode(.palette)
             .foregroundStyle(layers.primary, layers.secondary, layers.tertiary)
     }

@@ -15,7 +15,7 @@ actor FakeForecastClient: ForecastClientProtocol {
         self.results = results
     }
 
-    func forecast(latitude: Double, longitude: Double) async throws(ForecastError) -> WeatherForecast {
+    func fetchForecast(latitude: Double, longitude: Double) async throws(ForecastError) -> WeatherForecast {
         let result = results.isEmpty ? .failure(.unknown) : results.removeFirst()
         return try result.get()
     }

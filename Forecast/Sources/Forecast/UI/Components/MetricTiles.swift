@@ -22,7 +22,7 @@ struct MetricTiles: View {
                 title: Localizable.cloudCoverTileTitle,
                 systemImage: Constants.cloudIcon,
                 percent: current.cloudCover,
-                caption: CloudCoverDescription.title(for: current.cloudCover),
+                caption: CloudCoverDescription.makeTitle(for: current.cloudCover),
                 tint: Palette.textSecondary
             )
             MetricTile(
