@@ -8,7 +8,7 @@
 import Foundation
 import Networking
 
-nonisolated struct ForecastAPI: ForecastAPIProtocol {
+struct ForecastAPI: ForecastAPIProtocol {
     static let baseURL = URL(staticString: "https://api.open-meteo.com/")
 
     func forecast(latitude: Double, longitude: Double) -> Endpoint {

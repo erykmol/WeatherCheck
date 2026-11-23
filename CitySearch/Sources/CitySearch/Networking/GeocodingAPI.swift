@@ -8,7 +8,7 @@
 import Foundation
 import Networking
 
-nonisolated struct GeocodingAPI: GeocodingAPIProtocol {
+struct GeocodingAPI: GeocodingAPIProtocol {
     static let baseURL = URL(staticString: "https://geocoding-api.open-meteo.com/")
 
     func search(name: String) -> Endpoint {
