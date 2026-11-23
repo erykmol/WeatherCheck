@@ -110,4 +110,20 @@ struct RequestBuilderTests {
 
         #expect(request.value(forHTTPHeaderField: "Accept") == "text/csv")
     }
+
+    @Test func ignoresTheLocalCacheWhenTheEndpointAsks() throws {
+        let sut = RequestBuilder(baseURL: Self.baseURL)
+
+        let request = try sut.makeRequest(for: Endpoint(method: .GET, path: "v1/items", ignoresCache: true))
+
+        #expect(request.cachePolicy == .reloadIgnoringLocalCacheData)
+    }
+
+    @Test func usesTheProtocolCachePolicyByDefault() throws {
+        let sut = RequestBuilder(baseURL: Self.baseURL)
+
+        let request = try sut.makeRequest(for: Endpoint(method: .GET, path: "v1/items"))
+
+        #expect(request.cachePolicy == .useProtocolCachePolicy)
+    }
 }

@@ -13,18 +13,21 @@ public struct Endpoint: Sendable {
     public var query: [URLQueryItem]
     public var headers: [String: String]
     public var body: Data?
+    public var ignoresCache: Bool
 
     public init(
         method: HTTPMethod,
         path: String,
         query: [URLQueryItem] = [],
         headers: [String: String] = [:],
-        body: Data? = nil
+        body: Data? = nil,
+        ignoresCache: Bool = false
     ) {
         self.method = method
         self.path = path
         self.query = query
         self.headers = headers
         self.body = body
+        self.ignoresCache = ignoresCache
     }
 }
