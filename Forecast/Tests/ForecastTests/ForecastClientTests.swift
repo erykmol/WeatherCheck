@@ -21,13 +21,17 @@ struct ForecastClientTests {
         ForecastClient(networkManager: networkManager, api: api, decoder: decoder, mapper: mapper)
     }
 
-    @Test func asksTheAPIForTheEndpointOfTheCoordinates() async throws {
+    @Test(arguments: [true, false])
+    func asksTheAPIForTheEndpointOfTheRequest(
+        ignoringCache: Bool
+    ) async throws {
         let api = FakeForecastAPI(endpoint: Endpoint(method: .GET, path: "v1/forecast"))
         let sut = makeSUT(api: api)
 
-        _ = try await sut.fetchForecast(latitude: 51.75, longitude: 19.46667)
+        _ = try await sut.fetchForecast(latitude: 51.75, longitude: 19.46667, ignoringCache: ignoringCache)
 
-        #expect(api.receivedRequests == [FakeForecastAPI.Request(latitude: 51.75, longitude: 19.46667)])
+        let expected = FakeForecastAPI.Request(latitude: 51.75, longitude: 19.46667, ignoringCache: ignoringCache)
+        #expect(api.receivedRequests == [expected])
     }
 
     @Test func sendsTheEndpointFromTheAPI() async throws {
@@ -35,7 +39,7 @@ struct ForecastClientTests {
         let api = FakeForecastAPI(endpoint: Endpoint(method: .GET, path: "v1/endpoint-from-the-api"))
         let sut = makeSUT(networkManager: networkManager, api: api)
 
-        _ = try await sut.fetchForecast(latitude: 51.75, longitude: 19.46667)
+        _ = try await sut.fetchForecast(latitude: 51.75, longitude: 19.46667, ignoringCache: false)
 
         #expect(networkManager.sentEndpoints.map(\.path) == ["v1/endpoint-from-the-api"])
     }
@@ -45,7 +49,7 @@ struct ForecastClientTests {
         let decoder = FakeResponseDecoder(result: .success(ForecastResponse.fixture()))
         let sut = makeSUT(networkManager: FakeNetworkingManager(result: .success(data)), decoder: decoder)
 
-        _ = try await sut.fetchForecast(latitude: 51.75, longitude: 19.46667)
+        _ = try await sut.fetchForecast(latitude: 51.75, longitude: 19.46667, ignoringCache: false)
 
         #expect(decoder.receivedData == [data])
     }
@@ -55,7 +59,7 @@ struct ForecastClientTests {
         let decoder = FakeResponseDecoder(result: .success(ForecastResponse.fixture(currentTime: "2026-11-18T09:15")))
         let sut = makeSUT(decoder: decoder, mapper: mapper)
 
-        _ = try await sut.fetchForecast(latitude: 51.75, longitude: 19.46667)
+        _ = try await sut.fetchForecast(latitude: 51.75, longitude: 19.46667, ignoringCache: false)
 
         #expect(mapper.receivedResponses.map(\.current.time) == ["2026-11-18T09:15"])
     }
@@ -63,7 +67,7 @@ struct ForecastClientTests {
     @Test func returnsTheMappedForecast() async throws {
         let sut = makeSUT(mapper: FakeForecastMapper(result: .success(.placeholder)))
 
-        let forecast = try await sut.fetchForecast(latitude: 51.75, longitude: 19.46667)
+        let forecast = try await sut.fetchForecast(latitude: 51.75, longitude: 19.46667, ignoringCache: false)
 
         #expect(forecast == .placeholder)
     }
@@ -72,7 +76,7 @@ struct ForecastClientTests {
         let sut = makeSUT(mapper: FakeForecastMapper(result: .failure(.unknown)))
 
         await #expect(throws: ForecastError.unknown) {
-            try await sut.fetchForecast(latitude: 51.75, longitude: 19.46667)
+            try await sut.fetchForecast(latitude: 51.75, longitude: 19.46667, ignoringCache: false)
         }
     }
 
@@ -80,7 +84,7 @@ struct ForecastClientTests {
         let sut = makeSUT(networkManager: FakeNetworkingManager(result: .failure(.offline)))
 
         await #expect(throws: ForecastError.offline) {
-            try await sut.fetchForecast(latitude: 51.75, longitude: 19.46667)
+            try await sut.fetchForecast(latitude: 51.75, longitude: 19.46667, ignoringCache: false)
         }
     }
 
@@ -88,7 +92,7 @@ struct ForecastClientTests {
         let sut = makeSUT(decoder: FakeResponseDecoder(result: .failure(.unexpected("Couldn't decode the data"))))
 
         await #expect(throws: ForecastError.unknown) {
-            try await sut.fetchForecast(latitude: 51.75, longitude: 19.46667)
+            try await sut.fetchForecast(latitude: 51.75, longitude: 19.46667, ignoringCache: false)
         }
     }
 }

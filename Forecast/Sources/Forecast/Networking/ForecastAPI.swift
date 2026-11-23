@@ -11,7 +11,11 @@ import Networking
 struct ForecastAPI: ForecastAPIProtocol {
     static let baseURL = URL(staticString: "https://api.open-meteo.com/")
 
-    func makeForecastEndpoint(latitude: Double, longitude: Double) -> Endpoint {
+    func makeForecastEndpoint(
+        latitude: Double,
+        longitude: Double,
+        ignoringCache: Bool
+    ) -> Endpoint {
         Endpoint(
             method: .GET,
             path: "v1/forecast",
@@ -23,7 +27,8 @@ struct ForecastAPI: ForecastAPIProtocol {
                 URLQueryItem(name: "daily", value: "weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max"),
                 URLQueryItem(name: "timezone", value: "auto"),
                 URLQueryItem(name: "forecast_days", value: String(Constants.forecastDays)),
-            ]
+            ],
+            ignoresCache: ignoringCache
         )
     }
 }

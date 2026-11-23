@@ -10,6 +10,7 @@ import Foundation
 protocol ForecastClientProtocol: Sendable {
     func fetchForecast(
         latitude: Double,
-        longitude: Double
+        longitude: Double,
+        ignoringCache: Bool
     ) async throws(ForecastError) -> WeatherForecast
 }

@@ -19,9 +19,16 @@ struct ForecastViewModelTests {
         _ results: Result<WeatherForecast, ForecastError>...,
         connectivity: [Connectivity] = []
     ) -> ForecastViewModel {
+        makeSUT(client: FakeForecastClient(results: results), connectivity: connectivity)
+    }
+
+    private func makeSUT(
+        client: FakeForecastClient,
+        connectivity: [Connectivity] = []
+    ) -> ForecastViewModel {
         ForecastViewModel(
             location: .lodz,
-            client: FakeForecastClient(results: results),
+            client: client,
             networkMonitor: StubNetworkMonitor(updates: connectivity),
             now: { [updatedAt] in updatedAt }
         )
@@ -83,6 +90,18 @@ struct ForecastViewModelTests {
         await sut.retry()
 
         #expect(sut.state == .loaded(.placeholder, updatedAt: updatedAt))
+    }
+
+    @Test func ignoresTheCacheOnlyOnRetry() async {
+        let client = FakeForecastClient(results: [])
+        let sut = makeSUT(client: client)
+        await sut.load()
+
+        await sut.retry()
+        await sut.refresh()
+
+        let requests = await client.receivedRequests
+        #expect(requests.map(\.ignoringCache) == [false, true, false])
     }
 
     @Test func refreshKeepsTheForecastWhenItFails() async {

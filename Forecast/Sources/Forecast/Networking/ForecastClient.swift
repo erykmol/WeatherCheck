@@ -31,11 +31,12 @@ struct ForecastClient: ForecastClientProtocol {
 
     func fetchForecast(
         latitude: Double,
-        longitude: Double
+        longitude: Double,
+        ignoringCache: Bool
     ) async throws(ForecastError) -> WeatherForecast {
         let response: ForecastResponse
         do throws(NetworkError) {
-            let data = try await networkManager.send(api.makeForecastEndpoint(latitude: latitude, longitude: longitude))
+            let data = try await networkManager.send(api.makeForecastEndpoint(latitude: latitude, longitude: longitude, ignoringCache: ignoringCache))
             response = try await decoder.decode(ForecastResponse.self, from: data)
         } catch {
             throw ForecastError(error)
