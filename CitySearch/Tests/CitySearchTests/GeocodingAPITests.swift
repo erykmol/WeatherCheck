@@ -14,7 +14,7 @@ struct GeocodingAPITests {
     @Test func searchesForTheGivenName() {
         let sut = GeocodingAPI()
 
-        let endpoint = sut.makeSearchEndpoint(name: "Łódź")
+        let endpoint = sut.makeSearchEndpoint(name: "Łódź", ignoringCache: false)
 
         #expect(endpoint.query.contains(URLQueryItem(name: "name", value: "Łódź")))
     }
@@ -22,8 +22,17 @@ struct GeocodingAPITests {
     @Test func asksForPolishNames() {
         let sut = GeocodingAPI()
 
-        let endpoint = sut.makeSearchEndpoint(name: "Łódź")
+        let endpoint = sut.makeSearchEndpoint(name: "Łódź", ignoringCache: false)
 
         #expect(endpoint.query.contains(URLQueryItem(name: "language", value: "pl")))
+    }
+
+    @Test(arguments: [true, false])
+    func ignoresTheCacheOnlyWhenAsked(ignoringCache: Bool) {
+        let sut = GeocodingAPI()
+
+        let endpoint = sut.makeSearchEndpoint(name: "Łódź", ignoringCache: ignoringCache)
+
+        #expect(endpoint.ignoresCache == ignoringCache)
     }
 }

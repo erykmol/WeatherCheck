@@ -20,13 +20,14 @@ struct GeocodingClientTests {
         GeocodingClient(networkManager: networkManager, api: api, decoder: decoder)
     }
 
-    @Test func asksTheAPIForTheEndpointOfTheName() async throws {
+    @Test(arguments: [true, false])
+    func asksTheAPIForTheEndpointOfTheSearch(ignoringCache: Bool) async throws {
         let api = FakeGeocodingAPI(endpoint: Endpoint(method: .GET, path: "v1/search"))
         let sut = makeSUT(api: api)
 
-        _ = try await sut.searchCities(named: "Łódź")
+        _ = try await sut.searchCities(named: "Łódź", ignoringCache: ignoringCache)
 
-        #expect(api.receivedNames == ["Łódź"])
+        #expect(api.receivedRequests == [FakeGeocodingAPI.Request(name: "Łódź", ignoringCache: ignoringCache)])
     }
 
     @Test func sendsTheEndpointFromTheAPI() async throws {
@@ -34,7 +35,7 @@ struct GeocodingClientTests {
         let api = FakeGeocodingAPI(endpoint: Endpoint(method: .GET, path: "v1/endpoint-from-the-api"))
         let sut = makeSUT(networkManager: networkManager, api: api)
 
-        _ = try await sut.searchCities(named: "Łódź")
+        _ = try await sut.searchCities(named: "Łódź", ignoringCache: false)
 
         #expect(networkManager.sentEndpoints.map(\.path) == ["v1/endpoint-from-the-api"])
     }
@@ -44,7 +45,7 @@ struct GeocodingClientTests {
         let decoder = FakeResponseDecoder(result: .success(GeocodingResponse(results: [])))
         let sut = makeSUT(networkManager: FakeNetworkingManager(result: .success(data)), decoder: decoder)
 
-        _ = try await sut.searchCities(named: "Łódź")
+        _ = try await sut.searchCities(named: "Łódź", ignoringCache: false)
 
         #expect(decoder.receivedData == [data])
     }
@@ -60,7 +61,7 @@ struct GeocodingClientTests {
         )
         let sut = makeSUT(decoder: FakeResponseDecoder(result: .success(GeocodingResponse(results: [place]))))
 
-        let cities = try await sut.searchCities(named: "Łódź")
+        let cities = try await sut.searchCities(named: "Łódź", ignoringCache: false)
 
         #expect(cities == [.lodz])
     }
@@ -68,7 +69,7 @@ struct GeocodingClientTests {
     @Test func treatsMissingResultsAsNoCities() async throws {
         let sut = makeSUT(decoder: FakeResponseDecoder(result: .success(GeocodingResponse(results: nil))))
 
-        let cities = try await sut.searchCities(named: "Kraqow")
+        let cities = try await sut.searchCities(named: "Kraqow", ignoringCache: false)
 
         #expect(cities.isEmpty)
     }
@@ -77,7 +78,7 @@ struct GeocodingClientTests {
         let sut = makeSUT(networkManager: FakeNetworkingManager(result: .failure(.offline)))
 
         await #expect(throws: SearchError.offline) {
-            try await sut.searchCities(named: "Łódź")
+            try await sut.searchCities(named: "Łódź", ignoringCache: false)
         }
     }
 
@@ -85,7 +86,7 @@ struct GeocodingClientTests {
         let sut = makeSUT(decoder: FakeResponseDecoder(result: .failure(.unexpected("Couldn't decode the data"))))
 
         await #expect(throws: SearchError.unknown) {
-            try await sut.searchCities(named: "Łódź")
+            try await sut.searchCities(named: "Łódź", ignoringCache: false)
         }
     }
 }

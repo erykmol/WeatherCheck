@@ -20,8 +20,24 @@ struct CitySearchViewModelTests {
         store: FakeHistoryStore = FakeHistoryStore(),
         onCitySelected: @escaping (City) -> Void = { _ in }
     ) -> CitySearchViewModel {
-        CitySearchViewModel(
+        makeSUT(
             geocoding: FakeGeocodingClient(results: results),
+            validation: validation,
+            connectivity: connectivity,
+            store: store,
+            onCitySelected: onCitySelected
+        )
+    }
+
+    private func makeSUT(
+        geocoding: FakeGeocodingClient,
+        validation: CityNameValidation = .valid("Łódź"),
+        connectivity: [Connectivity] = [],
+        store: FakeHistoryStore = FakeHistoryStore(),
+        onCitySelected: @escaping (City) -> Void = { _ in }
+    ) -> CitySearchViewModel {
+        CitySearchViewModel(
+            geocoding: geocoding,
             validator: FakeCityNameValidator(validation: validation),
             networkMonitor: StubNetworkMonitor(updates: connectivity),
             history: store,
@@ -149,6 +165,19 @@ struct CitySearchViewModelTests {
 
         #expect(sut.request != before)
         #expect(sut.request.query == before.query)
+    }
+
+    @Test func retryIgnoresTheCacheForTheNextSearchOnly() async {
+        let geocoding = FakeGeocodingClient(results: [])
+        let sut = makeSUT(geocoding: geocoding)
+        await sut.searchIfNeeded()
+
+        sut.retry()
+        await sut.searchIfNeeded()
+        await sut.searchIfNeeded()
+
+        let requests = await geocoding.receivedRequests
+        #expect(requests.map(\.ignoringCache) == [false, true, false])
     }
 
     @Test func loadsHistoryFromTheStore() {

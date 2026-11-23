@@ -8,5 +8,8 @@
 import Foundation
 
 protocol GeocodingClientProtocol: Sendable {
-    func searchCities(named name: String) async throws(SearchError) -> [City]
+    func searchCities(
+        named name: String,
+        ignoringCache: Bool
+    ) async throws(SearchError) -> [City]
 }
