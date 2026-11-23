@@ -54,7 +54,10 @@ struct PreviewGeocodingClient: GeocodingClientProtocol {
         self.response = response
     }
 
-    func searchCities(named name: String) async throws(SearchError) -> [City] {
+    func searchCities(
+        named name: String,
+        ignoringCache: Bool
+    ) async throws(SearchError) -> [City] {
         switch response {
         case .matching(let cities):
             return cities.filter { $0.name.localizedStandardContains(name) }

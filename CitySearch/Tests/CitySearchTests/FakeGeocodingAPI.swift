@@ -11,19 +11,24 @@ import Networking
 @testable import CitySearch
 
 final class FakeGeocodingAPI: GeocodingAPIProtocol {
+    struct Request: Equatable, Sendable {
+        let name: String
+        let ignoringCache: Bool
+    }
+
     private let endpoint: Endpoint
-    private let names = OSAllocatedUnfairLock<[String]>(initialState: [])
+    private let requests = OSAllocatedUnfairLock<[Request]>(initialState: [])
 
     init(endpoint: Endpoint) {
         self.endpoint = endpoint
     }
 
-    var receivedNames: [String] {
-        names.withLock { $0 }
+    var receivedRequests: [Request] {
+        requests.withLock { $0 }
     }
 
-    func makeSearchEndpoint(name: String) -> Endpoint {
-        names.withLock { $0.append(name) }
+    func makeSearchEndpoint(name: String, ignoringCache: Bool) -> Endpoint {
+        requests.withLock { $0.append(Request(name: name, ignoringCache: ignoringCache)) }
         return endpoint
     }
 }

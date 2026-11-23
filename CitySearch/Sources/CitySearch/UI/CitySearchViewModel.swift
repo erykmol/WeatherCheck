@@ -33,6 +33,7 @@ final class CitySearchViewModel {
     private var hasConnection = true
     private var lastSearchFailedOffline = false
     private var attempt = 0
+    private var ignoresCacheOnNextSearch = false
 
     var isOffline: Bool {
         !hasConnection || lastSearchFailedOffline
@@ -92,7 +93,9 @@ final class CitySearchViewModel {
                 return
             }
             content = .searching
-            await showCitiesOrError(named: name)
+            let ignoringCache = ignoresCacheOnNextSearch
+            ignoresCacheOnNextSearch = false
+            await showCitiesOrError(named: name, ignoringCache: ignoringCache)
         }
     }
 
@@ -111,6 +114,7 @@ final class CitySearchViewModel {
     }
 
     func retry() {
+        ignoresCacheOnNextSearch = true
         attempt += 1
     }
 
@@ -127,9 +131,12 @@ final class CitySearchViewModel {
         updateHistory { try historyStore.deleteAll() }
     }
 
-    private func showCitiesOrError(named name: String) async {
+    private func showCitiesOrError(
+        named name: String,
+        ignoringCache: Bool
+    ) async {
         do throws(SearchError) {
-            let cities = try await geocoding.searchCities(named: name)
+            let cities = try await geocoding.searchCities(named: name, ignoringCache: ignoringCache)
             guard !Task.isCancelled else { return }
             lastSearchFailedOffline = false
             content = cities.isEmpty ? .noResults(query: name) : .results(cities, query: name)

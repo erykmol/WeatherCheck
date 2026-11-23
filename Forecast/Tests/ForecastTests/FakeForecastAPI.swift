@@ -14,6 +14,7 @@ final class FakeForecastAPI: ForecastAPIProtocol {
     struct Request: Equatable, Sendable {
         let latitude: Double
         let longitude: Double
+        let ignoringCache: Bool
     }
 
     private let endpoint: Endpoint
@@ -27,8 +28,12 @@ final class FakeForecastAPI: ForecastAPIProtocol {
         requests.withLock { $0 }
     }
 
-    func makeForecastEndpoint(latitude: Double, longitude: Double) -> Endpoint {
-        requests.withLock { $0.append(Request(latitude: latitude, longitude: longitude)) }
+    func makeForecastEndpoint(
+        latitude: Double,
+        longitude: Double,
+        ignoringCache: Bool
+    ) -> Endpoint {
+        requests.withLock { $0.append(Request(latitude: latitude, longitude: longitude, ignoringCache: ignoringCache)) }
         return endpoint
     }
 }

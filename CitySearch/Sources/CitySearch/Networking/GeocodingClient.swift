@@ -26,9 +26,12 @@ struct GeocodingClient: GeocodingClientProtocol {
         self.decoder = decoder
     }
 
-    func searchCities(named name: String) async throws(SearchError) -> [City] {
+    func searchCities(
+        named name: String,
+        ignoringCache: Bool
+    ) async throws(SearchError) -> [City] {
         do throws(NetworkError) {
-            let data = try await networkManager.send(api.makeSearchEndpoint(name: name))
+            let data = try await networkManager.send(api.makeSearchEndpoint(name: name, ignoringCache: ignoringCache))
             let response = try await decoder.decode(GeocodingResponse.self, from: data)
             return (response.results ?? []).map { City($0) }
         } catch {

@@ -33,6 +33,7 @@ public struct RequestBuilder: Sendable {
         var request = URLRequest(url: url)
         request.httpMethod = endpoint.method.rawValue
         request.httpBody = endpoint.body
+        request.cachePolicy = endpoint.ignoresCache ? .reloadIgnoringLocalCacheData : .useProtocolCachePolicy
         request.setValue("application/json", forHTTPHeaderField: "Accept")
         
         for (field, value) in endpoint.headers {

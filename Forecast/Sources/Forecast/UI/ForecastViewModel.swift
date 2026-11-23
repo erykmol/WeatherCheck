@@ -85,14 +85,19 @@ final class ForecastViewModel {
 
     func retry() async {
         state = .loading
-        await showForecastOrError()
+        await showForecastOrError(ignoringCache: true)
     }
 
     private func showForecastOrError(
-        keepingForecastOnFailure: Bool = false
+        keepingForecastOnFailure: Bool = false,
+        ignoringCache: Bool = false
     ) async {
         do throws(ForecastError) {
-            let forecast = try await client.fetchForecast(latitude: location.latitude, longitude: location.longitude)
+            let forecast = try await client.fetchForecast(
+                latitude: location.latitude,
+                longitude: location.longitude,
+                ignoringCache: ignoringCache
+            )
             lastRefreshFailedOffline = false
             state = .loaded(forecast, updatedAt: now())
         } catch {
