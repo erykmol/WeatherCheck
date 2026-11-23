@@ -13,7 +13,10 @@ public final class SearchHistoryStore: SearchHistoryStoreProtocol {
     private let retention: SearchHistoryRetention
     private let now: () -> Date
 
-    public convenience init(records: any SearchHistoryRecordsProtocol, retention: SearchHistoryRetention) {
+    public convenience init(
+        records: any SearchHistoryRecordsProtocol,
+        retention: SearchHistoryRetention
+    ) {
         self.init(records: records, retention: retention, now: { .now })
     }
 
@@ -49,7 +52,9 @@ public final class SearchHistoryStore: SearchHistoryStoreProtocol {
         try records.deleteAll()
     }
 
-    private func applyRetention(to entries: [SearchHistoryEntry]) -> [SearchHistoryEntry] {
+    private func applyRetention(
+        to entries: [SearchHistoryEntry]
+    ) -> [SearchHistoryEntry] {
         let cutoff = retention.calculateCutoff(before: now())
         let newestFirst = entries
             .filter { entry in cutoff.map { entry.searchedAt >= $0 } ?? true }

@@ -16,7 +16,9 @@ final class FakeMigrationPlanValidator: MigrationPlanValidatorProtocol {
         self.error = error
     }
 
-    func validate(_ plan: any MigrationPlanProtocol.Type) throws(MigrationError) {
+    func validate(
+        _ plan: any MigrationPlanProtocol.Type
+    ) throws(MigrationError) {
         validatedPlans.append(ObjectIdentifier(plan))
         if let error {
             throw error

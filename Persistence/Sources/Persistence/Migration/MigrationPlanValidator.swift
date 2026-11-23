@@ -14,7 +14,9 @@ struct MigrationPlanValidator: MigrationPlanValidatorProtocol {
         self.modelBuilder = modelBuilder
     }
 
-    func validate(_ plan: any MigrationPlanProtocol.Type) throws(MigrationError) {
+    func validate(
+        _ plan: any MigrationPlanProtocol.Type
+    ) throws(MigrationError) {
         let schemas = plan.schemas
         let stages = plan.stages
         guard stages.count == schemas.count - 1 else {
@@ -35,7 +37,9 @@ struct MigrationPlanValidator: MigrationPlanValidatorProtocol {
         try validateChecksums(of: schemas)
     }
 
-    private func validateChecksums(of schemas: [any VersionedSchemaProtocol.Type]) throws(MigrationError) {
+    private func validateChecksums(
+        of schemas: [any VersionedSchemaProtocol.Type]
+    ) throws(MigrationError) {
         let changes = schemas.compactMap { (schema: any VersionedSchemaProtocol.Type) -> String? in
             let checksum = modelBuilder.makeImmutableModel(for: schema, bindingClasses: false).versionChecksum
             guard checksum != schema.versionChecksum else {

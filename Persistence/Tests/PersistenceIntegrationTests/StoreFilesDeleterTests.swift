@@ -51,7 +51,10 @@ struct StoreFilesDeleterTests {
         #expect(!store.fileExists(at: store.url))
     }
 
-    private func insertItem(titled title: String, into stack: CoreDataStack) throws {
+    private func insertItem(
+        titled title: String,
+        into stack: CoreDataStack
+    ) throws {
         NSEntityDescription
             .insertNewObject(forEntityName: TestEntity.item, into: stack.viewContext)
             .setValue(title, forKey: "title")

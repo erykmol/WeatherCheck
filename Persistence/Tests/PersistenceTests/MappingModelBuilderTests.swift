@@ -80,7 +80,10 @@ struct MappingModelBuilderTests {
         #expect(owner?.valueExpression?.description.contains("OwnerToOwner") == true)
     }
 
-    private func findEntityMapping(named name: String, in mapping: NSMappingModel) -> NSEntityMapping? {
+    private func findEntityMapping(
+        named name: String,
+        in mapping: NSMappingModel
+    ) -> NSEntityMapping? {
         mapping.entityMappings.first { $0.destinationEntityName == name }
     }
 }

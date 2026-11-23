@@ -14,7 +14,9 @@ public enum TestPlanParts {
         [TestSchemaV1.self, TestSchemaV2.self, TestSchemaV3.self, TestSchemaV4.self, TestSchemaV5.self]
     }
 
-    static func makeStages(itemPolicy: NSEntityMigrationPolicy.Type) -> [MigrationStage] {
+    static func makeStages(
+        itemPolicy: NSEntityMigrationPolicy.Type
+    ) -> [MigrationStage] {
         [
             .lightweight(from: TestSchemaV1.self, to: TestSchemaV2.self),
             .lightweight(from: TestSchemaV2.self, to: TestSchemaV3.self),

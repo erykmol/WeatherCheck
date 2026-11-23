@@ -53,8 +53,6 @@ final class ForecastViewModel {
         self.now = now
     }
 
-    
-
     func load() async {
         guard case .loading = state else { return }
         await showForecastOrError()
@@ -90,7 +88,9 @@ final class ForecastViewModel {
         await showForecastOrError()
     }
 
-    private func showForecastOrError(keepingForecastOnFailure: Bool = false) async {
+    private func showForecastOrError(
+        keepingForecastOnFailure: Bool = false
+    ) async {
         do throws(ForecastError) {
             let forecast = try await client.fetchForecast(latitude: location.latitude, longitude: location.longitude)
             lastRefreshFailedOffline = false

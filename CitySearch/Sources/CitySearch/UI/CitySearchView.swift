@@ -13,7 +13,10 @@ public struct CitySearchView: View {
     @State private var viewModel: CitySearchViewModel
     @State private var isConfirmingClear = false
 
-    public init(history: any SearchHistoryStoreProtocol, onCitySelected: @escaping (City) -> Void) {
+    public init(
+        history: any SearchHistoryStoreProtocol,
+        onCitySelected: @escaping (City) -> Void
+    ) {
         self.init(viewModel: CitySearchViewModel(
             validator: CityNameValidator(),
             networkMonitor: NetworkMonitor(),

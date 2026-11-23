@@ -28,7 +28,9 @@ public struct NetworkingManager: NetworkingManagerProtocol {
         try await performCheckingStatus(builder.makeRequest(for: endpoint))
     }
 
-    private func performCheckingStatus(_ request: URLRequest) async throws(NetworkError) -> Data {
+    private func performCheckingStatus(
+        _ request: URLRequest
+    ) async throws(NetworkError) -> Data {
         let (data, response): (Data, URLResponse)
         do {
             (data, response) = try await session.data(for: request)

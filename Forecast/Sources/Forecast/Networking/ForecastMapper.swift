@@ -8,7 +8,9 @@
 import Foundation
 
 struct ForecastMapper: ForecastMapperProtocol {
-    func mapForecast(from response: ForecastResponse) throws(ForecastError) -> WeatherForecast {
+    func mapForecast(
+        from response: ForecastResponse
+    ) throws(ForecastError) -> WeatherForecast {
         let hourly = response.hourly
         let daily = response.daily
         let currentHour = response.current.time.prefix(Constants.hourKeyLength)

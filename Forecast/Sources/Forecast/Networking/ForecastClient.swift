@@ -29,7 +29,10 @@ struct ForecastClient: ForecastClientProtocol {
         self.mapper = mapper
     }
 
-    func fetchForecast(latitude: Double, longitude: Double) async throws(ForecastError) -> WeatherForecast {
+    func fetchForecast(
+        latitude: Double,
+        longitude: Double
+    ) async throws(ForecastError) -> WeatherForecast {
         let response: ForecastResponse
         do throws(NetworkError) {
             let data = try await networkManager.send(api.makeForecastEndpoint(latitude: latitude, longitude: longitude))

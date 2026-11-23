@@ -8,5 +8,8 @@
 import Foundation
 
 public protocol ResponseDecoderProtocol: Sendable {
-    func decode<T: Decodable & Sendable>(_ type: T.Type, from data: Data) async throws(NetworkError) -> T
+    func decode<T: Decodable & Sendable>(
+        _ type: T.Type,
+        from data: Data
+    ) async throws(NetworkError) -> T
 }

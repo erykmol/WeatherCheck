@@ -21,7 +21,10 @@ public final class FakeResponseDecoder: ResponseDecoderProtocol {
         payloads.withLock { $0 }
     }
 
-    public func decode<T: Decodable & Sendable>(_ type: T.Type, from data: Data) async throws(NetworkError) -> T {
+    public func decode<T: Decodable & Sendable>(
+        _ type: T.Type,
+        from data: Data
+    ) async throws(NetworkError) -> T {
         payloads.withLock { $0.append(data) }
         guard let value = try result.get() as? T else {
             throw .unexpected("FakeResponseDecoder has no \(T.self) to return")

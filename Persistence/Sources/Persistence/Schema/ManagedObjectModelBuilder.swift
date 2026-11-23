@@ -9,7 +9,10 @@ import Foundation
 import CoreData
 
 struct ManagedObjectModelBuilder: ManagedObjectModelBuilderProtocol {
-    func makeImmutableModel(for schema: any VersionedSchemaProtocol.Type, bindingClasses: Bool) -> NSManagedObjectModel {
+    func makeImmutableModel(
+        for schema: any VersionedSchemaProtocol.Type,
+        bindingClasses: Bool
+    ) -> NSManagedObjectModel {
         let entities = schema.makeEntities()
         if !bindingClasses {
             for entity in entities {

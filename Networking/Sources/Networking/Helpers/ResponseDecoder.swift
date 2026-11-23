@@ -10,7 +10,10 @@ import Foundation
 public struct ResponseDecoder: ResponseDecoderProtocol {
     public init() {}
 
-    public func decode<T: Decodable & Sendable>(_ type: T.Type, from data: Data) async throws(NetworkError) -> T {
+    public func decode<T: Decodable & Sendable>(
+        _ type: T.Type,
+        from data: Data
+    ) async throws(NetworkError) -> T {
         try await decodeOffTheCallersActor(type, from: data)
     }
 

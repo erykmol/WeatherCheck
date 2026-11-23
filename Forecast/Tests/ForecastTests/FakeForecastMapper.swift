@@ -21,7 +21,9 @@ final class FakeForecastMapper: ForecastMapperProtocol {
         responses.withLock { $0 }
     }
 
-    func mapForecast(from response: ForecastResponse) throws(ForecastError) -> WeatherForecast {
+    func mapForecast(
+        from response: ForecastResponse
+    ) throws(ForecastError) -> WeatherForecast {
         responses.withLock { $0.append(response) }
         return try result.get()
     }

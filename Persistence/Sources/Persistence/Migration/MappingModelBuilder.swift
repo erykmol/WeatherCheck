@@ -117,7 +117,9 @@ struct MappingModelBuilder: MappingModelBuilderProtocol {
         "\(name)To\(name)"
     }
 
-    private func makeSourceExpression(forEntityNamed name: String) -> NSExpression {
+    private func makeSourceExpression(
+        forEntityNamed name: String
+    ) -> NSExpression {
         NSFetchRequestExpression.expression(
             forFetch: NSExpression(forConstantValue: NSFetchRequest<NSManagedObject>(entityName: name)),
             context: makeCallExpression(#selector(getter: NSMigrationManager.sourceContext), on: Constants.managerVariable),

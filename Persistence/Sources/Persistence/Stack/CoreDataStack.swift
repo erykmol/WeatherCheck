@@ -14,7 +14,9 @@ public final class CoreDataStack {
         case file(URL)
         case inMemory
 
-        public static func applicationSupport(for plan: any MigrationPlanProtocol.Type) -> Storage {
+        public static func applicationSupport(
+            for plan: any MigrationPlanProtocol.Type
+        ) -> Storage {
             .file(.applicationSupportDirectory.appending(path: String(describing: plan) + Constants.storeFileExtension))
         }
     }
@@ -22,7 +24,10 @@ public final class CoreDataStack {
     public let viewContext: NSManagedObjectContext
     private let container: NSPersistentContainer
 
-    public convenience init(plan: any MigrationPlanProtocol.Type, storage: Storage) throws {
+    public convenience init(
+        plan: any MigrationPlanProtocol.Type,
+        storage: Storage
+    ) throws {
         let modelBuilder = ManagedObjectModelBuilder()
         try self.init(
             name: String(describing: plan),

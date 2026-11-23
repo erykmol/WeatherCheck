@@ -10,5 +10,7 @@ import CoreData
 
 @MainActor
 protocol ManagedObjectModelCacheProtocol {
-    func bindModel(for schema: any VersionedSchemaProtocol.Type) -> NSManagedObjectModel
+    func bindModel(
+        for schema: any VersionedSchemaProtocol.Type
+    ) -> NSManagedObjectModel
 }

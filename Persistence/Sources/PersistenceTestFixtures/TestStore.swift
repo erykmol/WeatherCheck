@@ -55,7 +55,9 @@ public final class TestStore {
         }
     }
 
-    public func fetchTagNames(_ model: NSManagedObjectModel) throws -> [String] {
+    public func fetchTagNames(
+        _ model: NSManagedObjectModel
+    ) throws -> [String] {
         try withContext(model) { context in
             let request = NSFetchRequest<NSManagedObject>(entityName: TestEntity.tag)
             request.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
@@ -78,7 +80,9 @@ public final class TestStore {
         }
     }
 
-    public func fetchPetOwnerNames(_ model: NSManagedObjectModel) throws -> [String] {
+    public func fetchPetOwnerNames(
+        _ model: NSManagedObjectModel
+    ) throws -> [String] {
         try withContext(model) { context in
             try context
                 .fetch(NSFetchRequest<NSManagedObject>(entityName: RelationTestEntity.pet))
