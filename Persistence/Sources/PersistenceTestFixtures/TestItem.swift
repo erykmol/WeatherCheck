@@ -14,7 +14,12 @@ public struct TestItem: Equatable {
     public let amount: Double
     public let unit: String
 
-    public init(title: String, note: String?, amount: Double, unit: String) {
+    public init(
+        title: String,
+        note: String?,
+        amount: Double,
+        unit: String
+    ) {
         self.title = title
         self.note = note
         self.amount = amount

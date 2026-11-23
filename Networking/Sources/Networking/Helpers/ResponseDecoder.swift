@@ -10,12 +10,18 @@ import Foundation
 public struct ResponseDecoder: ResponseDecoderProtocol {
     public init() {}
 
-    public func decode<T: Decodable & Sendable>(_ type: T.Type, from data: Data) async throws(NetworkError) -> T {
+    public func decode<T: Decodable & Sendable>(
+        _ type: T.Type,
+        from data: Data
+    ) async throws(NetworkError) -> T {
         try await decodeOffTheCallersActor(type, from: data)
     }
 
     @concurrent
-    private func decodeOffTheCallersActor<T: Decodable & Sendable>(_ type: T.Type, from data: Data) async throws(NetworkError) -> T {
+    private func decodeOffTheCallersActor<T: Decodable & Sendable>(
+        _ type: T.Type,
+        from data: Data
+    ) async throws(NetworkError) -> T {
         do {
             return try JSONDecoder().decode(type, from: data)
         } catch {

@@ -9,7 +9,7 @@ import Foundation
 
 struct CityNameValidator: CityNameValidatorProtocol {
     func validate(_ text: String) -> CityNameValidation {
-        let name = sanitized(text)
+        let name = sanitize(text)
         guard !name.isEmpty else {
             return .empty
         }
@@ -25,7 +25,7 @@ struct CityNameValidator: CityNameValidatorProtocol {
         return .valid(name)
     }
 
-    private func sanitized(_ text: String) -> String {
+    private func sanitize(_ text: String) -> String {
         let scalars = text.unicodeScalars
             .filter { $0.properties.generalCategory != .format }
             .map { $0.properties.generalCategory == .dashPunctuation ? Constants.hyphen : $0 }

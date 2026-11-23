@@ -53,19 +53,17 @@ final class ForecastViewModel {
         self.now = now
     }
 
-    
-
     func load() async {
         guard case .loading = state else { return }
-        await fetch()
+        await showForecastOrError()
     }
 
     func refresh() async {
-        await fetch(keepingForecastOnFailure: true)
+        await showForecastOrError(keepingForecastOnFailure: true)
     }
 
     func observeConnectivity() async {
-        for await connectivity in networkMonitor.connectivityUpdates() {
+        for await connectivity in networkMonitor.monitorConnectivity() {
             switch connectivity {
             case .disconnected:
                 hasConnection = false
@@ -87,12 +85,14 @@ final class ForecastViewModel {
 
     func retry() async {
         state = .loading
-        await fetch()
+        await showForecastOrError()
     }
 
-    private func fetch(keepingForecastOnFailure: Bool = false) async {
+    private func showForecastOrError(
+        keepingForecastOnFailure: Bool = false
+    ) async {
         do throws(ForecastError) {
-            let forecast = try await client.forecast(latitude: location.latitude, longitude: location.longitude)
+            let forecast = try await client.fetchForecast(latitude: location.latitude, longitude: location.longitude)
             lastRefreshFailedOffline = false
             state = .loaded(forecast, updatedAt: now())
         } catch {

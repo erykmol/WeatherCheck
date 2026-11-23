@@ -16,7 +16,11 @@ struct HeroSection: View {
 
     @ScaledMetric(relativeTo: .largeTitle) private var temperatureSize = Typography.displaySize
 
-    init(location: ForecastLocation, current: WeatherForecast.Current, today: WeatherForecast.Day?) {
+    init(
+        location: ForecastLocation,
+        current: WeatherForecast.Current,
+        today: WeatherForecast.Day?
+    ) {
         self.location = location
         self.current = current
         self.today = today
@@ -36,8 +40,8 @@ struct HeroSection: View {
             }
             .unredacted()
 
-            Text(TemperatureFormat.string(current.temperature))
-                .font(Typography.display(size: temperatureSize))
+            Text(TemperatureFormat.format(current.temperature))
+                .font(Typography.makeDisplayFont(size: temperatureSize))
                 .monospacedDigit()
 
             Label {
@@ -49,8 +53,8 @@ struct HeroSection: View {
 
             if let today {
                 Localizable.todayTemperatureRange(
-                    max: TemperatureFormat.string(today.maxTemperature),
-                    min: TemperatureFormat.string(today.minTemperature)
+                    max: TemperatureFormat.format(today.maxTemperature),
+                    min: TemperatureFormat.format(today.minTemperature)
                 )
                 .font(Typography.secondary)
                 .foregroundStyle(Palette.textSecondary)

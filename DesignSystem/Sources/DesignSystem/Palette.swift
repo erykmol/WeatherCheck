@@ -13,23 +13,23 @@ public enum Palette {
     public static let background = Color(uiColor: .systemGroupedBackground)
     public static let card = Color(uiColor: .secondarySystemGroupedBackground)
     public static let separator = Color(uiColor: .separator)
-    public static let track = catalog("Track")
+    public static let track = loadColor(named: "Track")
 
     public static let textPrimary = Color(uiColor: .label)
-    public static let textSecondary = catalog("TextSecondary")
+    public static let textSecondary = loadColor(named: "TextSecondary")
 
-    public static let accent = catalog("Accent")
-    public static let onAccent = catalog("OnAccent")
-    public static let rain = catalog("Rain")
-    public static let cloud = catalog("Cloud")
-    public static let sun = catalog("Sun")
-    public static let warning = catalog("Warning")
-    public static let warningBackground = catalog("WarningBackground")
-    public static let destructive = catalog("Destructive")
+    public static let accent = loadColor(named: "Accent")
+    public static let onAccent = loadColor(named: "OnAccent")
+    public static let rain = loadColor(named: "Rain")
+    public static let cloud = loadColor(named: "Cloud")
+    public static let sun = loadColor(named: "Sun")
+    public static let warning = loadColor(named: "Warning")
+    public static let warningBackground = loadColor(named: "WarningBackground")
+    public static let destructive = loadColor(named: "Destructive")
 
-    public static let lightGray = catalog("LightGray")
+    public static let lightGray = loadColor(named: "LightGray")
     
-    private static func catalog(_ name: String) -> Color {
+    private static func loadColor(named name: String) -> Color {
         Color(name, bundle: .module)
     }
 }

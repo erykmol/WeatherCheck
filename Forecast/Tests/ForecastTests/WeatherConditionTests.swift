@@ -39,13 +39,13 @@ struct WeatherConditionTests {
     @Test func usesNightSymbolsAfterDark() {
         let sut = WeatherCondition.clear
 
-        #expect(sut.symbolName(isDay: true) == "sun.max.fill")
-        #expect(sut.symbolName(isDay: false) == "moon.stars.fill")
+        #expect(sut.makeSymbolName(isDay: true) == "sun.max.fill")
+        #expect(sut.makeSymbolName(isDay: false) == "moon.stars.fill")
     }
 
     @Test func fallsBackToACloudForUnknownCodes() {
         let sut = WeatherCondition.unknown
 
-        #expect(sut.symbolName(isDay: true) == "cloud.fill")
+        #expect(sut.makeSymbolName(isDay: true) == "cloud.fill")
     }
 }

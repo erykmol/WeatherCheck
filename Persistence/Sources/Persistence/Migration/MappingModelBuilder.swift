@@ -9,7 +9,7 @@ import Foundation
 import CoreData
 
 struct MappingModelBuilder: MappingModelBuilderProtocol {
-    func mappingModel(
+    func makeMappingModel(
         for stage: MigrationStage,
         from source: NSManagedObjectModel,
         to destination: NSManagedObjectModel
@@ -26,11 +26,11 @@ struct MappingModelBuilder: MappingModelBuilderProtocol {
                 )
             }
         case .custom(_, _, let policies):
-            return customMappingModel(from: source, to: destination, policies: policies)
+            return makeCustomMappingModel(from: source, to: destination, policies: policies)
         }
     }
 
-    private func customMappingModel(
+    private func makeCustomMappingModel(
         from source: NSManagedObjectModel,
         to destination: NSManagedObjectModel,
         policies: [String: NSEntityMigrationPolicy.Type]
@@ -44,18 +44,18 @@ struct MappingModelBuilder: MappingModelBuilderProtocol {
                 return nil
             }
             let entityMapping = NSEntityMapping()
-            entityMapping.name = mappingName(forEntityNamed: name)
+            entityMapping.name = makeMappingName(forEntityNamed: name)
             entityMapping.mappingType = .transformEntityMappingType
             entityMapping.sourceEntityName = name
             entityMapping.sourceEntityVersionHash = sourceEntity.versionHash
             entityMapping.destinationEntityName = name
             entityMapping.destinationEntityVersionHash = destinationEntity.versionHash
-            entityMapping.sourceExpression = sourceExpression(forEntityNamed: name)
+            entityMapping.sourceExpression = makeSourceExpression(forEntityNamed: name)
             if let policy = policies[name] {
                 entityMapping.entityMigrationPolicyClassName = NSStringFromClass(policy)
             } else {
-                entityMapping.attributeMappings = attributeMappings(from: sourceEntity, to: destinationEntity)
-                entityMapping.relationshipMappings = relationshipMappings(
+                entityMapping.attributeMappings = makeAttributeMappings(from: sourceEntity, to: destinationEntity)
+                entityMapping.relationshipMappings = makeRelationshipMappings(
                     from: sourceEntity,
                     to: destinationEntity,
                     in: source
@@ -66,7 +66,7 @@ struct MappingModelBuilder: MappingModelBuilderProtocol {
         return mapping
     }
 
-    private func attributeMappings(
+    private func makeAttributeMappings(
         from source: NSEntityDescription,
         to destination: NSEntityDescription
     ) -> [NSPropertyMapping] {
@@ -81,12 +81,12 @@ struct MappingModelBuilder: MappingModelBuilderProtocol {
             }
             let mapping = NSPropertyMapping()
             mapping.name = name
-            mapping.valueExpression = sourceValue(forKey: sourceName)
+            mapping.valueExpression = makeSourceValueExpression(forKey: sourceName)
             return mapping
         }
     }
 
-    private func relationshipMappings(
+    private func makeRelationshipMappings(
         from source: NSEntityDescription,
         to destination: NSEntityDescription,
         in sourceModel: NSManagedObjectModel
@@ -105,39 +105,48 @@ struct MappingModelBuilder: MappingModelBuilderProtocol {
             }
             let mapping = NSPropertyMapping()
             mapping.name = name
-            mapping.valueExpression = destinationInstances(
-                ofMapping: mappingName(forEntityNamed: target),
-                for: sourceValue(forKey: sourceName)
+            mapping.valueExpression = makeDestinationInstancesExpression(
+                ofMapping: makeMappingName(forEntityNamed: target),
+                for: makeSourceValueExpression(forKey: sourceName)
             )
             return mapping
         }
     }
 
-    private func mappingName(forEntityNamed name: String) -> String {
+    private func makeMappingName(forEntityNamed name: String) -> String {
         "\(name)To\(name)"
     }
 
-    private func sourceExpression(forEntityNamed name: String) -> NSExpression {
+    private func makeSourceExpression(
+        forEntityNamed name: String
+    ) -> NSExpression {
         NSFetchRequestExpression.expression(
             forFetch: NSExpression(forConstantValue: NSFetchRequest<NSManagedObject>(entityName: name)),
-            context: call(#selector(getter: NSMigrationManager.sourceContext), on: Constants.managerVariable),
+            context: makeCallExpression(#selector(getter: NSMigrationManager.sourceContext), on: Constants.managerVariable),
             countOnly: false
         )
     }
 
-    private func sourceValue(forKey key: String) -> NSExpression {
-        call(#selector(NSObject.value(forKey:)), on: Constants.sourceVariable, with: [NSExpression(forConstantValue: key)])
+    private func makeSourceValueExpression(forKey key: String) -> NSExpression {
+        makeCallExpression(#selector(NSObject.value(forKey:)), on: Constants.sourceVariable, with: [NSExpression(forConstantValue: key)])
     }
 
-    private func destinationInstances(ofMapping mappingName: String, for sourceInstances: NSExpression) -> NSExpression {
-        call(
+    private func makeDestinationInstancesExpression(
+        ofMapping mappingName: String,
+        for sourceInstances: NSExpression
+    ) -> NSExpression {
+        makeCallExpression(
             #selector(NSMigrationManager.destinationInstances(forEntityMappingName:sourceInstances:)),
             on: Constants.managerVariable,
             with: [NSExpression(forConstantValue: mappingName), sourceInstances]
         )
     }
 
-    private func call(_ selector: Selector, on variable: String, with arguments: [NSExpression] = []) -> NSExpression {
+    private func makeCallExpression(
+        _ selector: Selector,
+        on variable: String,
+        with arguments: [NSExpression] = []
+    ) -> NSExpression {
         NSExpression(
             forFunction: NSExpression(forVariable: variable),
             selectorName: NSStringFromSelector(selector),

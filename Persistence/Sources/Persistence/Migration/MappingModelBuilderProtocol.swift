@@ -9,7 +9,7 @@ import Foundation
 import CoreData
 
 protocol MappingModelBuilderProtocol {
-    func mappingModel(
+    func makeMappingModel(
         for stage: MigrationStage,
         from source: NSManagedObjectModel,
         to destination: NSManagedObjectModel

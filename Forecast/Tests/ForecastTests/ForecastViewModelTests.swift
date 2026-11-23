@@ -13,7 +13,7 @@ import NetworkingTestHelpers
 
 @MainActor
 struct ForecastViewModelTests {
-    private let updatedAt = Date(timeIntervalSince1970: 1_795_000_000)
+    private let updatedAt = Date(timeIntervalSince1970: 1_795_000_000.0)
 
     private func makeSUT(
         _ results: Result<WeatherForecast, ForecastError>...,

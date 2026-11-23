@@ -8,5 +8,5 @@
 import Foundation
 
 public protocol NetworkMonitorProtocol: Sendable {
-    func connectivityUpdates() -> AsyncStream<Connectivity>
+    func monitorConnectivity() -> AsyncStream<Connectivity>
 }

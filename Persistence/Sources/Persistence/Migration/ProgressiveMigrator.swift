@@ -15,7 +15,7 @@ struct ProgressiveMigrator {
         loadSteps: () throws(MigrationError) -> [MigrationStep]
     ) throws(MigrationError) {
         guard FileManager.default.fileExists(atPath: storeURL.path(percentEncoded: false)) else { return }
-        let metadata = try storeMetadata(at: storeURL)
+        let metadata = try readStoreMetadata(at: storeURL)
         guard !currentModel.isConfiguration(withName: nil, compatibleWithStoreMetadata: metadata) else { return }
 
         let steps = try loadSteps()
@@ -29,20 +29,24 @@ struct ProgressiveMigrator {
             try migrate(storeAt: storeURL, with: steps[index], step: index)
         }
 
-        let migrated = try storeMetadata(at: storeURL)
+        let migrated = try readStoreMetadata(at: storeURL)
         guard currentModel.isConfiguration(withName: nil, compatibleWithStoreMetadata: migrated) else {
             throw .incompleteMigration
         }
     }
 
-    private static func temporaryStoreURL(for storeURL: URL) -> URL {
+    private static func makeTemporaryStoreURL(for storeURL: URL) -> URL {
         storeURL
             .deletingLastPathComponent()
             .appending(path: Constants.temporaryStorePrefix + storeURL.lastPathComponent)
     }
 
-    private func migrate(storeAt storeURL: URL, with migrationStep: MigrationStep, step: Int) throws(MigrationError) {
-        let temporaryURL = Self.temporaryStoreURL(for: storeURL)
+    private func migrate(
+        storeAt storeURL: URL,
+        with migrationStep: MigrationStep,
+        step: Int
+    ) throws(MigrationError) {
+        let temporaryURL = Self.makeTemporaryStoreURL(for: storeURL)
         let coordinator = NSPersistentStoreCoordinator(managedObjectModel: migrationStep.destinationModel)
         do {
             try autoreleasepool {
@@ -72,7 +76,10 @@ struct ProgressiveMigrator {
         }
     }
 
-    private func removeStore(at url: URL, using coordinator: NSPersistentStoreCoordinator) throws {
+    private func removeStore(
+        at url: URL,
+        using coordinator: NSPersistentStoreCoordinator
+    ) throws {
         let fileManager = FileManager.default
         let path = url.path(percentEncoded: false)
         guard fileManager.fileExists(atPath: path) else { return }
@@ -82,7 +89,9 @@ struct ProgressiveMigrator {
         }
     }
 
-    private func storeMetadata(at url: URL) throws(MigrationError) -> [String: Any] {
+    private func readStoreMetadata(
+        at url: URL
+    ) throws(MigrationError) -> [String: Any] {
         do {
             return try NSPersistentStoreCoordinator.metadataForPersistentStore(type: .sqlite, at: url, options: nil)
         } catch {

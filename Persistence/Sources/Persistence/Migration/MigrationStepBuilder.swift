@@ -38,12 +38,12 @@ struct MigrationStepBuilder {
         self.modelCache = modelCache
     }
 
-    func steps() throws(MigrationError) -> [MigrationStep] {
+    func makeSteps() throws(MigrationError) -> [MigrationStep] {
         var steps: [MigrationStep] = []
         for stage in plan.stages {
-            let source = modelBuilder.model(for: stage.source, bindingClasses: false)
-            let destination = modelBuilder.model(for: stage.destination, bindingClasses: false)
-            let mapping = try mappingModelBuilder.mappingModel(for: stage, from: source, to: destination)
+            let source = modelBuilder.makeImmutableModel(for: stage.source, bindingClasses: false)
+            let destination = modelBuilder.makeImmutableModel(for: stage.destination, bindingClasses: false)
+            let mapping = try mappingModelBuilder.makeMappingModel(for: stage, from: source, to: destination)
             steps.append(MigrationStep(sourceModel: source, destinationModel: destination, mappingModel: mapping))
         }
         return steps

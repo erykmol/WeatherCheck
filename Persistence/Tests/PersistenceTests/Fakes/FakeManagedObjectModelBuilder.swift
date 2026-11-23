@@ -18,8 +18,11 @@ final class FakeManagedObjectModelBuilder: ManagedObjectModelBuilderProtocol {
 
     private(set) var requests: [Request] = []
 
-    func model(for schema: any VersionedSchemaProtocol.Type, bindingClasses: Bool) -> NSManagedObjectModel {
+    func makeImmutableModel(
+        for schema: any VersionedSchemaProtocol.Type,
+        bindingClasses: Bool
+    ) -> NSManagedObjectModel {
         requests.append(Request(schema: ObjectIdentifier(schema), bindingClasses: bindingClasses))
-        return managedObjectModel(for: schema)
+        return makeManagedObjectModel(for: schema)
     }
 }

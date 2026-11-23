@@ -26,13 +26,17 @@ public final class TestStore {
         FileManager.default.fileExists(atPath: url.path(percentEncoded: false))
     }
 
-    public func filesBesideTheStore() throws -> [String] {
+    public func listFilesBesideTheStore() throws -> [String] {
         try FileManager.default
             .contentsOfDirectory(atPath: directory.path(percentEncoded: false))
             .filter { !$0.hasPrefix(url.lastPathComponent) }
     }
 
-    public func seed(_ model: NSManagedObjectModel, entity: String = TestEntity.item, with objects: [[String: Any]]) throws {
+    public func seed(
+        _ model: NSManagedObjectModel,
+        entity: String = TestEntity.item,
+        with objects: [[String: Any]]
+    ) throws {
         try withContext(model) { context in
             for values in objects {
                 NSEntityDescription
@@ -43,7 +47,7 @@ public final class TestStore {
         }
     }
 
-    public func items(_ model: NSManagedObjectModel) throws -> [TestItem] {
+    public func fetchItems(_ model: NSManagedObjectModel) throws -> [TestItem] {
         try withContext(model) { context in
             let request = NSFetchRequest<NSManagedObject>(entityName: TestEntity.item)
             request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
@@ -51,7 +55,9 @@ public final class TestStore {
         }
     }
 
-    public func tagNames(_ model: NSManagedObjectModel) throws -> [String] {
+    public func fetchTagNames(
+        _ model: NSManagedObjectModel
+    ) throws -> [String] {
         try withContext(model) { context in
             let request = NSFetchRequest<NSManagedObject>(entityName: TestEntity.tag)
             request.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
@@ -59,7 +65,11 @@ public final class TestStore {
         }
     }
 
-    public func seedOwner(named ownerName: String, withPetNamed petName: String, in model: NSManagedObjectModel) throws {
+    public func seedOwner(
+        named ownerName: String,
+        withPetNamed petName: String,
+        in model: NSManagedObjectModel
+    ) throws {
         try withContext(model) { context in
             let owner = NSEntityDescription.insertNewObject(forEntityName: RelationTestEntity.owner, into: context)
             owner.setValue(ownerName, forKey: "name")
@@ -70,7 +80,9 @@ public final class TestStore {
         }
     }
 
-    public func petOwnerNames(_ model: NSManagedObjectModel) throws -> [String] {
+    public func fetchPetOwnerNames(
+        _ model: NSManagedObjectModel
+    ) throws -> [String] {
         try withContext(model) { context in
             try context
                 .fetch(NSFetchRequest<NSManagedObject>(entityName: RelationTestEntity.pet))
@@ -93,8 +105,6 @@ public final class TestStore {
 
         let context = NSManagedObjectContext(.privateQueue)
         context.persistentStoreCoordinator = coordinator
-        // `performAndWait` runs the closure synchronously, so handing the non-Sendable
-        // `body` and `context` to its `@Sendable` block is safe.
         return try withoutActuallyEscaping(body) { body in
             nonisolated(unsafe) let body = body
             return try context.performAndWait { try body(context) }

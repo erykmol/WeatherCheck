@@ -18,7 +18,9 @@ final class FakeManagedObjectModelCache: ManagedObjectModelCacheProtocol {
         self.model = model
     }
 
-    func bindModel(for schema: any VersionedSchemaProtocol.Type) -> NSManagedObjectModel {
+    func bindModel(
+        for schema: any VersionedSchemaProtocol.Type
+    ) -> NSManagedObjectModel {
         requestedSchemas.append(ObjectIdentifier(schema))
         return model
     }

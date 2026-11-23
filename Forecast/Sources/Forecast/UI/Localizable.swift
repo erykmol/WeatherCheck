@@ -10,7 +10,10 @@ import SwiftUI
 
 enum Localizable {
     static var loadingAccessibilityLabel: Text { Text("loading_accessibility_label", bundle: .module) }
-    static func todayTemperatureRange(max maxTemperature: String, min minTemperature: String) -> Text {
+    static func todayTemperatureRange(
+        max maxTemperature: String,
+        min minTemperature: String
+    ) -> Text {
         Text("today_temperature_range \(maxTemperature) \(minTemperature)", bundle: .module)
     }
 

@@ -27,7 +27,7 @@ final class FakeForecastAPI: ForecastAPIProtocol {
         requests.withLock { $0 }
     }
 
-    func forecast(latitude: Double, longitude: Double) -> Endpoint {
+    func makeForecastEndpoint(latitude: Double, longitude: Double) -> Endpoint {
         requests.withLock { $0.append(Request(latitude: latitude, longitude: longitude)) }
         return endpoint
     }

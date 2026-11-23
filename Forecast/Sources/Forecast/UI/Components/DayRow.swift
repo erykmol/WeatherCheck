@@ -27,7 +27,7 @@ struct DayRow: View {
                     Text(day.weekday)
                 }
             }
-            .font(Typography.label)
+            .font(Typography.bodyEmphasized)
             .lineLimit(1)
             .frame(width: Constants.weekdayWidth, alignment: .leading)
 
@@ -41,13 +41,15 @@ struct DayRow: View {
             }
             .frame(width: Constants.dayIconWidth)
 
-            Text(TemperatureFormat.string(day.minTemperature))
+            Text(TemperatureFormat.format(day.minTemperature))
                 .foregroundStyle(Palette.textSecondary)
+                .font(Typography.bodyEmphasized)
                 .frame(width: Constants.temperatureWidth, alignment: .trailing)
 
             TemperatureRangeBar(range: day.minTemperature...day.maxTemperature, bounds: bounds)
 
-            Text(TemperatureFormat.string(day.maxTemperature))
+            Text(TemperatureFormat.format(day.maxTemperature))
+                .font(Typography.bodyEmphasized)
                 .frame(width: Constants.temperatureWidth, alignment: .trailing)
         }
         .monospacedDigit()
@@ -57,8 +59,8 @@ struct DayRow: View {
 }
 
 private enum Constants {
-    static let dayRowHeight: CGFloat = 52
-    static let dayIconWidth: CGFloat = 40
-    static let weekdayWidth: CGFloat = 56
-    static let temperatureWidth: CGFloat = 36
+    static let dayRowHeight: CGFloat = 52.0
+    static let dayIconWidth: CGFloat = 40.0
+    static let weekdayWidth: CGFloat = 56.0
+    static let temperatureWidth: CGFloat = 36.0
 }

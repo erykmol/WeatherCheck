@@ -8,5 +8,7 @@
 import Foundation
 
 protocol ForecastMapperProtocol: Sendable {
-    func forecast(from response: ForecastResponse) throws(ForecastError) -> WeatherForecast
+    func mapForecast(
+        from response: ForecastResponse
+    ) throws(ForecastError) -> WeatherForecast
 }

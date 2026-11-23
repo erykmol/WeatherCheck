@@ -14,7 +14,9 @@ public struct RequestBuilder: Sendable {
         self.baseURL = baseURL
     }
 
-    public func makeRequest(for endpoint: Endpoint) throws(NetworkError) -> URLRequest {
+    public func makeRequest(
+        for endpoint: Endpoint
+    ) throws(NetworkError) -> URLRequest {
         var components = URLComponents(url: baseURL.appending(path: endpoint.path), resolvingAgainstBaseURL: false)
         
         if !endpoint.query.isEmpty {

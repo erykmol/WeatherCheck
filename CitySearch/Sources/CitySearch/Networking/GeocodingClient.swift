@@ -16,7 +16,7 @@ struct GeocodingClient: GeocodingClientProtocol {
     init(
         networkManager: any NetworkingManagerProtocol = NetworkingManager(
             builder: RequestBuilder(baseURL: GeocodingAPI.baseURL),
-            errorMessage: OpenMeteoErrorDecoder().reason(from:)
+            errorMessage: OpenMeteoErrorDecoder().decodeReason(from:)
         ),
         api: any GeocodingAPIProtocol = GeocodingAPI(),
         decoder: any ResponseDecoderProtocol = ResponseDecoder()
@@ -28,7 +28,7 @@ struct GeocodingClient: GeocodingClientProtocol {
 
     func searchCities(named name: String) async throws(SearchError) -> [City] {
         do throws(NetworkError) {
-            let data = try await networkManager.send(api.search(name: name))
+            let data = try await networkManager.send(api.makeSearchEndpoint(name: name))
             let response = try await decoder.decode(GeocodingResponse.self, from: data)
             return (response.results ?? []).map { City($0) }
         } catch {

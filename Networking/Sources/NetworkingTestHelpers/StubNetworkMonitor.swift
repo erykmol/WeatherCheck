@@ -15,7 +15,7 @@ public struct StubNetworkMonitor: NetworkMonitorProtocol {
         self.updates = updates
     }
 
-    public func connectivityUpdates() -> AsyncStream<Connectivity> {
+    public func monitorConnectivity() -> AsyncStream<Connectivity> {
         AsyncStream { continuation in
             for update in updates {
                 continuation.yield(update)

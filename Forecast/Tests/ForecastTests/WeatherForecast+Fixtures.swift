@@ -10,7 +10,7 @@ import Foundation
 
 extension WeatherForecast {
     static let refreshed = WeatherForecast(
-        current: Current(temperature: 3, cloudCover: 100, rainChance: 80, condition: .rain, isDay: false),
+        current: Current(temperature: 3.0, cloudCover: 100, rainChance: 80, condition: .rain, isDay: false),
         hours: [],
         days: []
     )

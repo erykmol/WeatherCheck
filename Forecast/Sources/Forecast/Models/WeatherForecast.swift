@@ -49,7 +49,7 @@ struct WeatherForecast: Equatable, Sendable {
             let low = days.map(\.minTemperature).min(),
             let high = days.map(\.maxTemperature).max(),
             low <= high
-        else { return 0...0 }
+        else { return 0.0...0.0 }
         return low...high
     }
 }

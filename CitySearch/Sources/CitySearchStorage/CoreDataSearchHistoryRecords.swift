@@ -23,31 +23,31 @@ public final class CoreDataSearchHistoryRecords: SearchHistoryRecordsProtocol {
             factory: CoreDataStackFactory(plan: SearchHistoryMigrationPlan.self),
             deleter: StoreFilesDeleter()
         )
-        try self.init(stack: opener.openStack(storage: storage))
+        try self.init(stack: opener.openStackRecreatingOnFailure(storage: storage))
     }
 
     init(stack: CoreDataStack) {
         self.stack = stack
     }
 
-    public func entries() throws -> [SearchHistoryEntry] {
-        let request = CityEntity.fetchAll()
+    public func loadEntries() throws -> [SearchHistoryEntry] {
+        let request = CityEntity.makeFetchAllRequest()
         request.returnsObjectsAsFaults = false
-        return try context.fetch(request).map(entry(from:))
+        return try context.fetch(request).map(makeEntry(from:))
     }
 
     public func save(_ entry: SearchHistoryEntry) throws {
-        let entity = try context.fetch(CityEntity.fetch(id: entry.city.id)).first ?? CityEntity(insertInto: context)
+        let entity = try context.fetch(CityEntity.makeFetchRequest(id: entry.city.id)).first ?? CityEntity(insertInto: context)
         entity.update(from: entry.city, searchedAt: entry.searchedAt)
         try saveChanges()
     }
 
     public func delete(cityIDs: [Int]) throws {
-        try delete(context.fetch(CityEntity.fetch(ids: cityIDs)))
+        try delete(context.fetch(CityEntity.makeFetchRequest(ids: cityIDs)))
     }
 
     public func deleteAll() throws {
-        try delete(context.fetch(CityEntity.fetchAll()))
+        try delete(context.fetch(CityEntity.makeFetchAllRequest()))
     }
 
     private func delete(_ entities: [CityEntity]) throws {
@@ -67,7 +67,7 @@ public final class CoreDataSearchHistoryRecords: SearchHistoryRecordsProtocol {
         }
     }
 
-    private func entry(from entity: CityEntity) -> SearchHistoryEntry {
+    private func makeEntry(from entity: CityEntity) -> SearchHistoryEntry {
         SearchHistoryEntry(
             city: City(
                 id: Int(entity.cityID),

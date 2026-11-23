@@ -64,7 +64,9 @@ struct CitySearchViewModelTests {
     }
 
     @Test(arguments: [CityNameValidation.empty, .tooShort])
-    func goesBackToHistoryWithoutASearchableName(validation: CityNameValidation) async {
+    func goesBackToHistoryWithoutASearchableName(
+        validation: CityNameValidation
+    ) async {
         let sut = makeSUT(.success([.lodz]), validation: validation)
 
         await sut.searchIfNeeded()

@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 public enum Typography {
-    public static let displaySize: CGFloat = 88
+    public static let displaySize: CGFloat = 88.0
 
     public static let metric = Font.largeTitle.weight(.semibold)
     public static let title = Font.title.weight(.semibold)
@@ -26,7 +26,7 @@ public enum Typography {
     public static let largeIcon = Font.title2
     public static let accessory = Font.footnote.weight(.semibold)
     
-    public static func display(size: CGFloat) -> Font {
+    public static func makeDisplayFont(size: CGFloat) -> Font {
         .system(size: size, weight: .thin)
     }
 }

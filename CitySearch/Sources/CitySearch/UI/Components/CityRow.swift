@@ -14,7 +14,11 @@ struct CityRow: View {
     private let subtitle: String
     private let systemImage: String
 
-    init(title: AttributedString, subtitle: String, systemImage: String) {
+    init(
+        title: AttributedString,
+        subtitle: String,
+        systemImage: String
+    ) {
         self.title = title
         self.subtitle = subtitle
         self.systemImage = systemImage
@@ -51,6 +55,6 @@ struct CityRow: View {
 }
 
 private enum Constants {
-    static let rowIconWidth: CGFloat = 28
+    static let rowIconWidth: CGFloat = 28.0
     static let chevronIcon = "chevron.right"
 }

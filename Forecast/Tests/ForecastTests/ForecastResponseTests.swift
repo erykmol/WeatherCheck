@@ -36,7 +36,7 @@ struct ForecastResponseTests {
 
         #expect(sut.current.time == "2026-11-18T14:30")
         #expect(sut.current.temperature == 6.1)
-        #expect(sut.current.cloudCover == 85)
+        #expect(sut.current.cloudCover == 85.0)
         #expect(sut.current.weatherCode == 3)
         #expect(sut.current.isDay == 1)
     }
@@ -46,7 +46,7 @@ struct ForecastResponseTests {
 
         #expect(sut.hourly.time == ["2026-11-18T14:00", "2026-11-18T15:00"])
         #expect(sut.hourly.temperature == [6.1, nil])
-        #expect(sut.hourly.precipitationProbability == [35, nil])
+        #expect(sut.hourly.precipitationProbability == [35.0, nil])
         #expect(sut.hourly.weatherCode == [3, nil])
         #expect(sut.hourly.isDay == [1, nil])
     }
@@ -58,6 +58,6 @@ struct ForecastResponseTests {
         #expect(sut.daily.weatherCode == [61])
         #expect(sut.daily.temperatureMax == [8.2])
         #expect(sut.daily.temperatureMin == [3.1])
-        #expect(sut.daily.precipitationProbabilityMax == [60])
+        #expect(sut.daily.precipitationProbabilityMax == [60.0])
     }
 }

@@ -14,7 +14,9 @@ public enum TestPlanParts {
         [TestSchemaV1.self, TestSchemaV2.self, TestSchemaV3.self, TestSchemaV4.self, TestSchemaV5.self]
     }
 
-    static func stages(itemPolicy: NSEntityMigrationPolicy.Type) -> [MigrationStage] {
+    static func makeStages(
+        itemPolicy: NSEntityMigrationPolicy.Type
+    ) -> [MigrationStage] {
         [
             .lightweight(from: TestSchemaV1.self, to: TestSchemaV2.self),
             .lightweight(from: TestSchemaV2.self, to: TestSchemaV3.self),
@@ -30,7 +32,7 @@ public enum TestMigrationPlan: MigrationPlanProtocol {
     }
 
     public static var stages: [MigrationStage] {
-        TestPlanParts.stages(itemPolicy: AmountToNumberPolicy.self)
+        TestPlanParts.makeStages(itemPolicy: AmountToNumberPolicy.self)
     }
 }
 
@@ -40,7 +42,7 @@ public enum FailingTestMigrationPlan: MigrationPlanProtocol {
     }
 
     public static var stages: [MigrationStage] {
-        TestPlanParts.stages(itemPolicy: FailingMigrationPolicy.self)
+        TestPlanParts.makeStages(itemPolicy: FailingMigrationPolicy.self)
     }
 }
 

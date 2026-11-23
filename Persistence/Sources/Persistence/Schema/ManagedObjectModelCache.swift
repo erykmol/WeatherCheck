@@ -19,12 +19,14 @@ final class ManagedObjectModelCache: ManagedObjectModelCacheProtocol {
         self.modelBuilder = modelBuilder
     }
 
-    func bindModel(for schema: any VersionedSchemaProtocol.Type) -> NSManagedObjectModel {
+    func bindModel(
+        for schema: any VersionedSchemaProtocol.Type
+    ) -> NSManagedObjectModel {
         let key = ObjectIdentifier(schema)
         if let model = models[key] {
             return model
         }
-        let model = modelBuilder.model(for: schema, bindingClasses: true)
+        let model = modelBuilder.makeImmutableModel(for: schema, bindingClasses: true)
         models[key] = model
         return model
     }

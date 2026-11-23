@@ -9,5 +9,5 @@ import Foundation
 import Networking
 
 protocol ForecastAPIProtocol: Sendable {
-    func forecast(latitude: Double, longitude: Double) -> Endpoint
+    func makeForecastEndpoint(latitude: Double, longitude: Double) -> Endpoint
 }

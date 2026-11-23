@@ -9,7 +9,7 @@ import Foundation
 
 @MainActor
 public protocol SearchHistoryRecordsProtocol {
-    func entries() throws -> [SearchHistoryEntry]
+    func loadEntries() throws -> [SearchHistoryEntry]
 
     func save(_ entry: SearchHistoryEntry) throws
 

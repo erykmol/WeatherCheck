@@ -15,7 +15,9 @@ public struct CoreDataStackFactory: CoreDataStackFactoryProtocol {
         self.plan = plan
     }
 
-    public func makeStack(storage: CoreDataStack.Storage) throws -> CoreDataStack {
+    public func makeStack(
+        storage: CoreDataStack.Storage
+    ) throws -> CoreDataStack {
         try CoreDataStack(plan: plan, storage: storage)
     }
 }

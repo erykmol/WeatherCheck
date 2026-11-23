@@ -9,11 +9,11 @@ import Foundation
 
 @MainActor
 public protocol SearchHistoryStoreProtocol {
-    func load() throws -> [City]
+    func loadCities() throws -> [City]
 
-    func record(_ city: City) throws
+    func saveApplyingRetention(_ city: City) throws
 
-    func remove(_ city: City) throws
+    func delete(_ city: City) throws
 
-    func removeAll() throws
+    func deleteAll() throws
 }

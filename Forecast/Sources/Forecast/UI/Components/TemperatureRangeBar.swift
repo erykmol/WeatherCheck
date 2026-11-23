@@ -39,6 +39,6 @@ struct TemperatureRangeBar: View {
 }
 
 private enum Constants {
-    static let rangeBarHeight: CGFloat = 5
-    static let minimumSpan: Double = 1
+    static let rangeBarHeight: CGFloat = 5.0
+    static let minimumSpan: Double = 1.0
 }

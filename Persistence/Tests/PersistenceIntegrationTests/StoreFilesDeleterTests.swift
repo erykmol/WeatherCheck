@@ -26,7 +26,7 @@ struct StoreFilesDeleterTests {
 
         let reopened = try factory.makeStack(storage: .file(store.url))
         defer { try? reopened.close() }
-        #expect(try itemTitles(in: reopened).isEmpty)
+        #expect(try fetchItemTitles(in: reopened).isEmpty)
     }
 
     @Test func deletesTheJournalFilesWithTheStore() throws {
@@ -51,14 +51,17 @@ struct StoreFilesDeleterTests {
         #expect(!store.fileExists(at: store.url))
     }
 
-    private func insertItem(titled title: String, into stack: CoreDataStack) throws {
+    private func insertItem(
+        titled title: String,
+        into stack: CoreDataStack
+    ) throws {
         NSEntityDescription
             .insertNewObject(forEntityName: TestEntity.item, into: stack.viewContext)
             .setValue(title, forKey: "title")
         try stack.viewContext.save()
     }
 
-    private func itemTitles(in stack: CoreDataStack) throws -> [String] {
+    private func fetchItemTitles(in stack: CoreDataStack) throws -> [String] {
         try stack.viewContext
             .fetch(NSFetchRequest<NSManagedObject>(entityName: TestEntity.item))
             .compactMap { $0.value(forKey: "title") as? String }

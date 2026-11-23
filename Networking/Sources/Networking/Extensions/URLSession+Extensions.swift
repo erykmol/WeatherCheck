@@ -8,7 +8,9 @@
 import Foundation
 
 extension URLSession: URLSessionProtocol {
-    public func data(for request: URLRequest) async throws -> (Data, URLResponse) {
+    public func data(
+        for request: URLRequest
+    ) async throws -> (Data, URLResponse) {
         try await data(for: request, delegate: nil)
     }
 }

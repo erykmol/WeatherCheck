@@ -17,26 +17,26 @@ final class PreviewHistoryStore: SearchHistoryStoreProtocol {
         self.cities = cities
     }
 
-    func load() -> [City] {
+    func loadCities() -> [City] {
         cities
     }
 
-    func record(_ city: City) {
-        remove(city)
+    func saveApplyingRetention(_ city: City) {
+        delete(city)
         cities.insert(city, at: 0)
     }
 
-    func remove(_ city: City) {
+    func delete(_ city: City) {
         cities.removeAll { $0.id == city.id }
     }
 
-    func removeAll() {
+    func deleteAll() {
         cities.removeAll()
     }
 }
 
 struct PreviewNetworkMonitor: NetworkMonitorProtocol {
-    func connectivityUpdates() -> AsyncStream<Connectivity> {
+    func monitorConnectivity() -> AsyncStream<Connectivity> {
         AsyncStream { $0.finish() }
     }
 }
