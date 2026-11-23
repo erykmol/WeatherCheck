@@ -37,7 +37,7 @@ struct MigrationPlanValidator: MigrationPlanValidatorProtocol {
 
     private func validateChecksums(of schemas: [any VersionedSchemaProtocol.Type]) throws(MigrationError) {
         let changes = schemas.compactMap { (schema: any VersionedSchemaProtocol.Type) -> String? in
-            let checksum = modelBuilder.model(for: schema, bindingClasses: false).versionChecksum
+            let checksum = modelBuilder.makeImmutableModel(for: schema, bindingClasses: false).versionChecksum
             guard checksum != schema.versionChecksum else {
                 return nil
             }

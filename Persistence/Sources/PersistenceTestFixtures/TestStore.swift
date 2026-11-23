@@ -26,7 +26,7 @@ public final class TestStore {
         FileManager.default.fileExists(atPath: url.path(percentEncoded: false))
     }
 
-    public func filesBesideTheStore() throws -> [String] {
+    public func listFilesBesideTheStore() throws -> [String] {
         try FileManager.default
             .contentsOfDirectory(atPath: directory.path(percentEncoded: false))
             .filter { !$0.hasPrefix(url.lastPathComponent) }
@@ -47,7 +47,7 @@ public final class TestStore {
         }
     }
 
-    public func items(_ model: NSManagedObjectModel) throws -> [TestItem] {
+    public func fetchItems(_ model: NSManagedObjectModel) throws -> [TestItem] {
         try withContext(model) { context in
             let request = NSFetchRequest<NSManagedObject>(entityName: TestEntity.item)
             request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
@@ -55,7 +55,7 @@ public final class TestStore {
         }
     }
 
-    public func tagNames(_ model: NSManagedObjectModel) throws -> [String] {
+    public func fetchTagNames(_ model: NSManagedObjectModel) throws -> [String] {
         try withContext(model) { context in
             let request = NSFetchRequest<NSManagedObject>(entityName: TestEntity.tag)
             request.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
@@ -78,7 +78,7 @@ public final class TestStore {
         }
     }
 
-    public func petOwnerNames(_ model: NSManagedObjectModel) throws -> [String] {
+    public func fetchPetOwnerNames(_ model: NSManagedObjectModel) throws -> [String] {
         try withContext(model) { context in
             try context
                 .fetch(NSFetchRequest<NSManagedObject>(entityName: RelationTestEntity.pet))

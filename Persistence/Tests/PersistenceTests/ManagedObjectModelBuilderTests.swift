@@ -15,7 +15,7 @@ struct ManagedObjectModelBuilderTests {
     @Test func buildsTheEntitiesOfTheSchema() throws {
         let sut = ManagedObjectModelBuilder()
 
-        let model = sut.model(for: TestSchemaV5.self, bindingClasses: false)
+        let model = sut.makeImmutableModel(for: TestSchemaV5.self, bindingClasses: false)
 
         let item = try #require(model.entitiesByName[TestEntity.item])
         #expect(Set(model.entitiesByName.keys) == [TestEntity.item, TestEntity.tag])
@@ -28,7 +28,7 @@ struct ManagedObjectModelBuilderTests {
     @Test func keepsTheNameAnAttributeWasRenamedFrom() throws {
         let sut = ManagedObjectModelBuilder()
 
-        let model = sut.model(for: TestSchemaV3.self, bindingClasses: false)
+        let model = sut.makeImmutableModel(for: TestSchemaV3.self, bindingClasses: false)
 
         let item = try #require(model.entitiesByName[TestEntity.item])
         #expect(item.attributesByName["title"]?.renamingIdentifier == "label")
@@ -37,7 +37,7 @@ struct ManagedObjectModelBuilderTests {
     @Test func addsTheUniquenessConstraint() throws {
         let sut = ManagedObjectModelBuilder()
 
-        let model = sut.model(for: BoundTestSchema.self, bindingClasses: false)
+        let model = sut.makeImmutableModel(for: BoundTestSchema.self, bindingClasses: false)
 
         let entity = try #require(model.entitiesByName["Bound"])
         #expect(entity.uniquenessConstraints as? [[String]] == [["name"]])
@@ -46,8 +46,8 @@ struct ManagedObjectModelBuilderTests {
     @Test func bindsEntityClassesOnlyWhenAsked() {
         let sut = ManagedObjectModelBuilder()
 
-        let bound = sut.model(for: BoundTestSchema.self, bindingClasses: true)
-        let unbound = sut.model(for: BoundTestSchema.self, bindingClasses: false)
+        let bound = sut.makeImmutableModel(for: BoundTestSchema.self, bindingClasses: true)
+        let unbound = sut.makeImmutableModel(for: BoundTestSchema.self, bindingClasses: false)
 
         #expect(bound.entitiesByName["Bound"]?.managedObjectClassName == NSStringFromClass(BoundTestObject.self))
         #expect(unbound.entitiesByName["Bound"]?.managedObjectClassName == NSStringFromClass(NSManagedObject.self))
@@ -56,8 +56,8 @@ struct ManagedObjectModelBuilderTests {
     @Test func entityClassesDoNotChangeTheVersionHashes() {
         let sut = ManagedObjectModelBuilder()
 
-        let bound = sut.model(for: BoundTestSchema.self, bindingClasses: true)
-        let unbound = sut.model(for: BoundTestSchema.self, bindingClasses: false)
+        let bound = sut.makeImmutableModel(for: BoundTestSchema.self, bindingClasses: true)
+        let unbound = sut.makeImmutableModel(for: BoundTestSchema.self, bindingClasses: false)
 
         #expect(bound.entityVersionHashesByName == unbound.entityVersionHashesByName)
     }

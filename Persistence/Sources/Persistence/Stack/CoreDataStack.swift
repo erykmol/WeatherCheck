@@ -75,7 +75,7 @@ public final class CoreDataStack {
                 withIntermediateDirectories: true
             )
             try migrator.migrateStoreIfNeeded(at: url, to: model) { () throws(MigrationError) in
-                try stepBuilder.steps()
+                try stepBuilder.makeSteps()
             }
             return url
         case .inMemory:

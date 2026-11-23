@@ -9,5 +9,5 @@ import Foundation
 import CoreData
 
 protocol ManagedObjectModelBuilderProtocol {
-    func model(for schema: any VersionedSchemaProtocol.Type, bindingClasses: Bool) -> NSManagedObjectModel
+    func makeImmutableModel(for schema: any VersionedSchemaProtocol.Type, bindingClasses: Bool) -> NSManagedObjectModel
 }

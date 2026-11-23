@@ -23,7 +23,7 @@ final class FakeMappingModelBuilder: MappingModelBuilderProtocol {
         self.error = error
     }
 
-    func mappingModel(
+    func makeMappingModel(
         for stage: MigrationStage,
         from source: NSManagedObjectModel,
         to destination: NSManagedObjectModel

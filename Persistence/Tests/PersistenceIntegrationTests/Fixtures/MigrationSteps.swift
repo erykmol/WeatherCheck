@@ -9,7 +9,7 @@ import Foundation
 @testable import Persistence
 
 @MainActor
-func migrationSteps(for plan: any MigrationPlanProtocol.Type) throws -> [MigrationStep] {
+func makeMigrationSteps(for plan: any MigrationPlanProtocol.Type) throws -> [MigrationStep] {
     let modelBuilder = ManagedObjectModelBuilder()
     return try MigrationStepBuilder(
         plan: plan,
@@ -17,5 +17,5 @@ func migrationSteps(for plan: any MigrationPlanProtocol.Type) throws -> [Migrati
         modelBuilder: modelBuilder,
         mappingModelBuilder: MappingModelBuilder(),
         modelCache: ManagedObjectModelCache(modelBuilder: modelBuilder)
-    ).steps()
+    ).makeSteps()
 }

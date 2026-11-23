@@ -24,7 +24,7 @@ final class ManagedObjectModelCache: ManagedObjectModelCacheProtocol {
         if let model = models[key] {
             return model
         }
-        let model = modelBuilder.model(for: schema, bindingClasses: true)
+        let model = modelBuilder.makeImmutableModel(for: schema, bindingClasses: true)
         models[key] = model
         return model
     }

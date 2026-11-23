@@ -107,7 +107,7 @@ public enum ChangedTestSchema: VersionedSchemaProtocol {
     }
 }
 
-public func unrelatedManagedObjectModel() -> NSManagedObjectModel {
+public func makeUnrelatedManagedObjectModel() -> NSManagedObjectModel {
     let model = NSManagedObjectModel()
     model.entities = [
         NSEntityDescription(name: "Other", properties: [NSAttributeDescription(name: "somethingElse", type: .stringAttributeType)]),
@@ -134,7 +134,7 @@ public enum BoundTestSchema: VersionedSchemaProtocol {
     }
 }
 
-public func managedObjectModel(for schema: any VersionedSchemaProtocol.Type) -> NSManagedObjectModel {
+public func makeManagedObjectModel(for schema: any VersionedSchemaProtocol.Type) -> NSManagedObjectModel {
     let entities = schema.makeEntities()
     for entity in entities {
         entity.managedObjectClassName = NSStringFromClass(NSManagedObject.self)

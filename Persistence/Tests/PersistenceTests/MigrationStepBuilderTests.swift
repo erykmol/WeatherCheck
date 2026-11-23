@@ -32,7 +32,7 @@ struct MigrationStepBuilderTests {
     @Test func buildsAStepBetweenEveryPairOfSchemas() throws {
         let sut = try makeSUT(plan: TestMigrationPlan.self)
 
-        let steps = try sut.steps()
+        let steps = try sut.makeSteps()
 
         let versions = TestPlanParts.schemas.map { Set<AnyHashable>([$0.versionIdentifier]) }
         #expect(steps.map(\.sourceModel.versionIdentifiers) == Array(versions.dropLast()))
@@ -43,7 +43,7 @@ struct MigrationStepBuilderTests {
         let modelBuilder = FakeManagedObjectModelBuilder()
         let sut = try makeSUT(plan: TestMigrationPlan.self, modelBuilder: modelBuilder)
 
-        _ = try sut.steps()
+        _ = try sut.makeSteps()
 
         #expect(!modelBuilder.requests.isEmpty)
         #expect(modelBuilder.requests.allSatisfy { !$0.bindingClasses })
@@ -53,7 +53,7 @@ struct MigrationStepBuilderTests {
         let mappingModelBuilder = FakeMappingModelBuilder()
         let sut = try makeSUT(plan: TestMigrationPlan.self, mappingModelBuilder: mappingModelBuilder)
 
-        let steps = try sut.steps()
+        let steps = try sut.makeSteps()
 
         let requests = mappingModelBuilder.requests
         #expect(requests.count == steps.count)
@@ -82,7 +82,7 @@ struct MigrationStepBuilderTests {
             _ = try makeSUT(plan: EmptyTestMigrationPlan.self, validator: validator)
         }
 
-        #expect(reason(of: error) == "The plan has no schemas")
+        #expect(extractReason(of: error) == "The plan has no schemas")
         #expect(validator.validatedPlans.isEmpty)
     }
 
@@ -93,7 +93,7 @@ struct MigrationStepBuilderTests {
             _ = try makeSUT(plan: TestMigrationPlan.self, validator: validator)
         }
 
-        #expect(reason(of: error) == "Stage 0 doesn't go from schema 0 to schema 1")
+        #expect(extractReason(of: error) == "Stage 0 doesn't go from schema 0 to schema 1")
         #expect(validator.validatedPlans == [ObjectIdentifier(TestMigrationPlan.self)])
     }
 
@@ -102,7 +102,7 @@ struct MigrationStepBuilderTests {
         let sut = try makeSUT(plan: TestMigrationPlan.self, mappingModelBuilder: mappingModelBuilder)
 
         let error = #expect(throws: MigrationError.self) {
-            _ = try sut.steps()
+            _ = try sut.makeSteps()
         }
 
         let isNoInferredMapping = switch error {
@@ -112,7 +112,7 @@ struct MigrationStepBuilderTests {
         #expect(isNoInferredMapping)
     }
 
-    private func reason(of error: MigrationError?) -> String? {
+    private func extractReason(of error: MigrationError?) -> String? {
         switch error {
         case .invalidPlan(let reason)?: reason
         default: nil

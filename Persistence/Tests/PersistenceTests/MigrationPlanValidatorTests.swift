@@ -36,7 +36,7 @@ struct MigrationPlanValidatorTests {
             try sut.validate(MissingStageTestMigrationPlan.self)
         }
 
-        #expect(reason(of: error) != nil)
+        #expect(extractReason(of: error) != nil)
     }
 
     @Test func rejectsStagesThatDoNotFollowTheSchemaOrder() {
@@ -46,7 +46,7 @@ struct MigrationPlanValidatorTests {
             try sut.validate(MisorderedTestMigrationPlan.self)
         }
 
-        #expect(reason(of: error) != nil)
+        #expect(extractReason(of: error) != nil)
     }
 
     @Test func rejectsAChangedSchemaAndNamesItsActualChecksum() {
@@ -56,11 +56,11 @@ struct MigrationPlanValidatorTests {
             try sut.validate(ChangedSchemaTestMigrationPlan.self)
         }
 
-        let checksum = managedObjectModel(for: ChangedTestSchema.self).versionChecksum
-        #expect(reason(of: error)?.contains(checksum) == true)
+        let checksum = makeManagedObjectModel(for: ChangedTestSchema.self).versionChecksum
+        #expect(extractReason(of: error)?.contains(checksum) == true)
     }
 
-    private func reason(of error: MigrationError?) -> String? {
+    private func extractReason(of error: MigrationError?) -> String? {
         switch error {
         case .invalidPlan(let reason)?: reason
         default: nil
