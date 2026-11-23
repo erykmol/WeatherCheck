@@ -27,7 +27,7 @@ struct DayRow: View {
                     Text(day.weekday)
                 }
             }
-            .font(Typography.label)
+            .font(Typography.bodyEmphasized)
             .lineLimit(1)
             .frame(width: Constants.weekdayWidth, alignment: .leading)
 
@@ -43,11 +43,13 @@ struct DayRow: View {
 
             Text(TemperatureFormat.format(day.minTemperature))
                 .foregroundStyle(Palette.textSecondary)
+                .font(Typography.bodyEmphasized)
                 .frame(width: Constants.temperatureWidth, alignment: .trailing)
 
             TemperatureRangeBar(range: day.minTemperature...day.maxTemperature, bounds: bounds)
 
             Text(TemperatureFormat.format(day.maxTemperature))
+                .font(Typography.bodyEmphasized)
                 .frame(width: Constants.temperatureWidth, alignment: .trailing)
         }
         .monospacedDigit()
