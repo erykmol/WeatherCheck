@@ -106,6 +106,17 @@ graph TD
 - **Swift 6 w całym projekcie**, dekodowanie JSON-a poza main actorem (`@concurrent`).
 - **Testy w Swift Testing**, testy integracyjne Core Data w osobnych targetach.
 
+## Decyzje techniczne
+
+- **Moduły jako lokalne pakiety Swift.** Każdy buduje się i testuje osobno, a granic między nimi pilnuje kompilator: to, co nie jest `public`, nie wychodzi poza moduł.
+- **Core Data z wersjonowanymi schematami i migracjami, choć historia ma 10 pozycji.** Zadanie każe traktować aplikację jak produkcyjną, a tam dane użytkowników muszą przetrwać zmianę schematu po wydaniu. `Persistence` nie zna żadnej funkcji, więc kolejna (np. prognoza offline) użyje go bez zmian.
+- **Własny migrator krok po kroku.** Automatyczna migracja Core Data przechodzi tylko wprost do bieżącej wersji, a etapy z iOS 17 (`NSStagedMigrationManager`) nie przyjmują mapowań z politykami encji.
+- **Historia oddzielona od Core Data.** Reguły listy są w `CitySearch`, a Core Data tylko w `CitySearchStorage`, więc reguły testuje się bez bazy, a magazyn można wymienić (np. na SwiftData) bez ich zmiany.
+- **Nieczytelny plik historii jest zakładany od nowa.** Historię łatwo odbudować, więc jednorazowa utrata kosztuje mniej niż historia trzymana tylko w pamięci aż do reinstalacji. Gdy i to zawiedzie, aplikacja działa dalej bez zapisu.
+- **Miasto trafia do historii po wybraniu z wyników**, a nie po wpisaniu, bo wpisywane frazy zawierałyby literówki i fragmenty nazw.
+- **Pinning kluczy głównych Let's Encrypt (ISRG), a nie certyfikatu serwera.** Piny zmienia tylko aktualizacja aplikacji, a klucz serwera zmienia się przy odnowieniu certyfikatu, certyfikaty pośrednie zaś bez zapowiedzi.
+- **Cache HTTP z `URLSession.shared` zamiast własnego.** Wyniki wyszukiwania są pamiętane przez 24 godziny zgodnie z nagłówkami Open-Meteo, prognoza jest zawsze pobierana na nowo, a „Spróbuj ponownie” zawsze pyta serwer.
+
 ## Dodatkowa funkcjonalność - przy założeniu dodatkowego czasu
 
 ### Design
