@@ -105,8 +105,6 @@ public final class TestStore {
 
         let context = NSManagedObjectContext(.privateQueue)
         context.persistentStoreCoordinator = coordinator
-        // `performAndWait` runs the closure synchronously, so handing the non-Sendable
-        // `body` and `context` to its `@Sendable` block is safe.
         return try withoutActuallyEscaping(body) { body in
             nonisolated(unsafe) let body = body
             return try context.performAndWait { try body(context) }
